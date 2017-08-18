@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "com.tlcn.mvpapplication"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    productFlavors {
+        dev {
+            buildConfigField("String", "API_URL", '"https://api.github.com/"')
+        }
+        real {
+            buildConfigField("String", "API_URL", '"https://api.github.com/"')
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    ext {
+        support_library_version = '26.0.0-alpha1'
+        retrofit_library_verson = '2.1.0'
+        butter_knife_library_version = '7.0.1'
+        dagger_library_version = '2.2'
+        fire_base_library_version = '10.2.1'
+    }
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:${support_library_version}"
+    compile "com.android.support:recyclerview-v7:${support_library_version}"
+    compile "com.android.support:design:${support_library_version}"
+
+    compile "com.jakewharton:butterknife:${butter_knife_library_version}"
+
+    compile "com.squareup.retrofit2:retrofit:${retrofit_library_verson}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofit_library_verson}"
+    compile "com.squareup.retrofit2:converter-scalars:${retrofit_library_verson}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_library_verson}"
+
+
+    compile "com.github.bumptech.glide:glide:3.7.0"
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    testCompile 'junit:junit:4.12'
+}
