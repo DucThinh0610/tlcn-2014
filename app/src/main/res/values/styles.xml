@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- todo :3/7/17 custom stype -->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_main</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/color_main</item>
+        <item name="colorAccent">@color/colorMainAccent</item>
+        <item name="android:windowBackground">@color/colorMainBg</item>
+        <item name="drawerArrowStyle">@style/ToolbarColorStyle</item>
+
+    </style>
+    <style name="ToolbarColorStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#666699</item>
+    </style>
 </resources>

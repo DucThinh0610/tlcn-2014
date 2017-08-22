@@ -77,7 +77,7 @@ public class UserView extends AppCompatActivity implements IUserView, View.OnCli
     @Override
     public void onClick(View view) {
         if (view == button) {
-            mPresenter.getUserInfo("ducthinh0610");
+            mPresenter.getUserInfo("tskiller1");
         }
     }
 }
