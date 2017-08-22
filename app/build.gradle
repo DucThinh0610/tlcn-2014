@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.tlcn.mvpapplication"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         multiDexEnabled = true
@@ -30,7 +30,7 @@ android {
 
 dependencies {
     ext {
-        support_library_version = '26.0.0-alpha1'
+        support_library_version = '25.3.1'
         retrofit_library_verson = '2.1.0'
         butter_knife_library_version = '7.0.1'
         dagger_library_version = '2.2'
@@ -44,6 +44,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${support_library_version}"
     compile "com.android.support:design:${support_library_version}"
 
+    compile "com.android.support:mediarouter-v7:${support_library_version}"
     compile "com.jakewharton:butterknife:${butter_knife_library_version}"
 
     compile "com.squareup.retrofit2:retrofit:${retrofit_library_verson}"
@@ -62,5 +63,8 @@ dependencies {
 
     compile 'com.github.bkhezry:MapDrawingTools:1.1.0'
     compile 'com.github.ar-android:DrawRouteMaps:1.0.0'
+
+    compile 'me.riddhimanadib.bottom-nav-bar:bottom-nav-bar:1.0.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 }
