@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.api;
 
 
-import com.google.gson.Gson;
 import com.tlcn.mvpapplication.BuildConfig;
 
 import okhttp3.OkHttpClient;
