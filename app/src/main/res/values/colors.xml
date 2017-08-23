@@ -7,4 +7,11 @@
     <color name="color_main">#666699</color>
     <color name="colorMainAccent">#e8eaf6</color>
     <color name="colorMainBg">#fafafa</color>
+
+    <!--TODO: Custom color for Bottom -->
+    <color name="colorBackground">#f9f9f9</color>
+    <color name="colorNavAccentSelected">#ff0000</color>
+    <color name="colorNavAccentUnselected">#878787</color>
+    <!--END: Custom color for Bottom -->
+
 </resources>
