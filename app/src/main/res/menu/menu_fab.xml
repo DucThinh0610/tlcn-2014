@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_tinhtrang"
+        android:title="@string/menu_fab_tinhtrang"
+        android:icon="@mipmap/ic_now"
+        android:orderInCategory="2"/>
+    <item
+        android:id="@+id/item_mucdo"
+        android:title="@string/menu_fab_mucdo"
+        android:icon="@mipmap/ic_chart"
+        android:orderInCategory="3"/>
+</menu>

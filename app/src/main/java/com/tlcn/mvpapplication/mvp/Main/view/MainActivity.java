@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.mvp.Main.FavouriteFragment;
 import com.tlcn.mvpapplication.mvp.Main.HomeFragment;
-import com.tlcn.mvpapplication.mvp.Main.MapFragment;
 import com.tlcn.mvpapplication.mvp.Main.NewsFragment;
 import com.tlcn.mvpapplication.mvp.Main.SettingFragment;
 
@@ -30,7 +30,7 @@ public class MainActivity extends BottomBarHolderActivity {
     }
     private List<NavigationPage> getNavigationPage(){
         NavigationPage page1 = new NavigationPage("Trang chủ", ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
-        NavigationPage page2 = new NavigationPage("Bản đồ", ContextCompat.getDrawable(this, R.mipmap.ic_maps), MapFragment.newInstance());
+        NavigationPage page2 = new NavigationPage("Quan tâm", ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
         NavigationPage page3 = new NavigationPage("Tin tức", ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
         NavigationPage page4 = new NavigationPage("Cài đặt", ContextCompat.getDrawable(this, R.mipmap.ic_setting), SettingFragment.newInstance());
         // add them in a list

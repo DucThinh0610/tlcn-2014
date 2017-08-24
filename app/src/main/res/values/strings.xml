@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">MVPApplication</string>
+    <string name="app_name">Kẹt Xe 24H</string>
     <string name="title_activity_maps">Map</string>
 
     <string name="capquyen">Xin vui lòng cấp quyền để sử dụng hết chức năng của ứng dụng</string>
+
+    <string name="menu_fab_gopy">Đóng góp</string>
+    <string name="menu_fab_tinhtrang">Tình trạng hiện tại</string>
+    <string name="menu_fab_mucdo">Mức độ kẹt xe</string>
 </resources>

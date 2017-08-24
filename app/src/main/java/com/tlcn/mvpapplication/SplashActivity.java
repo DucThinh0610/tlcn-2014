@@ -40,7 +40,6 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             handler.postDelayed(waitTask, 3000);
         }
-        // de sau nay neu ma user da dang nhap thi cho vao trang home
 
         generateHashkey();
     }
@@ -217,11 +216,10 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    public static final String PACKAGE = "com.hunegroup.hune";
 
     public void generateHashkey() {
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(PACKAGE, PackageManager.GET_SIGNATURES);
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
@@ -238,7 +236,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public void printHashKey() {
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(PACKAGE, PackageManager.GET_SIGNATURES);
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());

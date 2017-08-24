@@ -9,6 +9,10 @@ import android.net.NetworkInfo;
  */
 
 public class Utilities {
+    public static final float MIN_MAP_ZOOM = 0f;
+    public static final float MAX_MAP_ZOOM = 23f;
+    public static final float DEFAULT_MAP_ZOOM = 15f;
+
     public static boolean isConnectingToInternet(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
