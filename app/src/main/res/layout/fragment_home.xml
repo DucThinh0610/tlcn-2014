@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity" />
-
         <io.github.kobakei.materialfabspeeddial.FabSpeedDial
             android:id="@+id/fsd_floating"
             android:layout_width="wrap_content"
@@ -41,7 +40,6 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_menu" />
         </FrameLayout>
-
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
