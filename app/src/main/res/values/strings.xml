@@ -7,4 +7,5 @@
     <string name="menu_fab_gopy">Đóng góp</string>
     <string name="menu_fab_tinhtrang">Tình trạng hiện tại</string>
     <string name="menu_fab_mucdo">Mức độ kẹt xe</string>
+    <string name="search_location">Tìm kiếm địa điểm</string>
 </resources>

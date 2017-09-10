@@ -1,8 +1,14 @@
 package com.tlcn.mvpapplication.mvp.Main.view;
 
+import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.Main.FavouriteFragment;
@@ -28,7 +34,8 @@ public class MainActivity extends BottomBarHolderActivity {
         // pass them to super method
         super.setupBottomBarHolderActivity(getNavigationPage());
     }
-    private List<NavigationPage> getNavigationPage(){
+
+    private List<NavigationPage> getNavigationPage() {
         NavigationPage page1 = new NavigationPage("Trang chủ", ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
         NavigationPage page2 = new NavigationPage("Quan tâm", ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
         NavigationPage page3 = new NavigationPage("Tin tức", ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
@@ -40,5 +47,29 @@ public class MainActivity extends BottomBarHolderActivity {
         navigationPages.add(page3);
         navigationPages.add(page4);
         return navigationPages;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    hideKeyboard();
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager ipm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            ipm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
