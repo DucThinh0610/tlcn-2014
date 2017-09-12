@@ -9,4 +9,6 @@
     <string name="menu_fab_mucdo">Mức độ kẹt xe</string>
 
     <string name="home_login_facebook">Đăng nhập với Facebook"</string>
+
+    <string name="search_location">Tìm kiếm địa điểm</string>
 </resources>
