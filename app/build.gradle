@@ -15,9 +15,11 @@ android {
     productFlavors {
         dev {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
+            buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/maps/api/directions/json?"')
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
+            buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/maps/api/directions/json?"')
         }
     }
     buildTypes {

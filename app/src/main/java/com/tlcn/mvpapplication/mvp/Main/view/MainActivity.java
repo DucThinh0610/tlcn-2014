@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.Main.FavouriteFragment;
-import com.tlcn.mvpapplication.mvp.Main.HomeFragment;
+import com.tlcn.mvpapplication.mvp.Main.fragment.HomeFragment;
 import com.tlcn.mvpapplication.mvp.Main.NewsFragment;
 import com.tlcn.mvpapplication.mvp.Main.SettingFragment;
 

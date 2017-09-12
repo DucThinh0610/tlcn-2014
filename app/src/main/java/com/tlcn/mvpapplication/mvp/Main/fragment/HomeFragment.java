@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main;
+package com.tlcn.mvpapplication.mvp.Main.fragment;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -28,8 +28,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -46,6 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.mvp.Main.adapter.PlaceSearchAdapter;
+import com.tlcn.mvpapplication.mvp.Main.fragment.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.Utilities;
 
@@ -59,7 +58,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         FabSpeedDial.OnMenuItemClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        PlaceSearchAdapter.OnItemClick {
+        PlaceSearchAdapter.OnItemClick,
+        IHomeFragmentView {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -79,11 +79,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     EditTextCustom editSearch;
     @Bind(R.id.rcv_search)
     RecyclerView rcvSearch;
+    private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
     private static final LatLngBounds HCM = new LatLngBounds(
             new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
-    protected GoogleApiClient mGoogleApiClient;
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -94,10 +94,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        buildGoogleApiClient();
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
         ButterKnife.bind(this, v);
+        mPresenter.attachView(this);
+        mPresenter.onCreate();
         initData();
         initListener();
         return v;
@@ -167,10 +168,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 if (TextUtils.isEmpty(s.toString())) {
                     rcvSearch.setVisibility(View.GONE);
                 }
-                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
+                if (!s.toString().equals("") && mPresenter.getGoogleApiClient().isConnected()) {
                     mAdapter.getFilter().filter(s.toString());
                     rcvSearch.setVisibility(View.VISIBLE);
-                } else if (!mGoogleApiClient.isConnected()) {
+                } else if (!mPresenter.getGoogleApiClient().isConnected()) {
                 }
 
             }
@@ -184,7 +185,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     private void initData() {
         gpsTracker = new GPSTracker(getContext());
-        mAdapter = new PlaceSearchAdapter(getContext(), mGoogleApiClient, HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
+        mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvSearch.setAdapter(mAdapter);
     }
@@ -233,35 +234,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void onClickItem(String placeId, String placeDetail) {
         editSearch.setText(placeDetail);
         rcvSearch.setVisibility(View.GONE);
-        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                .getPlaceById(mGoogleApiClient, placeId);
-        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceBuffer places) {
-                if (places.getCount() == 1) {
-                    if (null != currentMarker) {
-                        currentMarker.remove();
-                    }
-                    currentMarker = mGoogleMap.addMarker(new MarkerOptions()
-                            .position(places.get(0).getLatLng())
-                            .title(places.get(0).getName().toString()));
-                    currentMarker.showInfoWindow();
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(places.get(0).getLatLng(), mGoogleMap.getCameraPosition().zoom);
-                    mGoogleMap.animateCamera(cameraUpdate);
-                } else {
-                }
-            }
-        });
+        mPresenter.getDetailPlace(placeId);
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .build();
-        mGoogleApiClient.connect();
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void getDetailPlaceSuccess(PlaceBuffer places) {
+        if (null != currentMarker) {
+            currentMarker.remove();
+        }
+        currentMarker = mGoogleMap.addMarker(new MarkerOptions()
+                .position(places.get(0).getLatLng())
+                .title(places.get(0).getName().toString()));
+        currentMarker.showInfoWindow();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(places.get(0).getLatLng(), mGoogleMap.getCameraPosition().zoom);
+        mGoogleMap.animateCamera(cameraUpdate);
+    }
+
+    @Override
+    public void onFail(String message) {
+        Toast.makeText(gpsTracker, message, Toast.LENGTH_SHORT).show();
+    }
 }
