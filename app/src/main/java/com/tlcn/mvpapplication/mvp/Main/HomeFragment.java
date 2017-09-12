@@ -158,7 +158,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 drlContainer.openDrawer(Gravity.START);
                 break;
             case R.id.imv_location: {
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), mGoogleMap.getCameraPosition().zoom);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15f);
                 mGoogleMap.animateCamera(cameraUpdate);
             }
         }

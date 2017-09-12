@@ -17,9 +17,27 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity" />
+
+        <RelativeLayout
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/rlt_search"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/oval_imv_grey"
+            android:gravity="center"
+            android:padding="1dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imv_location"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_my_location" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -28,20 +46,6 @@
             android:layout_alignParentEnd="true"
             android:gravity="center"
             android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:background="@drawable/oval_imv_grey"
-                android:padding="1dp"
-                android:gravity="center">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imv_location"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_my_location" />
-            </RelativeLayout>
 
             <io.github.kobakei.materialfabspeeddial.FabSpeedDial
                 android:id="@+id/fsd_floating"
@@ -96,9 +100,9 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/rlt_drawer"
                 android:backgroundTint="@color/white"
+                android:ellipsize="end"
                 android:hint="@string/search_location"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+                android:maxLines="1" />
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -109,52 +113,53 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@color/white"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nv_drawer"
-        android:layout_gravity="start"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/color_main"
-            >
+            android:background="@color/color_main">
+
             <Button
-                android:visibility="gone"
                 android:id="@+id/btn_login"
-                android:layout_centerInParent="true"
                 android:layout_width="175dp"
                 android:layout_height="35dp"
-                android:text="@string/home_login_facebook"
-                android:textColor="@color/color_white"
-                android:textAllCaps="false"
-                android:background="@drawable/custom_background_button_login"
-                />
-            <LinearLayout
                 android:layout_centerInParent="true"
-                android:orientation="horizontal"
+                android:background="@drawable/custom_background_button_login"
+                android:text="@string/home_login_facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white" />
+
+            <LinearLayout
                 android:id="@+id/ll_login_success"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imv_image"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:src="@drawable/ic_logo"
-                    />
+                    android:src="@drawable/ic_logo" />
+
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hồ Quốc Hưng"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    />
+                    android:text="Hồ Quốc Hưng"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
             </LinearLayout>
         </RelativeLayout>
     </android.support.design.widget.NavigationView>
