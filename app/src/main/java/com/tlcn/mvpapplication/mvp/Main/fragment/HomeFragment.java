@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         mGoogleMap.setMyLocationEnabled(true);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
+                mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM));
             }
         }
@@ -147,6 +148,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Chỉ đường", Toast.LENGTH_SHORT).show();
+                mPresenter.getDirectionFromTwoPoint();
                 dialog.dismiss();
             }
         });
@@ -257,11 +259,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 .title(places.get(0).getName().toString()));
         currentMarker.showInfoWindow();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(places.get(0).getLatLng(), mGoogleMap.getCameraPosition().zoom);
+        mPresenter.setLngEnd(places.get(0).getLatLng());
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
     @Override
     public void onFail(String message) {
-        Toast.makeText(gpsTracker, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

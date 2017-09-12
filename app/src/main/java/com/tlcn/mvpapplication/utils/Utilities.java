@@ -6,8 +6,8 @@ import android.net.NetworkInfo;
 
 import com.tlcn.mvpapplication.R;
 
-import java.sql.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by tskil on 8/23/2017.

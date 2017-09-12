@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.mvp.Main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView {
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
             newsAdapter = new NewsAdapter(getContext(),mPresenter.getListNewsResult());
+            rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }
     }
