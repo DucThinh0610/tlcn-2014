@@ -126,16 +126,25 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text=" Tin tức quan tâm"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text=" Tin tức quan tâm"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+                <ListView
+                    android:id="@+id/lsv_favourite"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
