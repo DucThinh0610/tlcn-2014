@@ -4,29 +4,75 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imv_image"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/a12"
-        />
-
-    <TextView
-        android:layout_below="@+id/imv_image"
-        android:id="@+id/tv_title"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
-        android:padding="5dp"
-        />
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_below="@+id/tv_title"
-        android:id="@+id/tv_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:padding="5dp"
-        />
+        <LinearLayout
+            android:id="@+id/lnl_item_tintuc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_info" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imv_image"
+                        android:maxLines="2"
+                        android:padding="5dp"
+                        android:text="Kẹt xe tại ngã tư hàng xanh"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <android.support.v7.widget.AppCompatRatingBar
+                        android:id="@+id/rtb_level"
+                        style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:progressBackgroundTint="@color/color_main"
+                        android:progressTint="@color/color_main"
+                        android:rating="1.5"
+                        android:secondaryProgressTint="@color/color_main" />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_title"
+                        android:padding="5dp"
+                        android:text="5 phút trước"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>
