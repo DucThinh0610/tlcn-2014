@@ -114,6 +114,7 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nv_drawer"
+        android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout
@@ -156,10 +157,5 @@
                     />
             </LinearLayout>
         </RelativeLayout>
-=======
-        android:layout_height="match_parent"
-        android:layout_gravity="start">
-
->>>>>>> 2cb7e84a4e8ed71d61c0c9166f2cd601c1647fc4
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
