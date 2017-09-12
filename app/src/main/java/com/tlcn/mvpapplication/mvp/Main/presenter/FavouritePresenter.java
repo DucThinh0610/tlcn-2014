@@ -35,7 +35,6 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     }
 
     public News getNewsInfoResult(String idNews){
-
         return news;
     }
 
@@ -43,11 +42,18 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     public void getNewsInfo(String idNews) {
         getView().showLoading();
         news = new News("1","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao");
+        getView().getNewsSuccess();
         getView().hideLoading();
     }
 
     @Override
     public void getListNews() {
-
+        getView().showLoading();
+        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
+        list.add(new News("2","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
+        list.add(new News("3","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
+        list.add(new News("4","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
+        getView().getListNewsSuccess();
+        getView().hideLoading();
     }
 }

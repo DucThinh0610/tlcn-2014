@@ -8,6 +8,7 @@ import com.tlcn.mvpapplication.base.IView;
 
 public interface IFavouriteView extends IView{
     void getListNewsSuccess();
+
     void getNewsSuccess();
 
     void onFail(String message);
