@@ -7,4 +7,6 @@
     <string name="menu_fab_gopy">Đóng góp</string>
     <string name="menu_fab_tinhtrang">Tình trạng hiện tại</string>
     <string name="menu_fab_mucdo">Mức độ kẹt xe</string>
+
+    <string name="home_login_facebook">Đăng nhập với Facebook"</string>
 </resources>

@@ -40,7 +40,6 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             handler.postDelayed(waitTask, 3000);
         }
-
         generateHashkey();
     }
 

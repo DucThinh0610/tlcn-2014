@@ -14,7 +14,9 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity" />
+            tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
         <io.github.kobakei.materialfabspeeddial.FabSpeedDial
             android:id="@+id/fsd_floating"
             android:layout_width="wrap_content"
@@ -47,6 +49,45 @@
         android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/color_main"
+            >
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_login"
+                android:layout_centerInParent="true"
+                android:layout_width="175dp"
+                android:layout_height="35dp"
+                android:text="@string/home_login_facebook"
+                android:textColor="@color/color_white"
+                android:textAllCaps="false"
+                android:background="@drawable/custom_background_button_login"
+                />
+            <LinearLayout
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:id="@+id/ll_login_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imv_image"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/ic_logo"
+                    />
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hồ Quốc Hưng"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
