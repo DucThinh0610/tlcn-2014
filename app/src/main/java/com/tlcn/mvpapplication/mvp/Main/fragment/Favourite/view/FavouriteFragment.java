@@ -100,12 +100,12 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         switch (view.getId()){
             case R.id.lnl_home:
                 Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                intent.putExtra("title","Nhà riêng");
+                intent.putExtra("title",getString(R.string.house));
                 startActivityForResult(intent,101);
                 break;
             case R.id.lnl_work:
                 Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
-                intent2.putExtra("title","Công ty");
+                intent2.putExtra("title",getString(R.string.work));
                 startActivityForResult(intent2,102);
                 break;
             case R.id.tv_add:

@@ -36,5 +36,6 @@
     <string name="add_location_house">Thêm vị trí nhà riêng</string>
     <string name="work">Công ty</string>
     <string name="add_location_work">Thêm vị trí công ty</string>
+    <string name="set_locaton_for">Đặt địa chỉ</string>
 </resources>
 

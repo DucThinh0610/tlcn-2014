@@ -143,7 +143,7 @@ public class ChooseLocationView extends AppCompatActivity implements
         rcvSearch.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         rcvSearch.setAdapter(mAdapter);
         if (getIntent().getExtras() != null) {
-            String title = "Đặt địa chỉ " + getIntent().getStringExtra("title").toLowerCase();
+            String title = getString(R.string.set_locaton_for) + " " + getIntent().getStringExtra("title").toLowerCase();
             tvTitle.setText(title);
             tvTitleCOM.setText(title);
         }
@@ -160,12 +160,14 @@ public class ChooseLocationView extends AppCompatActivity implements
                 intent.putExtra("latitude", mGoogleMap.getCameraPosition().target.latitude);
                 intent.putExtra("longitude", mGoogleMap.getCameraPosition().target.longitude);
                 setResult(101, intent);
+                finish();
                 break;
             case R.id.tv_save_com:
                 Intent intent2 = new Intent();
                 intent2.putExtra("latitude", mGoogleMap.getCameraPosition().target.latitude);
                 intent2.putExtra("longitude", mGoogleMap.getCameraPosition().target.longitude);
                 setResult(101, intent2);
+                finish();
                 break;
             case R.id.cv_choose_on_map:
                 tbDefault.setVisibility(View.GONE);
