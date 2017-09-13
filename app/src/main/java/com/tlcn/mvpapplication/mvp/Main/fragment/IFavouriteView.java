@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.view;
+package com.tlcn.mvpapplication.mvp.Main.fragment;
 
 import com.tlcn.mvpapplication.base.IView;
 

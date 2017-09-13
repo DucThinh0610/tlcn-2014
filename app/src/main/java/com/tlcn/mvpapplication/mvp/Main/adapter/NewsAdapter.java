@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tlcn.mvpapplication.R;
@@ -28,11 +30,32 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
     }
 
     @Override
-    public void onBindViewHolder(NewsHolder holder, int position) {
-        News item = list.get(position);
+    public void onBindViewHolder(final NewsHolder holder, int position) {
+        final News item = list.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.rtbLevel.setRating(item.getRating());
         holder.tvTime.setText(Utilities.getTimeAgo(mContext,item.getCreated()));
+        holder.tvDescription.setText(item.getDescription());
+
+        holder.lnlItemTinTuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo:Handle Event View Item Click
+                if(holder.lnlDescription.getVisibility() == View.GONE){
+                    holder.lnlDescription.setVisibility(View.VISIBLE);
+                }
+                else if(holder.lnlDescription.getVisibility() == View.VISIBLE){
+                    holder.lnlDescription.setVisibility(View.GONE);
+                }
+            }
+        });
+        holder.btnDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo:Handle Event button XemChiTiet Click
+
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -42,12 +65,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
     public class NewsHolder extends RecyclerView.ViewHolder {
         TextView tvTitle;
         TextView tvTime;
+        TextView tvDescription;
+        Button btnDetails;
+        LinearLayout lnlDescription;
+        LinearLayout lnlItemTinTuc;
         AppCompatRatingBar rtbLevel;
 
         public NewsHolder(View v) {
             super(v);
             tvTitle = (TextView) v.findViewById(R.id.tv_title);
             tvTime = (TextView) v.findViewById(R.id.tv_time);
+            tvDescription = (TextView) v.findViewById(R.id.tv_description);
+            btnDetails = (Button) v.findViewById(R.id.btn_details);
+            lnlDescription = (LinearLayout) v.findViewById(R.id.lnl_description);
+            lnlItemTinTuc = (LinearLayout) v.findViewById(R.id.lnl_item_tintuc);
             rtbLevel = (AppCompatRatingBar) v.findViewById(R.id.rtb_level);
         }
     }

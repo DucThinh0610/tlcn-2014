@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main;
+package com.tlcn.mvpapplication.mvp.Main.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

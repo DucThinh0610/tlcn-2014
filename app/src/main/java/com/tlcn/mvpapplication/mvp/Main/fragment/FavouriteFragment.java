@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main;
+package com.tlcn.mvpapplication.mvp.Main.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.Main.adapter.NewsAdapter;
-import com.tlcn.mvpapplication.mvp.Main.presenter.FavouritePresenter;
-import com.tlcn.mvpapplication.mvp.Main.view.IFavouriteView;
+import com.tlcn.mvpapplication.mvp.Main.fragment.presenter.FavouritePresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

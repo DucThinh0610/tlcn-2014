@@ -3,7 +3,8 @@ package com.tlcn.mvpapplication.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 /**
  * Created by tskil on 9/12/2017.

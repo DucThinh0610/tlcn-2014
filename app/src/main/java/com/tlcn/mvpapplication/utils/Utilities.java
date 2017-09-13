@@ -33,11 +33,10 @@ public class Utilities {
     }
 
     public static String getTimeAgo(Context context,Date startDate) {
-        Date endDate = (Date) Calendar.getInstance().getTime();
+        Date endDate = Calendar.getInstance().getTime();
         String result = "";
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
-
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -70,13 +69,13 @@ public class Utilities {
             result = elapsedWeeks+" "+context.getString(R.string.week)+" "+context.getString(R.string.ago);
         }
         else if(elapsedDays >= 1){
-            result = elapsedDays+" "+context.getString(R.string.year)+" "+context.getString(R.string.ago);
+            result = elapsedDays+" "+context.getString(R.string.day)+" "+context.getString(R.string.ago);
         }
         else if(elapsedHours >= 1){
-            result = elapsedHours+" "+context.getString(R.string.year)+" "+context.getString(R.string.ago);
+            result = elapsedHours+" "+context.getString(R.string.hour)+" "+context.getString(R.string.ago);
         }
         else if(elapsedMinutes >= 1){
-            result = elapsedMinutes+" "+context.getString(R.string.year)+" "+context.getString(R.string.ago);
+            result = elapsedMinutes+" "+context.getString(R.string.minute)+" "+context.getString(R.string.ago);
         }
         else{
             result = context.getString(R.string.now);

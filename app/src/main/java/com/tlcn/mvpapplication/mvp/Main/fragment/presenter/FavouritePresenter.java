@@ -1,11 +1,12 @@
-package com.tlcn.mvpapplication.mvp.Main.presenter;
+package com.tlcn.mvpapplication.mvp.Main.fragment.presenter;
 
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
-import com.tlcn.mvpapplication.mvp.Main.view.IFavouriteView;
+import com.tlcn.mvpapplication.mvp.Main.fragment.IFavouriteView;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,7 +42,10 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void getNewsInfo(String idNews) {
         getView().showLoading();
-        news = new News("1","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2017,9,12,9,30,30);
+        Date date = calendar.getTime();
+        news = new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao");
         getView().getNewsSuccess();
         getView().hideLoading();
     }
@@ -49,10 +53,13 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void getListNews() {
         getView().showLoading();
-        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
-        list.add(new News("2","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
-        list.add(new News("3","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
-        list.add(new News("4","Kẹt xe tại ngã tư hàng xanh",4,new Date(2017,9,13),"Kẹt xe rất cao"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2017,8,12);
+        Date date = calendar.getTime();
+        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
+        list.add(new News("2","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
+        list.add(new News("3","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
+        list.add(new News("4","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
         getView().getListNewsSuccess();
         getView().hideLoading();
     }
