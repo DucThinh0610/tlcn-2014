@@ -99,10 +99,14 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.lnl_home:
-                startActivityForResult(new Intent(getContext(), ChooseLocationView.class),101);
+                Intent intent = new Intent(getContext(), ChooseLocationView.class);
+                intent.putExtra("title","Nhà riêng");
+                startActivityForResult(intent,101);
                 break;
             case R.id.lnl_work:
-                startActivityForResult(new Intent(getContext(), ChooseLocationView.class),102);
+                Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
+                intent2.putExtra("title","Công ty");
+                startActivityForResult(intent2,102);
                 break;
             case R.id.tv_add:
                 break;

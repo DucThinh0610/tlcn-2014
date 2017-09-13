@@ -22,4 +22,19 @@
     <string name="year">năm</string>
     <string name="ago">trước</string>
     <string name="now">Vừa xong</string>
+
+    <string name="choose_location_on_map">Chọn trên bản đồ</string>
+    <string name="drag_or_zoom_map">Kéo bản đồ hoặc thu phóng</string>
+    <string name="save">Lưu</string>
+    <string name="view_details">Xem chi tiết</string>
+    <string name="view_info">Xem thông tin</string>
+    <string name="direct">Chỉ đường</string>
+    <string name="related_location">Vị trí quan tâm</string>
+    <string name="related_news">Tin tức quan tâm</string>
+    <string name="add">Thêm</string>
+    <string name="house">Nhà riêng</string>
+    <string name="add_location_house">Thêm vị trí nhà riêng</string>
+    <string name="work">Công ty</string>
+    <string name="add_location_work">Thêm vị trí công ty</string>
 </resources>
+

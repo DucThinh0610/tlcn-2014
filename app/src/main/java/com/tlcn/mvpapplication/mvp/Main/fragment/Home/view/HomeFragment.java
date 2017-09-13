@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +82,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     EditTextCustom editSearch;
     @Bind(R.id.rcv_search)
     RecyclerView rcvSearch;
+    @Bind(R.id.rl_location)
+    RelativeLayout rlLocation;
+
     private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
@@ -134,7 +138,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         mGoogleMap.setOnCameraIdleListener(this);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
-                mLastKnownLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM));
             }
@@ -180,7 +183,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     private void initListener() {
         imvMenu.setOnClickListener(this);
         fsdFloating.addOnMenuItemClickListener(this);
-        imvGetLocation.setOnClickListener(this);
+        rlLocation.setOnClickListener(this);
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -220,7 +223,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             case R.id.imv_menu:
                 drlContainer.openDrawer(Gravity.START);
                 break;
-            case R.id.imv_location: {
+            case R.id.rl_location: {
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15f);
                 mGoogleMap.animateCamera(cameraUpdate);
             }

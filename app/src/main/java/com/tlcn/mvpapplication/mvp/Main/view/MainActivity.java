@@ -39,7 +39,7 @@ public class MainActivity extends BottomBarHolderActivity {
         NavigationPage page1 = new NavigationPage("Trang chủ", ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
         NavigationPage page2 = new NavigationPage("Quan tâm", ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
         NavigationPage page3 = new NavigationPage("Tin tức", ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
-        NavigationPage page4 = new NavigationPage("Đóng góp", ContextCompat.getDrawable(this, R.mipmap.ic_setting), ContributeFragment.newInstance());
+        NavigationPage page4 = new NavigationPage("Đóng góp", ContextCompat.getDrawable(this, R.mipmap.ic_contribute), ContributeFragment.newInstance());
         // add them in a list
         List<NavigationPage> navigationPages = new ArrayList<>();
         navigationPages.add(page1);

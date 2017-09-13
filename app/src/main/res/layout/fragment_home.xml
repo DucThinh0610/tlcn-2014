@@ -22,6 +22,7 @@
             tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity" />
 
         <RelativeLayout
+            android:id="@+id/rl_location"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_alignParentRight="true"
@@ -80,7 +81,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_menu_black_24dp" />
+                    android:src="@drawable/ic_menu_main" />
 
                 <ImageView
                     android:id="@+id/imv_back"
@@ -90,7 +91,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_arrow_back"
+                    android:src="@drawable/ic_arrow_back_main"
                     android:visibility="gone" />
             </FrameLayout>
 

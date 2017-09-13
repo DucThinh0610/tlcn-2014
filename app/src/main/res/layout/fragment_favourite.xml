@@ -31,7 +31,7 @@
                     android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/ic_my_location_black"
                     android:gravity="center"
-                    android:text=" Vị trí quan tâm"
+                    android:text="@string/related_location"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
@@ -43,7 +43,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:text="Thêm"
+                    android:text="@string/add"
                     android:textColor="@color/color_main"
                     android:textSize="15sp" />
             </RelativeLayout>
@@ -83,16 +83,17 @@
                         android:paddingLeft="10dp">
 
                         <TextView
+                            android:id="@+id/textView2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nhà riêng"
+                            android:text="@string/house"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Thêm địa chỉ nhà riêng" />
+                            android:text="@string/add_location_house" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -126,14 +127,14 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Công ty"
+                            android:text="@string/work"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Thêm địa chỉ công ty" />
+                            android:text="@string/add_location_work" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -159,7 +160,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text=" Tin tức quan tâm"
+                    android:text="@string/related_news"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 

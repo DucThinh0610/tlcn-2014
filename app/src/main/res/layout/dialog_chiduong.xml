@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Xem thông tin"
+                    android:text="@string/view_info"
                     android:textSize="15sp" />
             </LinearLayout>
             <LinearLayout
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Chỉ đường"
+                    android:text="@string/direct"
                     android:textSize="15sp" />
             </LinearLayout>
 
