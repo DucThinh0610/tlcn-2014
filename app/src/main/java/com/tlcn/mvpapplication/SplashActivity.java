@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
             // Marshmallow+
             insertDummyContactWrapper();
         } else {
-            handler.postDelayed(waitTask, 3000);
+            handler.postDelayed(waitTask, 1000);
         }
         generateHashkey();
     }

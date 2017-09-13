@@ -17,6 +17,7 @@
         android:theme="@style/MyAppTheme">
         <activity android:name=".mvp.User.view.UserView"/>
         <activity android:name=".mvp.Main.view.MainActivity"/>
+        <activity android:name=".mvp.ChooseLocation.view.ChooseLocationView"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

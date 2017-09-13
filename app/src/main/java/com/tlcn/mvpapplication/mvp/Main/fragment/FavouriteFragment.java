@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.Main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.mvp.ChooseLocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.Main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.Main.fragment.presenter.FavouritePresenter;
 
@@ -20,13 +24,19 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/24/2017.
  */
 
-public class FavouriteFragment extends Fragment implements IFavouriteView {
+public class FavouriteFragment extends Fragment implements IFavouriteView, View.OnClickListener {
     public static FavouriteFragment newInstance() {
         return new FavouriteFragment();
     }
 
     @Bind(R.id.rcv_favourite)
     RecyclerView rcvFavourite;
+    @Bind(R.id.lnl_home)
+    LinearLayout lnlHome;
+    @Bind(R.id.lnl_work)
+    LinearLayout lnlWork;
+    @Bind(R.id.tv_add)
+    TextView tvAdd;
 
     FavouritePresenter mPresenter = new FavouritePresenter();
     NewsAdapter newsAdapter;
@@ -47,6 +57,9 @@ public class FavouriteFragment extends Fragment implements IFavouriteView {
 
     private void initListener(View v) {
         //các sự kiện click view được khai báo ở đây
+        lnlHome.setOnClickListener(this);
+        lnlWork.setOnClickListener(this);
+        tvAdd.setOnClickListener(this);
     }
 
     private void initData(View v) {
@@ -56,7 +69,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView {
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new NewsAdapter(getContext(),mPresenter.getListNewsResult());
+            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult());
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }
@@ -80,5 +93,19 @@ public class FavouriteFragment extends Fragment implements IFavouriteView {
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.lnl_home:
+                startActivityForResult(new Intent(getContext(), ChooseLocationView.class),101);
+                break;
+            case R.id.lnl_work:
+                startActivityForResult(new Intent(getContext(), ChooseLocationView.class),102);
+                break;
+            case R.id.tv_add:
+                break;
+        }
     }
 }

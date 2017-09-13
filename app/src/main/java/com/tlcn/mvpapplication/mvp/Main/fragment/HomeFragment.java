@@ -28,10 +28,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -81,8 +79,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     RecyclerView rcvSearch;
     private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
-    private static final LatLngBounds HCM = new LatLngBounds(
-            new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
+    private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
