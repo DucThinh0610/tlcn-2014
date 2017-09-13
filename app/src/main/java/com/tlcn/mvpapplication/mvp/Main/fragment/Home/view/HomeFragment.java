@@ -41,9 +41,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
+import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.Main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.Main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
+import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import butterknife.Bind;
@@ -77,6 +79,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     EditTextCustom editSearch;
     @Bind(R.id.rcv_search)
     RecyclerView rcvSearch;
+    private DialogProgress mProgressDialog;
     private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
@@ -263,5 +266,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onFail(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoading() {
+        showDialogLoading();
+    }
+
+    @Override
+    public void hideLoading() {
+        dismissDialogLoading();
+    }
+
+    protected void showDialogLoading() {
+        dismissDialogLoading();
+        mProgressDialog = DialogUtils.showProgressDialog(getContext());
+    }
+
+    protected void dismissDialogLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

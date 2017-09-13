@@ -153,4 +153,14 @@ public class ChooseLocationView extends AppCompatActivity implements
         rcvSearch.setVisibility(View.GONE);
         mPresenter.getDetailPlace(placeId);
     }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
 }
