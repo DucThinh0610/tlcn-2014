@@ -118,15 +118,15 @@
             android:layout_margin="10dp"
             android:id="@+id/cv_choose_on_map"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="60dp">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:padding="12.5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="15dp"
                     android:src="@drawable/ic_map_main"
                     />
                 <TextView
@@ -134,7 +134,9 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
+                    android:textSize="18sp"
                     android:text="Chọn trên bản đồ"
+                    android:textColor="@color/color_main"
                     />
             </LinearLayout>
         </android.support.v7.widget.CardView>

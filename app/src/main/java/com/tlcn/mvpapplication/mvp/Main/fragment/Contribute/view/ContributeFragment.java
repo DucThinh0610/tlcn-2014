@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment.Setting.view;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Contribute.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,9 +13,9 @@ import com.tlcn.mvpapplication.R;
  * Created by tskil on 8/23/2017.
  */
 
-public class SettingFragment extends Fragment {
-    public static SettingFragment newInstance() {
-        return new SettingFragment();
+public class ContributeFragment extends Fragment {
+    public static ContributeFragment newInstance() {
+        return new ContributeFragment();
     }
 
     @Nullable
