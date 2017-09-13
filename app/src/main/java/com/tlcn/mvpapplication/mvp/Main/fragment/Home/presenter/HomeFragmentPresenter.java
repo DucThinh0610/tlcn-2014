@@ -79,16 +79,19 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
             getView().onFail("Null");
             return;
         }
+        getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
                 "AIzaSyDfcXtZwtuMYSZWe6LxP3V6k3WcbAwyetc").enqueue(new Callback<Direction>() {
             @Override
             public void onResponse(Call<Direction> call, Response<Direction> response) {
+                getView().hideLoading();
                 Log.d("Result", response.body().toString());
             }
 
             @Override
             public void onFailure(Call<Direction> call, Throwable t) {
+                getView().hideLoading();
                 Log.d("OnFail", t.getMessage());
             }
         });

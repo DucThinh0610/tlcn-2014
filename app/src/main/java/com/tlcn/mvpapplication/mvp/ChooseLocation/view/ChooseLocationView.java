@@ -52,7 +52,8 @@ public class ChooseLocationView extends AppCompatActivity implements
         IChooseLocationView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        PlaceSearchAdapter.OnItemClick, OnMapReadyCallback {
+        PlaceSearchAdapter.OnItemClick,
+        OnMapReadyCallback {
 
     //Todo: Binding
     @Bind(R.id.imv_back_activity)
@@ -247,5 +248,14 @@ public class ChooseLocationView extends AppCompatActivity implements
             }
         }
         mGoogleMap.setMyLocationEnabled(true);
+    }
+
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
     }
 }
