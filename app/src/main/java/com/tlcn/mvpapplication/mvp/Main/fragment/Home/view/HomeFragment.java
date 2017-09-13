@@ -57,11 +57,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
+        GoogleMap.OnCameraIdleListener,
         IHomeFragmentView {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
+
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
 
     @Bind(R.id.imv_menu)
     ImageView imvMenu;
@@ -86,6 +90,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     GPSTracker gpsTracker;
     boolean isFirst = true;
     SupportMapFragment supportMapFragment;
+    LatLng mCurrentLocation,mCameraPosition,mLastKnownLocation;
 
     @Nullable
     @Override
@@ -102,14 +107,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mGoogleMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mGoogleMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnCameraIdleListener(this);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
+                mLastKnownLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM));
             }
@@ -263,5 +288,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onFail(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCameraIdle() {
+        mLastKnownLocation = mGoogleMap.getCameraPosition().target;
     }
 }

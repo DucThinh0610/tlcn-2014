@@ -14,7 +14,7 @@ import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view.FavouriteFragment;
 import com.tlcn.mvpapplication.mvp.Main.fragment.Home.view.HomeFragment;
 import com.tlcn.mvpapplication.mvp.Main.fragment.News.view.NewsFragment;
-import com.tlcn.mvpapplication.mvp.Main.fragment.Setting.view.SettingFragment;
+import com.tlcn.mvpapplication.mvp.Main.fragment.Contribute.view.ContributeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class MainActivity extends BottomBarHolderActivity {
         NavigationPage page1 = new NavigationPage("Trang chủ", ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
         NavigationPage page2 = new NavigationPage("Quan tâm", ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
         NavigationPage page3 = new NavigationPage("Tin tức", ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
-        NavigationPage page4 = new NavigationPage("Cài đặt", ContextCompat.getDrawable(this, R.mipmap.ic_setting), SettingFragment.newInstance());
+        NavigationPage page4 = new NavigationPage("Đóng góp", ContextCompat.getDrawable(this, R.mipmap.ic_setting), ContributeFragment.newInstance());
         // add them in a list
         List<NavigationPage> navigationPages = new ArrayList<>();
         navigationPages.add(page1);
