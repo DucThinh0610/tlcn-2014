@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.presenter;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view.IFavouriteView;
@@ -56,11 +57,27 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017,8,12);
         Date date = calendar.getTime();
-        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
-        list.add(new News("2","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
-        list.add(new News("3","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
-        list.add(new News("4","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao"));
+        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt nhiều xe tải tại giao lộ của ngã tư"));
+        list.add(new News("2","Kẹt xe tại Phạm Văn Đồng",3,date,"Đèn đỏ trục trặc khiến giao thông ùn tắc"));
+        list.add(new News("3","Kẹt xe tại Lê Văn Việt",1,date,"Kẹt xe tại điểm giao giữa Đình phong phú và Lê văn việt"));
+        list.add(new News("4","Kẹt xe tại ngã tư Bình Thái",5,date,"Kẹt xe rất đông"));
         getView().getListNewsSuccess();
         getView().hideLoading();
     }
+
+    @Override
+    public void setHouseLocation(LatLng location) {
+
+    }
+
+    @Override
+    public void setWorkLocation(LatLng location) {
+
+    }
+
+    @Override
+    public void setOtherLocation(LatLng location) {
+
+    }
+
 }

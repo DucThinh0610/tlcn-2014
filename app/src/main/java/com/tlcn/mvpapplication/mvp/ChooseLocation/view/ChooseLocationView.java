@@ -82,14 +82,14 @@ public class ChooseLocationView extends AppCompatActivity implements
     TextView tvTitleCOM;
 
     //Todo: Declaring
-    SupportMapFragment supportMapFragment;
-    ChooseLocationPresenter mPresenter = new ChooseLocationPresenter();
+    private SupportMapFragment supportMapFragment;
+    private ChooseLocationPresenter mPresenter = new ChooseLocationPresenter();
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private PlaceSearchAdapter mAdapter;
-    GoogleMap mGoogleMap;
-    GPSTracker gpsTracker;
-    boolean isFirst = true;
-
+    private GoogleMap mGoogleMap;
+    private GPSTracker gpsTracker;
+    private boolean isFirst = true;
+    private LatLng location;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,17 +156,20 @@ public class ChooseLocationView extends AppCompatActivity implements
                 finish();
                 break;
             case R.id.tv_save:
-                Intent intent = new Intent();
-                intent.putExtra("latitude", mGoogleMap.getCameraPosition().target.latitude);
-                intent.putExtra("longitude", mGoogleMap.getCameraPosition().target.longitude);
-                setResult(101, intent);
-                finish();
+                if(location != null) {
+                    Intent intent = new Intent();
+                    intent.putExtra("latitude", location.latitude);
+                    intent.putExtra("longitude", location.longitude);
+                    setResult(101, intent);
+                    finish();
+                }
+                else finish();
                 break;
             case R.id.tv_save_com:
                 Intent intent2 = new Intent();
                 intent2.putExtra("latitude", mGoogleMap.getCameraPosition().target.latitude);
                 intent2.putExtra("longitude", mGoogleMap.getCameraPosition().target.longitude);
-                setResult(101, intent2);
+                setResult(102, intent2);
                 finish();
                 break;
             case R.id.cv_choose_on_map:
@@ -205,7 +208,7 @@ public class ChooseLocationView extends AppCompatActivity implements
 
     @Override
     public void getDetailPlaceSuccess(PlaceBuffer places) {
-
+        location = places.get(0).getLatLng();
     }
 
     @Override

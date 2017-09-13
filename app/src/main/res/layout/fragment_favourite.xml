@@ -57,7 +57,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/lnl_home"
+                    android:id="@+id/lnl_house"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -91,6 +91,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_location_house"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/add_location_house" />
@@ -132,6 +133,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_location_work"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/add_location_work" />

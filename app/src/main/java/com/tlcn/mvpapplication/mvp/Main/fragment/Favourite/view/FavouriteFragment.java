@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.ChooseLocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.Main.adapter.NewsAdapter;
@@ -29,18 +31,55 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         return new FavouriteFragment();
     }
 
+    //Todo: Binding
     @Bind(R.id.rcv_favourite)
     RecyclerView rcvFavourite;
-    @Bind(R.id.lnl_home)
-    LinearLayout lnlHome;
+    @Bind(R.id.lnl_house)
+    LinearLayout lnlHouse;
     @Bind(R.id.lnl_work)
     LinearLayout lnlWork;
     @Bind(R.id.tv_add)
     TextView tvAdd;
+    @Bind(R.id.tv_location_house)
+    TextView tvLocationHouse;
+    @Bind(R.id.tv_location_work)
+    TextView tvLocationWork;
 
+    //Todo: Declaring
     FavouritePresenter mPresenter = new FavouritePresenter();
     NewsAdapter newsAdapter;
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            //Todo: House
+            if (resultCode == 101 || resultCode == 102) {
+                if (data.getExtras() != null) {
+                    LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                    mPresenter.setHouseLocation(location);
+                    tvLocationHouse.setText(getString(R.string.have_set));
+                }
+            }
+        } else if (requestCode == 102) {
+            //Todo: Work
+            if (resultCode == 101 || resultCode == 102) {
+                if (data.getExtras() != null) {
+                    LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                    mPresenter.setWorkLocation(location);
+                    tvLocationWork.setText(getString(R.string.have_set));
+                }
+            }
+        } else {
+            //Todo: Other
+            if (resultCode == 101 || resultCode == 102) {
+                if (data.getExtras() != null) {
+                    LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                    mPresenter.setOtherLocation(location);
+                }
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -57,7 +96,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     private void initListener(View v) {
         //các sự kiện click view được khai báo ở đây
-        lnlHome.setOnClickListener(this);
+        lnlHouse.setOnClickListener(this);
         lnlWork.setOnClickListener(this);
         tvAdd.setOnClickListener(this);
     }
@@ -97,19 +136,29 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.lnl_home:
-                Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                intent.putExtra("title",getString(R.string.house));
-                startActivityForResult(intent,101);
+        switch (view.getId()) {
+            case R.id.lnl_house:
+                if (!tvLocationHouse.getText().equals(getString(R.string.have_set))) {
+                    Intent intent = new Intent(getContext(), ChooseLocationView.class);
+                    intent.putExtra("title", getString(R.string.house));
+                    startActivityForResult(intent, 101);
+                } else
+                    showDialog();
                 break;
             case R.id.lnl_work:
-                Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
-                intent2.putExtra("title",getString(R.string.work));
-                startActivityForResult(intent2,102);
+                if (!tvLocationHouse.getText().equals(getString(R.string.have_set))) {
+                    Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
+                    intent2.putExtra("title", getString(R.string.work));
+                    startActivityForResult(intent2, 102);
+                } else showDialog();
                 break;
             case R.id.tv_add:
                 break;
         }
+    }
+
+    private void showDialog() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.show();
     }
 }
