@@ -1,6 +1,5 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment.presenter;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Home.presenter;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,13 +9,12 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Direction;
-import com.tlcn.mvpapplication.mvp.Main.fragment.IHomeFragmentView;
+import com.tlcn.mvpapplication.mvp.Main.fragment.Home.view.IHomeFragmentView;
 
 import retrofit2.Call;
 import retrofit2.Callback;

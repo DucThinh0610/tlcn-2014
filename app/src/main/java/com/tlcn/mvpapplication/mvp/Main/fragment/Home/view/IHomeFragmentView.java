@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Home.view;
 
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.tlcn.mvpapplication.base.IView;

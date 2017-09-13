@@ -1,6 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment.presenter;
-
-import com.google.android.gms.maps.model.LatLng;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Home.presenter;
 
 /**
  * Created by ducthinh on 12/09/2017.

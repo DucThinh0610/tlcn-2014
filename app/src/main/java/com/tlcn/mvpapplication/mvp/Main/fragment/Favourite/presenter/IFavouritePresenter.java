@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment.presenter;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.presenter;
 
 /**
  * Created by tskil on 9/12/2017.

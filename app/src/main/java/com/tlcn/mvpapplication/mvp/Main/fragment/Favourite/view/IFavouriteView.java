@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view;
 
 import com.tlcn.mvpapplication.base.IView;
 

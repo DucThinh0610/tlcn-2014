@@ -1,8 +1,8 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment.presenter;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.presenter;
 
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
-import com.tlcn.mvpapplication.mvp.Main.fragment.IFavouriteView;
+import com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view.IFavouriteView;
 
 import java.util.ArrayList;
 import java.util.Calendar;

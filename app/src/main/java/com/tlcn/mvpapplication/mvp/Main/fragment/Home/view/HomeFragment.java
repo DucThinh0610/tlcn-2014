@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Home.view;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -42,7 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.mvp.Main.adapter.PlaceSearchAdapter;
-import com.tlcn.mvpapplication.mvp.Main.fragment.presenter.HomeFragmentPresenter;
+import com.tlcn.mvpapplication.mvp.Main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.Utilities;
 

@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.mvp.Main.fragment;
+package com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.ChooseLocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.Main.adapter.NewsAdapter;
-import com.tlcn.mvpapplication.mvp.Main.fragment.presenter.FavouritePresenter;
+import com.tlcn.mvpapplication.mvp.Main.fragment.Favourite.presenter.FavouritePresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
