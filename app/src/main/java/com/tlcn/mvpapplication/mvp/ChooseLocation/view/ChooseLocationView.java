@@ -62,9 +62,10 @@ public class ChooseLocationView extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_location);
         ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        mPresenter.onCreate();
         initData();
         initListener();
-        mPresenter.attachView(this);
     }
 
     private void initListener() {
