@@ -192,7 +192,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            tools:context="com.tlcn.mvpapplication.mvp.ChooseLocation.view.ChooseLocationView" />
+            tools:context="com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView" />
         <FrameLayout
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"

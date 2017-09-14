@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            tools:context="com.tlcn.mvpapplication.mvp.Main.view.MainActivity" />
+            tools:context="com.tlcn.mvpapplication.mvp.main.view.MainActivity" />
 
         <RelativeLayout
             android:id="@+id/rl_location"

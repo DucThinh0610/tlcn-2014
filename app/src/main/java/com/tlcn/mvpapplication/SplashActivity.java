@@ -13,7 +13,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.tlcn.mvpapplication.mvp.Main.view.MainActivity;
+import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.security.MessageDigest;
