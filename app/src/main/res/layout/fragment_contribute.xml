@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/color_main"
@@ -33,12 +34,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,38 +58,44 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="Vị trí kẹt xe*"
+                    android:text="@string/traffic_jam_location"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp">
+
                 <RadioGroup
+                    android:id="@+id/rdg_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:buttonTint="@color/color_main"
+                        android:id="@+id/rdb_currnet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Hiện tại" />
+                        android:buttonTint="@color/color_main"
+                        android:checked="true"
+                        android:text="@string/current" />
 
                     <RadioButton
-                        android:buttonTint="@color/color_main"
+                        android:id="@+id/rdb_other"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Khác (Chọn bản đồ)" />
+                        android:buttonTint="@color/color_main"
+                        android:text="@string/other_choose_map" />
                 </RadioGroup>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,41 +121,48 @@
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
                 <com.xw.repo.BubbleSeekBar
-                    app:bsb_section_count="2"
-                    app:bsb_touch_to_seek="true"
-                    app:bsb_show_section_mark="true"
+                    android:id="@+id/sb_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:bsb_bubble_color="@color/color_main"
                     app:bsb_second_track_color="@color/color_main"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    app:bsb_section_count="2"
+                    app:bsb_show_section_mark="true"
+                    app:bsb_touch_to_seek="true" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:text="Thấp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="@string/low"
+                        android:textColor="@color/black" />
+
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Trung bình"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:text="@string/medium"
+                        android:textColor="@color/black" />
+
                     <TextView
-                        android:layout_alignParentRight="true"
-                        android:text="Cao"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/high"
+                        android:textColor="@color/black" />
                 </RelativeLayout>
             </LinearLayout>
-
-
 
 
             <LinearLayout
@@ -169,7 +183,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="Mô tả chi tiết"
+                    android:text="@string/detailed_description"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -180,12 +194,13 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:id="@+id/edt_description"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/bg_edittext_contribute"
                     android:gravity="left"
-                    android:hint="Nhập nội dung (nếu có)"
+                    android:hint="@string/enter_content_if_available"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -210,7 +225,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="Thông tin đính kèm"
+                    android:text="@string/attached_information"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -228,6 +243,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/imv_take_photo"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
@@ -240,7 +256,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="Chụp ảnh"
+                        android:text="@string/take_photo"
                         android:textColor="@color/color_main" />
                 </LinearLayout>
 
@@ -251,6 +267,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/imv_video"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
@@ -263,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="Quay phim"
+                        android:text="@string/video"
                         android:textColor="@color/color_main" />
                 </LinearLayout>
 
@@ -274,6 +291,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/imv_gallery"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
@@ -286,21 +304,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="Thư viện"
+                        android:text="@string/gallery"
                         android:textColor="@color/color_main" />
                 </LinearLayout>
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp">
 
                 <Button
+                    android:id="@+id/btn_send"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/custom_button_send_contribution"
-                    android:text="Gửi"
+                    android:text="@string/send"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
             </RelativeLayout>
