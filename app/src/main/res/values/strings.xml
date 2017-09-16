@@ -40,5 +40,19 @@
     <string name="have_set">Đã cài đặt</string>
     <string name="latest_news">Tin tức mới nhất</string>
     <string name="contribute">Đóng góp</string>
+    <string name="traffic_jam_location">Vị trí kẹt xe*</string>
+    <string name="current">Hiện tại</string>
+    <string name="other_choose_map">Khác (Chọn bản đồ)</string>
+    <string name="level_traffic_jam">Mức độ kẹt xe*</string>
+    <string name="low">Thấp</string>
+    <string name="medium">Trung bình</string>
+    <string name="high">Cao</string>
+    <string name="detailed_description">Mô tả chi tiết</string>
+    <string name="enter_content_if_available">Nhập nội dung (nếu có)</string>
+    <string name="attached_information">Thông tin đính kèm</string>
+    <string name="take_photo">Chụp ảnh</string>
+    <string name="video">Quay phim</string>
+    <string name="gallery">Thư viện</string>
+    <string name="send">Gửi</string>
 </resources>
 
