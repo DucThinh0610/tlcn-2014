@@ -29,7 +29,7 @@ public class ContributeFragment extends Fragment implements IContributeView{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_setting, container, false);
+        View v = inflater.inflate(R.layout.fragment_contribute, container, false);
         ButterKnife.bind(this, v);
         initData(v);
         initListener(v);
@@ -55,6 +55,16 @@ public class ContributeFragment extends Fragment implements IContributeView{
 
     @Override
     public void hideLoading() {
+
+    }
+
+    @Override
+    public void sendContributionSuccess() {
+
+    }
+
+    @Override
+    public void onFail(String message) {
 
     }
 }

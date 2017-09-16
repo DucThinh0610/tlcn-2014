@@ -26,6 +26,6 @@
     <color name="grey_divider">#CFCFCF</color>
     <color name="black">#000000</color>
     <color name="grey">#F2F2F2</color>
-
+    <color name="grey_bold">#DADADA</color>
     <color name="color_transparent">#00000000</color>
 </resources>

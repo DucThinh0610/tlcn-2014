@@ -7,4 +7,7 @@ import com.tlcn.mvpapplication.base.IView;
  */
 
 public interface IContributeView extends IView {
+    void sendContributionSuccess();
+
+    void onFail(String message);
 }
