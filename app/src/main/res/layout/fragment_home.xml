@@ -5,7 +5,9 @@
     android:id="@+id/drl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,9 +27,9 @@
             android:id="@+id/rl_location"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/rlt_search"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/oval_imv_grey"
             android:gravity="center"

@@ -8,11 +8,13 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
+import com.tlcn.mvpapplication.caches.storage.MapStorage;
 import com.tlcn.mvpapplication.model.Direction;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeFragmentView;
 
@@ -37,6 +39,17 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
 
     private GoogleApiClient mGoogleApiClient;
 
+    private CameraPosition mCameraPosition;
+
+    public void setCameraPosition(CameraPosition cameraPosition) {
+        this.mCameraPosition = cameraPosition;
+        MapStorage.getInstance().setCameraPosition(cameraPosition);
+    }
+
+    public CameraPosition getCameraPosition() {
+        return mCameraPosition;
+    }
+
     public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
     }
@@ -47,6 +60,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         if (App.getGoogleApiHelper().isConnected()) {
             mGoogleApiClient = App.getGoogleApiHelper().getGoogleApiClient();
         }
+        mCameraPosition = MapStorage.getInstance().getCameraPosition();
     }
 
     public void attachView(IHomeFragmentView view) {
@@ -82,7 +96,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
-                "AIzaSyDfcXtZwtuMYSZWe6LxP3V6k3WcbAwyetc").enqueue(new Callback<Direction>() {
+                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig").enqueue(new Callback<Direction>() {
             @Override
             public void onResponse(Call<Direction> call, Response<Direction> response) {
                 getView().hideLoading();

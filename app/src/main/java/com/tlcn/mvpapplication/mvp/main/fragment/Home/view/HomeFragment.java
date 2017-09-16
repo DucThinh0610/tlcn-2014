@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -97,7 +98,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     GPSTracker gpsTracker;
     boolean isFirst = true;
     SupportMapFragment supportMapFragment;
-    LatLng mCurrentLocation, mCameraPosition, mLastKnownLocation;
 
     @Nullable
     @Override
@@ -114,24 +114,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mGoogleMap != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, mGoogleMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            super.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -142,7 +124,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM));
+                CameraUpdate cameraUpdate;
+                if (mPresenter.getCameraPosition() == null) {
+                    cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM);
+                } else {
+                    cameraUpdate = CameraUpdateFactory.newCameraPosition(mPresenter.getCameraPosition());
+                }
+                mGoogleMap.moveCamera(cameraUpdate);
             }
         }
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -318,7 +306,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    @Override
     public void onCameraIdle() {
-        mLastKnownLocation = mGoogleMap.getCameraPosition().target;
+        mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
     }
 }
