@@ -169,7 +169,6 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     }
 
     public interface OnItemClick {
-
         void onClickItem(String id, String idName);
     }
 }

@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,8 @@ public class Location implements Serializable {
     @Expose
     private Double lng;
 
+    private LatLng latLng;
+
     public Double getLat() {
         return lat;
     }
@@ -31,5 +34,10 @@ public class Location implements Serializable {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public LatLng getLatLag() {
+        latLng = new LatLng(lat, lng);
+        return latLng;
     }
 }

@@ -5,7 +5,6 @@ import android.app.Application;
 public class App extends Application {
     private GoogleApiHelper googleApiHelper;
     private static App mInstance;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,5 +24,4 @@ public class App extends Application {
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();
     }
-
 }

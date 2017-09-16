@@ -10,32 +10,25 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 import com.tlcn.mvpapplication.api.network.ApiServices;
+import com.tlcn.mvpapplication.api.network.RestCallback;
+import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
-import com.tlcn.mvpapplication.model.Direction;
+import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeFragmentView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-/**
- * Created by ducthinh on 12/09/2017.
- */
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmentPresenter {
     private LatLng lngStart, lngEnd;
-
-    public void setLngStart(LatLng lngStart) {
-        this.lngStart = lngStart;
-    }
-
-    public void setLngEnd(LatLng lngEnd) {
-        this.lngEnd = lngEnd;
-    }
+    private List<Route> routes = new ArrayList<>();
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -52,6 +45,20 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
 
     public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
+    }
+
+    public void setLngStart(LatLng lngStart) {
+        this.lngStart = lngStart;
+    }
+
+    public void setLngEnd(LatLng lngEnd) {
+        this.lngEnd = lngEnd;
+    }
+
+    public List<Route> getRoutes() {
+        if (routes == null)
+            routes = new ArrayList<>();
+        return routes;
     }
 
     @Override
@@ -80,6 +87,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
             public void onResult(@NonNull PlaceBuffer places) {
                 if (places.getCount() == 1) {
                     getView().getDetailPlaceSuccess(places);
+                    places.release();
                 } else {
                     getView().onFail("Can't get detail place!");
                 }
@@ -96,17 +104,22 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
-                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig").enqueue(new Callback<Direction>() {
+                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig").enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
-            public void onResponse(Call<Direction> call, Response<Direction> response) {
+            public void success(GetDirectionResponse res) {
+                getView().onStartFindDirection();
+                if (routes != null) {
+                    routes.clear();
+                }
+                routes.addAll(res.getRoutes());
+                getView().getDirectionSuccess(routes);
                 getView().hideLoading();
-                Log.d("Result", response.body().toString());
             }
 
             @Override
-            public void onFailure(Call<Direction> call, Throwable t) {
+            public void failure(RestError error) {
+                getView().onFail(error.message);
                 getView().hideLoading();
-                Log.d("OnFail", t.getMessage());
             }
         });
     }

@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,19 +37,26 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,9 +75,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
-
-    private static final String KEY_CAMERA_POSITION = "camera_position";
-    private static final String KEY_LOCATION = "location";
 
     @Bind(R.id.imv_menu)
     ImageView imvMenu;
@@ -93,6 +98,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
+
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -178,7 +188,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -232,37 +241,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.v("Google API Callback", "Connection Done");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.v("Google API Callback", "Connection Suspended");
-        Log.v("Code", String.valueOf(i));
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v("Google API Callback", "Connection Failed");
-        Log.v("Error Code", String.valueOf(connectionResult.getErrorCode()));
-    }
-
-    @Override
     public void onClickItem(String placeId, String placeDetail) {
         editSearch.setText(placeDetail);
         rcvSearch.setVisibility(View.GONE);
         mPresenter.getDetailPlace(placeId);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -282,6 +264,51 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onFail(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void getDirectionSuccess(List<Route> routes) {
+        for (Route route : routes) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.getLeg().get(0).getStartLocation().getLatLag(), mGoogleMap.getCameraPosition().zoom));
+
+            originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                    .title(route.getLeg().get(0).getStartAddress())
+                    .position(route.getLeg().get(0).getStartLocation().getLatLag())));
+            destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                    .title(route.getLeg().get(0).getEndAddress())
+                    .position(route.getLeg().get(0).getEndLocation().getLatLag())));
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLUE).
+                    width(10);
+
+            for (int i = 0; i < route.getPoints().size(); i++)
+                polylineOptions.add(route.getPoints().get(i));
+
+            polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
+        }
+    }
+
+    @Override
+    public void onStartFindDirection() {
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline : polylinePaths) {
+                polyline.remove();
+            }
+        }
     }
 
     @Override
@@ -309,5 +336,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCameraIdle() {
         mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.v("Google API Callback", "Connection Done");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.v("Google API Callback", "Connection Suspended");
+        Log.v("Code", String.valueOf(i));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.v("Google API Callback", "Connection Failed");
+        Log.v("Error Code", String.valueOf(connectionResult.getErrorCode()));
     }
 }

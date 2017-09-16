@@ -74,4 +74,5 @@ dependencies {
     compile 'com.github.kobakei:MaterialFabSpeedDial:1.1.6'
     compile 'com.xw.repo:bubbleseekbar:3.7-lite'
     testCompile 'junit:junit:4.12'
+    compile 'javax.inject:javax.inject:1'
 }

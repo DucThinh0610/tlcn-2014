@@ -1,6 +1,6 @@
 package com.tlcn.mvpapplication.api.network;
 
-import com.tlcn.mvpapplication.model.Direction;
+import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
 import retrofit2.Call;
@@ -13,7 +13,7 @@ public interface ApiServices {
     Call<UserInfoGit> getUserInfo(@Path("user") String user);
 
     @GET("/maps/api/directions/json")
-    Call<Direction> getDirection(@Query("origin") String origin,
-                                 @Query("destination") String destination,
-                                 @Query("key") String key);
+    Call<GetDirectionResponse> getDirection(@Query("origin") String origin,
+                                            @Query("destination") String destination,
+                                            @Query("key") String key);
 }
