@@ -11,10 +11,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.ContributeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.FavouriteFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.HomeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.NewsFragment;
-import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.ContributeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
