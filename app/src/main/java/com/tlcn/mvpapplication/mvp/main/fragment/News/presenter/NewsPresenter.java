@@ -48,6 +48,7 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for(DataSnapshot data : listData){
                     News item = data.getValue(News.class);
