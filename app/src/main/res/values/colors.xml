@@ -28,4 +28,6 @@
     <color name="grey">#F2F2F2</color>
     <color name="grey_bold">#DADADA</color>
     <color name="color_transparent">#00000000</color>
+    <color name="color_polyline">#afafaf</color>
+    <color name="color_polyline_chose">#398fec</color>
 </resources>

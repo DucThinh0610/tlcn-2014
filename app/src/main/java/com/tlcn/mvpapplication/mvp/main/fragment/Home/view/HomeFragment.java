@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +42,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -70,7 +72,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeFragmentView {
+        IHomeFragmentView, GoogleMap.OnPolylineClickListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -156,6 +158,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 return false;
             }
         });
+        mGoogleMap.setOnPolylineClickListener(this);
     }
 
     private void showDialog() {
@@ -280,18 +283,32 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
-                    color(Color.BLUE).
-                    width(10);
+                    color(ContextCompat.getColor(getContext(), R.color.color_polyline)).
+                    width(20).clickable(true);
 
-            for (int i = 0; i < route.getPoints().size(); i++)
-                polylineOptions.add(route.getPoints().get(i));
+            for (LatLng latLng : route.getPoints()) {
+                polylineOptions.add(latLng);
+            }
 
             polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
+        }
+        for (int i=0;i<polylinePaths.size();i++){
+            Polyline item=polylinePaths.get(i);
+            if (i==0){
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
+                item.setZIndex(1.0f);
+            }
+            else {
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
+                item.setZIndex(0.0f);
+            }
         }
     }
 
     @Override
     public void onStartFindDirection() {
+        if (currentMarker != null)
+            currentMarker.remove();
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
                 marker.remove();
@@ -354,5 +371,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.v("Google API Callback", "Connection Failed");
         Log.v("Error Code", String.valueOf(connectionResult.getErrorCode()));
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        for (Polyline item : polylinePaths) {
+            if (polyline.getId().equals(item.getId())) {
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
+                item.setZIndex(1.0f);
+            } else {
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
+                item.setZIndex(0.0f);
+            }
+        }
     }
 }

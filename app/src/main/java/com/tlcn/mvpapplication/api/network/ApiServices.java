@@ -15,5 +15,6 @@ public interface ApiServices {
     @GET("/maps/api/directions/json")
     Call<GetDirectionResponse> getDirection(@Query("origin") String origin,
                                             @Query("destination") String destination,
-                                            @Query("key") String key);
+                                            @Query("key") String key,
+                                            @Query("alternatives") boolean alternatives);
 }

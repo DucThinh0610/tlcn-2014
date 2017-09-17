@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -10,8 +9,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
@@ -53,12 +50,6 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
 
     public void setLngEnd(LatLng lngEnd) {
         this.lngEnd = lngEnd;
-    }
-
-    public List<Route> getRoutes() {
-        if (routes == null)
-            routes = new ArrayList<>();
-        return routes;
     }
 
     @Override
@@ -104,7 +95,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
-                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig").enqueue(new RestCallback<GetDirectionResponse>() {
+                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig", true).enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
             public void success(GetDirectionResponse res) {
                 getView().onStartFindDirection();
