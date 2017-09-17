@@ -26,17 +26,24 @@ public class News {
     @SerializedName("description")
     @Expose
     private String description;
-
+    @SerializedName("num_like")
+    @Expose
+    private int numLike;
+    @SerializedName("num_dislike")
+    @Expose
+    private int numDislike;
     public News(){
 
     }
 
-    public News(String id, String title, float rating, Date created, String description) {
+    public News(String id, String title, float rating, Date created, String description ,int numLike ,int numDislike) {
         this.id = id;
         this.title = title;
         this.rating = rating;
         this.created = created;
         this.description = description;
+        this.numLike = numLike;
+        this.numDislike = numDislike;
     }
 
     public String getId() {
@@ -77,5 +84,21 @@ public class News {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getNumLike() {
+        return numLike;
+    }
+
+    public void setNumLike(int numLike) {
+        this.numLike = numLike;
+    }
+
+    public int getNumDislike() {
+        return numDislike;
+    }
+
+    public void setNumDislike(int numDislike) {
+        this.numDislike = numDislike;
     }
 }

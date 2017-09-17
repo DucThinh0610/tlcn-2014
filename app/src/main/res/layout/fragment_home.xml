@@ -120,50 +120,12 @@
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
+        app:menu="@menu/menu_navigation"
+        app:headerLayout="@layout/layout_header_navigation"
         android:id="@+id/nv_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/color_main">
-
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="175dp"
-                android:layout_height="35dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/custom_background_button_login"
-                android:text="@string/home_login_facebook"
-                android:textAllCaps="false"
-                android:textColor="@color/color_white" />
-
-            <LinearLayout
-                android:id="@+id/ll_login_success"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imv_image"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:src="@drawable/ic_logo" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:text="Hồ Quốc Hưng"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </RelativeLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

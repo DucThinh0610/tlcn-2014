@@ -20,9 +20,10 @@ import java.util.List;
  * Created by tskil on 9/12/2017.
  */
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
-    Context mContext;
-    List<News> list;
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
+    private Context mContext;
+    private List<News> list;
+
     @Override
     public NewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_list_tintuc, parent, false);
@@ -34,17 +35,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
         final News item = list.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.rtbLevel.setRating(item.getRating());
-        holder.tvTime.setText(Utilities.getTimeAgo(mContext,item.getCreated()));
+        holder.tvTime.setText(Utilities.getTimeAgo(mContext, item.getCreated()));
         holder.tvDescription.setText(item.getDescription());
+        holder.tvNumLike.setText(item.getNumLike() + "");
+        holder.tvNumDislike.setText(item.getNumDislike() + "");
         holder.lnlItemTinTuc.setLongClickable(false);
         holder.lnlItemTinTuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Todo:Handle Event View Item Click
-                if(holder.lnlDescription.getVisibility() == View.GONE){
+                if (holder.lnlDescription.getVisibility() == View.GONE) {
                     holder.lnlDescription.setVisibility(View.VISIBLE);
-                }
-                else if(holder.lnlDescription.getVisibility() == View.VISIBLE){
+                } else if (holder.lnlDescription.getVisibility() == View.VISIBLE) {
                     holder.lnlDescription.setVisibility(View.GONE);
                 }
             }
@@ -52,11 +54,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
         holder.btnDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo:Handle Event button XemChiTiet Click
+                //Todo:Handle Event Button XemChiTiet Click
+
+            }
+        });
+        holder.lnlLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo:Handle Event Like
+
+            }
+        });
+        holder.lnlDislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo:Handle Event Dislike
 
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -66,9 +83,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
         TextView tvTitle;
         TextView tvTime;
         TextView tvDescription;
+        TextView tvNumLike;
+        TextView tvNumDislike;
         Button btnDetails;
         LinearLayout lnlDescription;
         LinearLayout lnlItemTinTuc;
+        LinearLayout lnlLike;
+        LinearLayout lnlDislike;
         AppCompatRatingBar rtbLevel;
 
         public NewsHolder(View v) {
@@ -76,13 +97,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder>{
             tvTitle = (TextView) v.findViewById(R.id.tv_title);
             tvTime = (TextView) v.findViewById(R.id.tv_time);
             tvDescription = (TextView) v.findViewById(R.id.tv_description);
+            tvNumLike = (TextView) v.findViewById(R.id.tv_num_like);
+            tvNumDislike = (TextView) v.findViewById(R.id.tv_num_dislike);
             btnDetails = (Button) v.findViewById(R.id.btn_details);
             lnlDescription = (LinearLayout) v.findViewById(R.id.lnl_description);
             lnlItemTinTuc = (LinearLayout) v.findViewById(R.id.lnl_item_tintuc);
             rtbLevel = (AppCompatRatingBar) v.findViewById(R.id.rtb_level);
+            lnlLike = (LinearLayout) v.findViewById(R.id.lnl_like);
+            lnlDislike = (LinearLayout) v.findViewById(R.id.lnl_dislike);
         }
     }
-    public NewsAdapter(Context context,List<News> list){
+
+    public NewsAdapter(Context context, List<News> list) {
         this.mContext = context;
         this.list = list;
     }

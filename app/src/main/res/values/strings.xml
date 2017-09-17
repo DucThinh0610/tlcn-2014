@@ -54,5 +54,9 @@
     <string name="video">Quay phim</string>
     <string name="gallery">Thư viện</string>
     <string name="send">Gửi</string>
+    <string name="setting">Cài đặt</string>
+    <string name="about_info">Về chúng tôi</string>
+    <string name="feedback">Trợ giúp và phản hồi</string>
+    <string name="share_app">Chia sẻ ứng dụng</string>
 </resources>
 

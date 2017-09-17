@@ -46,7 +46,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017,9,12,9,30,30);
         Date date = calendar.getTime();
-        news = new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao");
+        news = new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt xe rất cao",10,20);
         getView().getNewsSuccess();
         getView().hideLoading();
     }
@@ -57,10 +57,10 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017,8,12);
         Date date = calendar.getTime();
-        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt nhiều xe tải tại giao lộ của ngã tư"));
-        list.add(new News("2","Kẹt xe tại Phạm Văn Đồng",3,date,"Đèn đỏ trục trặc khiến giao thông ùn tắc"));
-        list.add(new News("3","Kẹt xe tại Lê Văn Việt",1,date,"Kẹt xe tại điểm giao giữa Đình phong phú và Lê văn việt"));
-        list.add(new News("4","Kẹt xe tại ngã tư Bình Thái",5,date,"Kẹt xe rất đông"));
+        list.add(new News("1","Kẹt xe tại ngã tư hàng xanh",4,date,"Kẹt nhiều xe tải tại giao lộ của ngã tư",10,20));
+        list.add(new News("2","Kẹt xe tại Phạm Văn Đồng",3,date,"Đèn đỏ trục trặc khiến giao thông ùn tắc",5,1));
+        list.add(new News("3","Kẹt xe tại Lê Văn Việt",1,date,"Kẹt xe tại điểm giao giữa Đình phong phú và Lê văn việt",10,2));
+        list.add(new News("4","Kẹt xe tại ngã tư Bình Thái",5,date,"Kẹt xe rất đông",3,1));
         getView().getListNewsSuccess();
         getView().hideLoading();
     }
