@@ -15,9 +15,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
+import com.tlcn.mvpapplication.utils.DialogUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,9 +48,9 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     TextView tvLocationWork;
 
     //Todo: Declaring
+    private DialogProgress mProgressDialog;
     FavouritePresenter mPresenter = new FavouritePresenter();
     NewsAdapter newsAdapter;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -127,12 +129,12 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void showLoading() {
-
+        showDialogLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        dismissDialogLoading();
     }
 
     @Override
@@ -161,5 +163,17 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     private void showDialog() {
         final Dialog dialog = new Dialog(getContext());
         dialog.show();
+    }
+
+    protected void showDialogLoading() {
+        dismissDialogLoading();
+        mProgressDialog = DialogUtils.showProgressDialog(getContext());
+    }
+
+    protected void dismissDialogLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

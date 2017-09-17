@@ -3,9 +3,12 @@ package com.tlcn.mvpapplication.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.tlcn.mvpapplication.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -81,5 +84,20 @@ public class Utilities {
             result = context.getString(R.string.now);
         }
         return result;
+    }
+
+    public static Date parseStringToDate(String date) {
+        if (date == null || date.equals("")) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            Log.e("Obuut", "ParseException: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+        return null;
     }
 }

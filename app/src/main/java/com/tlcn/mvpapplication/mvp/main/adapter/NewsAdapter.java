@@ -34,11 +34,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     public void onBindViewHolder(final NewsHolder holder, int position) {
         final News item = list.get(position);
         holder.tvTitle.setText(item.getTitle());
-        holder.rtbLevel.setRating(item.getRating());
-        holder.tvTime.setText(Utilities.getTimeAgo(mContext, item.getCreated()));
+        holder.rtbLevel.setRating((float) item.getRating());
+        holder.tvTime.setText(Utilities.getTimeAgo(mContext, Utilities.parseStringToDate(item.getCreated())));
         holder.tvDescription.setText(item.getDescription());
-        holder.tvNumLike.setText(item.getNumLike() + "");
-        holder.tvNumDislike.setText(item.getNumDislike() + "");
+        String numlike = item.getNum_like() + "";
+        String numdislike = item.getNum_dislike() + "";
+        holder.tvNumLike.setText(numlike);
+        holder.tvNumDislike.setText(numdislike);
         holder.lnlItemTinTuc.setLongClickable(false);
         holder.lnlItemTinTuc.setOnClickListener(new View.OnClickListener() {
             @Override

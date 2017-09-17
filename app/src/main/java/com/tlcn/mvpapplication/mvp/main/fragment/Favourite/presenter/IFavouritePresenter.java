@@ -7,11 +7,11 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public interface IFavouritePresenter {
-    void getNewsInfo(String idNews);
-
     void getListNews();
 
     void setHouseLocation(LatLng location);
+
     void setWorkLocation(LatLng location);
+
     void setOtherLocation(LatLng location);
 }
