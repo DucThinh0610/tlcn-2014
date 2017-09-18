@@ -35,7 +35,6 @@ public class ContributeFragment extends Fragment implements IContributeView{
         initListener(v);
         mPresenter.attachView(this);
         mPresenter.onCreate();
-
         return v;
     }
     private void initListener(View v) {

@@ -39,6 +39,7 @@ public class News {
     @SerializedName("status")
     @Expose
     private boolean status;
+
     public News(){
 
     }
