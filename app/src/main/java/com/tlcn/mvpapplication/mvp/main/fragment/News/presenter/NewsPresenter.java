@@ -9,8 +9,12 @@ import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,8 +56,18 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for(DataSnapshot data : listData){
                     News item = data.getValue(News.class);
-                    list.add(item);
+                    if(item.isStatus()) {
+                        list.add(item);
+                    }
                 }
+                Collections.sort(list, new Comparator<News>() {
+                    @Override
+                    public int compare(News news, News t1) {
+                        Date date1 = Utilities.parseStringToDate(news.getCreated());
+                        Date date2 = Utilities.parseStringToDate(t1.getCreated());
+                        return date2.compareTo(date1);
+                    }
+                });
                 getView().hideLoading();
                 getView().getListNewsSuccess();
             }

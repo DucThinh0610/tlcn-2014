@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class News {
     @SerializedName("id")
     @Expose
-    private String id;
+    private long id;
     @SerializedName("title")
     @Expose
     private String title;
@@ -30,12 +30,20 @@ public class News {
     @SerializedName("description")
     @Expose
     private String description;
-
+    @SerializedName("latitude")
+    @Expose
+    private double latitude;
+    @SerializedName("longitude")
+    @Expose
+    private double longitude;
+    @SerializedName("status")
+    @Expose
+    private boolean status;
     public News(){
 
     }
 
-    public News(String id, String title, double rating, String created, long num_like, long num_dislike, String description) {
+    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -45,11 +53,11 @@ public class News {
         this.description = description;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -99,5 +107,29 @@ public class News {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

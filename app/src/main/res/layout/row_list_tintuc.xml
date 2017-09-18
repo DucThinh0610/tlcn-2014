@@ -104,10 +104,9 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tv_num_like"
+                                android:id="@+id/tv_num_dislike"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                />
+                                android:layout_height="wrap_content" />
 
                             <ImageView
                                 android:id="@+id/imv_dislike"
@@ -126,11 +125,10 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tv_num_dislike"
+                                android:id="@+id/tv_num_like"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                />
+                                android:layout_gravity="center" />
 
                             <ImageView
                                 android:id="@+id/imv_like"

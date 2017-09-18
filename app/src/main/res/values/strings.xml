@@ -58,5 +58,10 @@
     <string name="about_info">Về chúng tôi</string>
     <string name="feedback">Trợ giúp và phản hồi</string>
     <string name="share_app">Chia sẻ ứng dụng</string>
+    <string name="other">Khác</string>
+    <string name="add_other_location">Thêm vị trí khác</string>
+    <string name="no">Không</string>
+    <string name="yes">Có</string>
+    <string name="you_have_set_location_do_you_want_modify">Bạn đã cài đặt vị trí này\nBạn có muốn thay đổi?</string>
 </resources>
 

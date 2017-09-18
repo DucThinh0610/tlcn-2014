@@ -10,16 +10,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.LogUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,12 +43,16 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     LinearLayout lnlHouse;
     @Bind(R.id.lnl_work)
     LinearLayout lnlWork;
+    @Bind(R.id.lnl_other)
+    LinearLayout lnlOther;
     @Bind(R.id.tv_add)
     TextView tvAdd;
     @Bind(R.id.tv_location_house)
     TextView tvLocationHouse;
     @Bind(R.id.tv_location_work)
     TextView tvLocationWork;
+    @Bind(R.id.tv_location_other)
+    TextView tvLocationOther;
 
     //Todo: Declaring
     private DialogProgress mProgressDialog;
@@ -78,6 +85,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setOtherLocation(location);
+                    tvLocationOther.setText(getString(R.string.have_set));
                 }
             }
         }
@@ -100,12 +108,23 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         //các sự kiện click view được khai báo ở đây
         lnlHouse.setOnClickListener(this);
         lnlWork.setOnClickListener(this);
+        lnlOther.setOnClickListener(this);
         tvAdd.setOnClickListener(this);
     }
 
     private void initData(View v) {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
-
+        if(App.getPreferenceUtils().getHouseLocation().latitude != 0){
+            tvLocationHouse.setText(getString(R.string.have_set));
+        }
+        if(App.getPreferenceUtils().getWorkLocation().latitude != 0){
+            tvLocationWork.setText(getString(R.string.have_set));
+        }
+        if(App.getPreferenceUtils().getOtherLocation().latitude != 0){
+            lnlOther.setVisibility(View.VISIBLE);
+            tvAdd.setVisibility(View.GONE);
+            tvLocationOther.setText(getString(R.string.have_set));
+        }
     }
 
     @Override
@@ -117,14 +136,10 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         }
     }
 
-    @Override
-    public void getNewsSuccess() {
-
-    }
 
     @Override
     public void onFail(String message) {
-
+        LogUtils.LOGE("ERROR",message);
     }
 
     @Override
@@ -141,27 +156,53 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lnl_house:
-                if (!tvLocationHouse.getText().equals(getString(R.string.have_set))) {
-                    Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                    intent.putExtra("title", getString(R.string.house));
+                Intent intent = new Intent(getContext(), ChooseLocationView.class);
+                intent.putExtra("title", getString(R.string.house));
+                if (App.getPreferenceUtils().getHouseLocation().latitude == 0) {
                     startActivityForResult(intent, 101);
-                } else
-                    showDialog();
+                } else showDialog(intent,101);
                 break;
             case R.id.lnl_work:
-                if (!tvLocationHouse.getText().equals(getString(R.string.have_set))) {
-                    Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
-                    intent2.putExtra("title", getString(R.string.work));
+                Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
+                intent2.putExtra("title", getString(R.string.work));
+                if (App.getPreferenceUtils().getWorkLocation().latitude == 0) {
                     startActivityForResult(intent2, 102);
-                } else showDialog();
+                } else showDialog(intent2,102);
+                break;
+            case R.id.lnl_other:
+                Intent intent3 = new Intent(getContext(), ChooseLocationView.class);
+                intent3.putExtra("title", getString(R.string.other));
+                if (App.getPreferenceUtils().getOtherLocation().latitude == 0) {
+                    startActivityForResult(intent3, 103);
+                } else showDialog(intent3,103);
                 break;
             case R.id.tv_add:
+                lnlOther.setVisibility(View.VISIBLE);
+                tvAdd.setVisibility(View.GONE);
                 break;
         }
     }
 
-    private void showDialog() {
+    private void showDialog(final Intent intent, final int code) {
         final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_set_location);
+        Button btnYes = (Button) dialog.findViewById(R.id.btn_yes);
+        Button btnNo = (Button) dialog.findViewById(R.id.btn_no);
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                startActivityForResult(intent,code);
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 

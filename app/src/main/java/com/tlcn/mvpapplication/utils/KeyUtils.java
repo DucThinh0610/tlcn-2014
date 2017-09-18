@@ -6,4 +6,6 @@ package com.tlcn.mvpapplication.utils;
 
 public class KeyUtils {
     public static final String NEWS = "news";
+
+    public static final int DEFAULT_DISTANCE_TO_LOAD = 100;
 }
