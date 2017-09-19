@@ -341,6 +341,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvSearch.setAdapter(mAdapter);
+        editSearch.setSingleLine(true);
+        editSearch.setEllipsize(TextUtils.TruncateAt.END);
     }
 
     @Override
@@ -395,8 +397,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void getDirectionSuccess(List<Route> routes) {
         for (Route route : routes) {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.getLeg().get(0).getStartLocation().getLatLag(), mGoogleMap.getCameraPosition().zoom));
-
             originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .title(route.getLeg().get(0).getStartAddress())
                     .position(route.getLeg().get(0).getStartLocation().getLatLag())));
@@ -415,17 +415,25 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
             polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
         }
-        for (int i=0;i<polylinePaths.size();i++){
-            Polyline item=polylinePaths.get(i);
-            if (i==0){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(routes.get(0).getBound().getNortheast().getLatLag());
+        builder.include(routes.get(0).getBound().getSouthwest().getLatLag());
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.15);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+        for (int i = 0; i < polylinePaths.size(); i++) {
+            Polyline item = polylinePaths.get(i);
+            if (i == 0) {
                 item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
                 item.setZIndex(1.0f);
-            }
-            else {
+            } else {
                 item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
                 item.setZIndex(0.0f);
             }
         }
+
     }
 
     @Override

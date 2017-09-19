@@ -39,7 +39,6 @@ public class EditTextCustom extends EditText {
     private void init() {
         final Drawable x = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear);
         x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
-
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -56,7 +55,7 @@ public class EditTextCustom extends EditText {
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
 
-                if (hasFocus() && getText().length() > 0) {
+                if (getText().length() > 0) {
                     setCompoundDrawables(null, null, x, null);
                 } else {
                     setCompoundDrawables(null, null, null, null);
@@ -77,7 +76,7 @@ public class EditTextCustom extends EditText {
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         final Drawable x = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear);
-        x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
+        x.setBounds(10, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
         if (focused) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);

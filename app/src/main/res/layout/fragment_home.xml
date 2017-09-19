@@ -104,8 +104,7 @@
                 android:layout_toEndOf="@+id/rlt_drawer"
                 android:backgroundTint="@color/white"
                 android:ellipsize="end"
-                android:hint="@string/search_location"
-                android:maxLines="1" />
+                android:hint="@string/search_location" />
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
