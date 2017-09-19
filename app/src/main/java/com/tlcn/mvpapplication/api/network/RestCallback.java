@@ -8,12 +8,13 @@ import com.tlcn.mvpapplication.app.App;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class RestCallback<T> implements Callback<T> {
+public abstract class RestCallback<T extends BaseResponse> implements Callback<T> {
 
     private final int API_ERROR_NO_NETWORK = -1;
     private final int API_ERROR_TIMED_OUT = -2;
@@ -29,7 +30,10 @@ public abstract class RestCallback<T> implements Callback<T> {
 
         if (response.isSuccessful()) {
             T bodyResponse = response.body();
-            success(bodyResponse);
+            if (Objects.equals(bodyResponse.message, "successfully")){
+                success(bodyResponse);
+            }
+            else
         } else {
             RestError error = new RestError(API_ERROR_UNKNOWN, "Unknown error");
             failure(error);

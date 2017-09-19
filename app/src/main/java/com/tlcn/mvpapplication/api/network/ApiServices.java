@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.api.network;
 
+import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.model.Contribution;
 import com.tlcn.mvpapplication.model.Result;
@@ -23,7 +24,7 @@ public interface ApiServices {
                                             @Query("alternatives") boolean alternatives);
 
     @POST("contribute")
-    Call<Contribution> contribute(@Body Contribution contribution);
+    Call<BaseResponse> contribute(@Body ContributionRequest contribution);
 
     @GET("test")
     Call<Result> test();

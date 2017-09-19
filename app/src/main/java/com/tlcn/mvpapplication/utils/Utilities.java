@@ -36,13 +36,11 @@ public class Utilities {
         return false;
     }
 
-    public static String getNowTime(){
-        Date nowtime = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String result = sdf.format(nowtime);
-        return result;
+    public static Date getNowTime() {
+        return Calendar.getInstance().getTime();
     }
-    public static String getTimeAgo(Context context,Date startDate) {
+
+    public static String getTimeAgo(Context context, Date startDate) {
         Date endDate = Calendar.getInstance().getTime();
         String result = "";
         //milliseconds
@@ -69,25 +67,19 @@ public class Utilities {
 
         long elapsedMinutes = different / minutesInMilli;
 
-        if (elapsedYears >= 1 ){
-            result = elapsedYears+" "+context.getString(R.string.year)+" "+context.getString(R.string.ago);
-        }
-        else if(elapsedMonths >= 1){
-            result = elapsedMonths+" "+context.getString(R.string.month)+" "+context.getString(R.string.ago);
-        }
-        else if(elapsedWeeks >=1){
-            result = elapsedWeeks+" "+context.getString(R.string.week)+" "+context.getString(R.string.ago);
-        }
-        else if(elapsedDays >= 1){
-            result = elapsedDays+" "+context.getString(R.string.day)+" "+context.getString(R.string.ago);
-        }
-        else if(elapsedHours >= 1){
-            result = elapsedHours+" "+context.getString(R.string.hour)+" "+context.getString(R.string.ago);
-        }
-        else if(elapsedMinutes >= 1){
-            result = elapsedMinutes+" "+context.getString(R.string.minute)+" "+context.getString(R.string.ago);
-        }
-        else{
+        if (elapsedYears >= 1) {
+            result = elapsedYears + " " + context.getString(R.string.year) + " " + context.getString(R.string.ago);
+        } else if (elapsedMonths >= 1) {
+            result = elapsedMonths + " " + context.getString(R.string.month) + " " + context.getString(R.string.ago);
+        } else if (elapsedWeeks >= 1) {
+            result = elapsedWeeks + " " + context.getString(R.string.week) + " " + context.getString(R.string.ago);
+        } else if (elapsedDays >= 1) {
+            result = elapsedDays + " " + context.getString(R.string.day) + " " + context.getString(R.string.ago);
+        } else if (elapsedHours >= 1) {
+            result = elapsedHours + " " + context.getString(R.string.hour) + " " + context.getString(R.string.ago);
+        } else if (elapsedMinutes >= 1) {
+            result = elapsedMinutes + " " + context.getString(R.string.minute) + " " + context.getString(R.string.ago);
+        } else {
             result = context.getString(R.string.now);
         }
         return result;
@@ -127,12 +119,12 @@ public class Utilities {
         return meter;
     }
 
-    public static LatLng calculationRadius(LatLng location){
+    public static LatLng calculationRadius(LatLng location) {
         double meters = 50;
         double coef = meters * 0.0000089;
         double new_lat = location.latitude + coef;
         double new_long = location.longitude + coef / Math.cos(location.latitude * 0.018);
 
-        return new LatLng(new_lat,new_long);
+        return new LatLng(new_lat, new_long);
     }
 }

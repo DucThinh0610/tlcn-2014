@@ -19,11 +19,13 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Contribution;
 import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.ContributePresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
+import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
@@ -131,11 +133,6 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     }
 
     @Override
-    public void sendContributionSuccess(Result response) {
-
-    }
-
-    @Override
     public void onFail(String message) {
 
     }
@@ -144,7 +141,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_send:
-                Contribution contribution = new Contribution();
+                ContributionRequest contribution = new ContributionRequest();
                 contribution.setDevice_id(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
                 String user_id = "";
                 if(FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -155,7 +152,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 contribution.setLongitude(currentLocation.longitude);
                 contribution.setLevel(sbLevel.getProgress());
                 contribution.setDescription(edtDescription.getText().toString());
-                contribution.setCreated(Utilities.getNowTime());
+                contribution.setCreated(DateUtils.getCurrentDate());
 
                 mPresenter.sendContribution(contribution);
                 break;

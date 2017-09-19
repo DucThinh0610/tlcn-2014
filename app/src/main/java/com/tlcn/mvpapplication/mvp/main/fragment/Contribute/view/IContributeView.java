@@ -8,7 +8,6 @@ import com.tlcn.mvpapplication.model.Result;
  */
 
 public interface IContributeView extends IView {
-    void sendContributionSuccess(Result response);
 
     void onFail(String message);
 }

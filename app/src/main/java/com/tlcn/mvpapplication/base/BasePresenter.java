@@ -1,6 +1,9 @@
 package com.tlcn.mvpapplication.base;
 
+import com.tlcn.mvpapplication.api.ApiManager;
+
 public abstract class BasePresenter {
+    private ApiManager manager = new ApiManager();
     private IView mView;
 
     public void attachView(IView view) {
@@ -30,5 +33,9 @@ public abstract class BasePresenter {
 
     public void onDestroy() {
 
+    }
+
+    public ApiManager getManager() {
+        return this.manager;
     }
 }
