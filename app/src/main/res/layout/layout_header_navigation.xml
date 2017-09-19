@@ -50,7 +50,7 @@
                 android:textColor="@color/white"
                 android:text="@string/log_out"
                 android:textStyle="italic"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,11 +17,15 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.Contribution;
+import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.ContributePresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.Utilities;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,7 +61,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     //Todo: Declaring
     ContributePresenter mPresenter = new ContributePresenter();
     private DialogProgress mProgressDialog;
-    LatLng latLng;
+    LatLng currentLocation;
     GPSTracker gpsTracker;
     @Nullable
     @Override
@@ -77,13 +82,16 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         imvTakePhoto.setOnClickListener(this);
         imvGallery.setOnClickListener(this);
         imvVideo.setOnClickListener(this);
+        if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current)
+            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLatitude());
+
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                 switch (i){
                     case R.id.rdb_current:
                         if(gpsTracker.canGetLocation()){
-                            latLng = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLatitude());
+                            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLatitude());
                         }
                         else Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
                         break;
@@ -92,6 +100,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 }
             }
         });
+
     }
 
     private void initData(View v) {
@@ -122,7 +131,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     }
 
     @Override
-    public void sendContributionSuccess() {
+    public void sendContributionSuccess(Result response) {
 
     }
 
@@ -135,6 +144,20 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_send:
+                Contribution contribution = new Contribution();
+                contribution.setDevice_id(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+                String user_id = "";
+                if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                }
+                contribution.setUser_id(user_id);
+                contribution.setLatitude(currentLocation.latitude);
+                contribution.setLongitude(currentLocation.longitude);
+                contribution.setLevel(sbLevel.getProgress());
+                contribution.setDescription(edtDescription.getText().toString());
+                contribution.setCreated(Utilities.getNowTime());
+
+                mPresenter.sendContribution(contribution);
                 break;
             case R.id.imv_take_photo:
                 break;

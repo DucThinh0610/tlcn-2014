@@ -36,6 +36,12 @@ public class Utilities {
         return false;
     }
 
+    public static String getNowTime(){
+        Date nowtime = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String result = sdf.format(nowtime);
+        return result;
+    }
     public static String getTimeAgo(Context context,Date startDate) {
         Date endDate = Calendar.getInstance().getTime();
         String result = "";

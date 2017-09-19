@@ -313,7 +313,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(HomeFragment.this,asList("email","user_friends", "public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(HomeFragment.this,asList("email", "public_profile"));
             }
         });
         if(mFirebaseAuth.getCurrentUser() !=null) {

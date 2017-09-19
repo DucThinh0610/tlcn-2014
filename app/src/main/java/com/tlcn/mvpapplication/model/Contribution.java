@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by tskil on 9/16/2017.
  */
 
-public class Contribute implements Serializable{
+public class Contribution implements Serializable{
     @SerializedName("user_id")
     @Expose
     private String user_id;
@@ -38,11 +38,11 @@ public class Contribute implements Serializable{
     @Expose
     private String description;
 
-    public Contribute(){
+    public Contribution(){
 
     }
 
-    public Contribute(String user_id, String device_id, double latitude, double longitude, int level, String created, String description) {
+    public Contribution(String user_id, String device_id, double latitude, double longitude, int level, String created, String description) {
         this.user_id = user_id;
         this.device_id = device_id;
         this.latitude = latitude;
