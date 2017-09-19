@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class Contribution implements Serializable{
     @SerializedName("user_id")
     @Expose
+
     private String user_id;
 
     @SerializedName("device_id")

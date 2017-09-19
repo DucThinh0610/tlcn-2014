@@ -33,13 +33,24 @@ public class ContributePresenter extends BasePresenter implements IContributePre
         AppManager.http_api_server().from(ApiServices.class).contribute(contribution).enqueue(new RestCallback<Contribution>() {
             @Override
             public void success(Contribution res) {
+                getView().hideLoading();
+            }
 
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+            }
+        });
+        /*AppManager.http_api_server().from(ApiServices.class).test().enqueue(new RestCallback<Result>() {
+            @Override
+            public void success(Result res) {
+                LogUtils.LOGE("response server",res.toString());
             }
 
             @Override
             public void failure(RestError error) {
 
             }
-        });
+        });*/
     }
 }

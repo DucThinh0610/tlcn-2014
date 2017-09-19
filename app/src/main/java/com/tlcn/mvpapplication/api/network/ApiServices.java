@@ -2,12 +2,13 @@ package com.tlcn.mvpapplication.api.network;
 
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.model.Contribution;
+import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -21,7 +22,11 @@ public interface ApiServices {
                                             @Query("destination") String destination,
                                             @Query("key") String key,
                                             @Query("alternatives") boolean alternatives);
+
+    @Multipart
     @POST("news")
-    @Headers("Accept: application/x-www-form-urlencoded")
     Call<Contribution> contribute(@Body Contribution contribution);
+
+    @GET("test")
+    Call<Result> test();
 }
