@@ -83,7 +83,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         imvGallery.setOnClickListener(this);
         imvVideo.setOnClickListener(this);
         if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current)
-            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLatitude());
+            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
 
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -91,7 +91,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 switch (i){
                     case R.id.rdb_current:
                         if(gpsTracker.canGetLocation()){
-                            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLatitude());
+                            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
                         }
                         else Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
                         break;
