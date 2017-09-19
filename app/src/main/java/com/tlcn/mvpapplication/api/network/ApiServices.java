@@ -8,7 +8,7 @@ import com.tlcn.mvpapplication.model.UserInfoGit;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -23,8 +23,8 @@ public interface ApiServices {
                                             @Query("key") String key,
                                             @Query("alternatives") boolean alternatives);
 
-    @Multipart
-    @POST("news")
+    @POST("contribute")
+    @Headers({ "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"})
     Call<Contribution> contribute(@Body Contribution contribution);
 
     @GET("test")
