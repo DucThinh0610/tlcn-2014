@@ -2,8 +2,8 @@ package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,12 +23,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -38,16 +45,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.direction.Route;
@@ -55,6 +67,7 @@ import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.LogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
@@ -64,6 +77,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
+
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+import static java.util.Arrays.asList;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback,
         View.OnClickListener,
@@ -110,11 +126,39 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     GPSTracker gpsTracker;
     boolean isFirst = true;
     SupportMapFragment supportMapFragment;
+    CallbackManager mCallbackManager;
+    FirebaseAuth mFirebaseAuth;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        LogUtils.LOGE("Facebook Login", loginResult.getAccessToken().getToken());
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Log.e("Facebook Login", exception.toString());
+                    }
+                });
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+        mFirebaseAuth = FirebaseAuth.getInstance();
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
         ButterKnife.bind(this, v);
@@ -123,6 +167,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         initData();
         initListener();
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
     }
 
     @Override
@@ -160,7 +211,46 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         });
         mGoogleMap.setOnPolylineClickListener(this);
     }
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
 
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            View v = nvDrawer.getHeaderView(0);
+                            final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
+                            final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);
+                            CircleImageView imvAvatar = (CircleImageView) v.findViewById(R.id.imv_avatar);
+                            TextView tvName = (TextView) v.findViewById(R.id.tv_name);
+                            TextView tvLogOut = (TextView) v.findViewById(R.id.tv_log_out);
+                            tvLogOut.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    btnLogin.setVisibility(View.VISIBLE);
+                                    lnlLoginSuccess.setVisibility(View.GONE);
+                                    LoginManager.getInstance().logOut();
+                                    mFirebaseAuth.signOut();
+                                }
+                            });
+                            btnLogin.setVisibility(View.GONE);
+                            lnlLoginSuccess.setVisibility(View.VISIBLE);
+                            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()),imvAvatar);
+                            tvName.setText(user.getDisplayName());
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
     private void showDialog() {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_chiduong);
@@ -214,6 +304,39 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void initData() {
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_header_navigation,null);
+        final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
+        final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);
+        CircleImageView imvAvatar = (CircleImageView) v.findViewById(R.id.imv_avatar);
+        TextView tvName = (TextView) v.findViewById(R.id.tv_name);
+        TextView tvLogOut = (TextView) v.findViewById(R.id.tv_log_out);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(HomeFragment.this,asList("email","user_friends", "public_profile"));
+            }
+        });
+        if(mFirebaseAuth.getCurrentUser() !=null) {
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            btnLogin.setVisibility(View.GONE);
+            lnlLoginSuccess.setVisibility(View.VISIBLE);
+            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()),imvAvatar);
+            tvName.setText(user.getDisplayName());
+            tvLogOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    btnLogin.setVisibility(View.VISIBLE);
+                    lnlLoginSuccess.setVisibility(View.GONE);
+                    LoginManager.getInstance().logOut();
+                    mFirebaseAuth.signOut();
+                }
+            });
+        }
+        else {
+            btnLogin.setVisibility(View.VISIBLE);
+            lnlLoginSuccess.setVisibility(View.GONE);
+        }
+        nvDrawer.addHeaderView(v);
         gpsTracker = new GPSTracker(getContext());
         mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -18,27 +18,38 @@
             android:textColor="@color/color_white" />
 
         <LinearLayout
-            android:id="@+id/ll_login_success"
+            android:visibility="gone"
+            android:id="@+id/lnl_login_success"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="vertical"
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imv_image"
+                android:layout_gravity="center"
+                android:id="@+id/imv_avatar"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:src="@drawable/ic_logo" />
+                />
 
             <TextView
+                android:layout_marginTop="5dp"
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="Hồ Quốc Hưng"
                 android:textColor="@color/white"
+                android:textSize="18sp" />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/tv_log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/log_out"
+                android:textStyle="italic"
                 android:textSize="15sp" />
         </LinearLayout>
     </RelativeLayout>

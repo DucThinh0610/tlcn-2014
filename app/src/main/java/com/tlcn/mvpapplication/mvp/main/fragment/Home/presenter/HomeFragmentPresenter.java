@@ -31,6 +31,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
 
     private CameraPosition mCameraPosition;
 
+
     public void setCameraPosition(CameraPosition cameraPosition) {
         this.mCameraPosition = cameraPosition;
         MapStorage.getInstance().setCameraPosition(cameraPosition);

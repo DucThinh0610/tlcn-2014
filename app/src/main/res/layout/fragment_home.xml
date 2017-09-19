@@ -121,7 +121,6 @@
 
     <android.support.design.widget.NavigationView
         app:menu="@menu/menu_navigation"
-        app:headerLayout="@layout/layout_header_navigation"
         android:id="@+id/nv_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

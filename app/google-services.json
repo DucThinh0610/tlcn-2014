@@ -15,21 +15,21 @@
       },
       "oauth_client": [
         {
-          "client_id": "879435991567-ci1m8fr6vm6sj4hndsetuuq7jig9aqrf.apps.googleusercontent.com",
+          "client_id": "879435991567-14oins8f8a6ieoohagiancjluinfh6i9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "879435991567-35ae3elcb4g9nbfudv56fothbnin5kd9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tlcn.mvpapplication",
             "certificate_hash": "486acafb0da4ade2ef8af1468e8666ea574e1d76"
           }
-        },
-        {
-          "client_id": "879435991567-oha0fu1ka4dt0sjv1676g68bfs2mrb71.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCa-mRGAphrLiWut2Wvr918LJUmEOWdqOI"
+          "current_key": "AIzaSyApJsrm78UIe2Is1TeIv3jvtGH5ZcqNQrg"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "879435991567-oha0fu1ka4dt0sjv1676g68bfs2mrb71.apps.googleusercontent.com",
+              "client_id": "879435991567-14oins8f8a6ieoohagiancjluinfh6i9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
