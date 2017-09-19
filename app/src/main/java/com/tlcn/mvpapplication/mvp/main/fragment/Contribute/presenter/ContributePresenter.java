@@ -52,6 +52,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 //
 //            }
 //        });*/
+        getView().showLoading();
         getManager().addContribution(contribution, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
@@ -60,6 +61,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
             @Override
             public void failure(RestError error) {
+                getView().onFail(error.message);
                 getView().hideLoading();
             }
         });

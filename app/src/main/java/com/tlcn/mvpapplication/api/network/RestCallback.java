@@ -30,9 +30,7 @@ public abstract class RestCallback<T extends BaseResponse> implements Callback<T
 
         if (response.isSuccessful()) {
             T bodyResponse = response.body();
-            if (Objects.equals(bodyResponse.message, "successfully")){
-                success(bodyResponse);
-            }
+            success(bodyResponse);
         } else {
             RestError error = new RestError(API_ERROR_UNKNOWN, "Unknown error");
             failure(error);
