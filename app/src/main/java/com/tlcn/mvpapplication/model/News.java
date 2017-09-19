@@ -48,12 +48,12 @@ public class News implements Serializable{
 
     @SerializedName("num_rating")
     @Expose
-    private String num_rating;
+    private long num_rating;
     public News(){
 
     }
 
-    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by, String num_rating) {
+    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by, long num_rating) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -156,11 +156,11 @@ public class News implements Serializable{
         this.created_by = created_by;
     }
 
-    public String getNum_rating() {
+    public long getNum_rating() {
         return num_rating;
     }
 
-    public void setNum_rating(String num_rating) {
+    public void setNum_rating(long num_rating) {
         this.num_rating = num_rating;
     }
 }
