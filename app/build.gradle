@@ -15,10 +15,12 @@ android {
         dev {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
+            buildConfigField("String", "SERVER_URL_API", '" https://tlcn-2014.herokuapp.com/"')
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
+            buildConfigField("String", "SERVER_URL_API", '" https://tlcn-2014.herokuapp.com/"')
         }
     }
     buildTypes {
@@ -56,6 +58,9 @@ dependencies {
 
     compile "com.google.firebase:firebase-core:${fire_base_library_version}"
     compile "com.google.firebase:firebase-database:${fire_base_library_version}"
+    compile "com.google.firebase:firebase-auth:${fire_base_library_version}"
+
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -10,6 +10,7 @@ public class AppManager {
     private static Context context;
     private static HttpHelper httpApi = null;
     private static HttpHelper httpDirection = null;
+    private static HttpHelper httpServer = null;
 
     public static void load(Context context) {
         AppManager.context = context;
@@ -23,5 +24,10 @@ public class AppManager {
     synchronized static public HttpHelper http_api_direction() {
         if (httpDirection == null) httpDirection = new HttpHelper(BuildConfig.DIRECTION_URL_API);
         return httpDirection;
+    }
+
+    synchronized static public HttpHelper http_api_server() {
+        if (httpServer == null) httpServer = new HttpHelper(BuildConfig.SERVER_URL_API);
+        return httpServer;
     }
 }

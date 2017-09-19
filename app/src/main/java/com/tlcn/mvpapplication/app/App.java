@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.app;
 
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 
 public class App extends Application {
@@ -14,7 +15,7 @@ public class App extends Application {
         AppManager.load(this);
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public static synchronized App getInstance() {

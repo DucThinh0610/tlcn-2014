@@ -1,10 +1,13 @@
 package com.tlcn.mvpapplication.api.network;
 
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.model.Contribute;
+import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -17,4 +20,6 @@ public interface ApiServices {
                                             @Query("destination") String destination,
                                             @Query("key") String key,
                                             @Query("alternatives") boolean alternatives);
+    @POST("news")
+    Call<Result> contribute(Contribute contribute);
 }

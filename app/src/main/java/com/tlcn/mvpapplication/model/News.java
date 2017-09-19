@@ -3,12 +3,14 @@ package com.tlcn.mvpapplication.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 
 /**
  * Created by tskil on 9/12/2017.
  */
 
-public class News {
+public class News implements Serializable{
     @SerializedName("id")
     @Expose
     private long id;
@@ -40,11 +42,15 @@ public class News {
     @Expose
     private boolean status;
 
+    @SerializedName("created_by")
+    @Expose
+    private String created_by;
+
     public News(){
 
     }
 
-    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description) {
+    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -52,6 +58,10 @@ public class News {
         this.num_like = num_like;
         this.num_dislike = num_dislike;
         this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.status = status;
+        this.created_by = created_by;
     }
 
     public long getId() {
@@ -132,5 +142,13 @@ public class News {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
     }
 }
