@@ -1,14 +1,10 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter;
 
 import com.tlcn.mvpapplication.api.network.ApiCallback;
-import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
-import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
-import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
-import com.tlcn.mvpapplication.model.Contribution;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.IContributeView;
 
 /**

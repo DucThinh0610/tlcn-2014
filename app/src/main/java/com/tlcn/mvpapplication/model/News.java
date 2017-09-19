@@ -46,11 +46,14 @@ public class News implements Serializable{
     @Expose
     private String created_by;
 
+    @SerializedName("num_rating")
+    @Expose
+    private String num_rating;
     public News(){
 
     }
 
-    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by) {
+    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by, String num_rating) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -62,6 +65,7 @@ public class News implements Serializable{
         this.longitude = longitude;
         this.status = status;
         this.created_by = created_by;
+        this.num_rating = num_rating;
     }
 
     public long getId() {
@@ -150,5 +154,13 @@ public class News implements Serializable{
 
     public void setCreated_by(String created_by) {
         this.created_by = created_by;
+    }
+
+    public String getNum_rating() {
+        return num_rating;
+    }
+
+    public void setNum_rating(String num_rating) {
+        this.num_rating = num_rating;
     }
 }
