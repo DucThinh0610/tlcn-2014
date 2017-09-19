@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by tskil on 8/23/2017.
@@ -89,7 +90,7 @@ public class Utilities {
         if (date == null || date.equals("")) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         try {
             return sdf.parse(date);
         } catch (ParseException e) {
