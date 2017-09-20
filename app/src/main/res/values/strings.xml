@@ -4,10 +4,13 @@
 
     <string name="capquyen">Xin vui lòng cấp quyền để sử dụng hết chức năng của ứng dụng</string>
 
-    <string name="menu_fab_gopy">Đóng góp</string>
     <string name="menu_fab_tinhtrang">Tình trạng hiện tại</string>
     <string name="menu_fab_mucdo">Mức độ kẹt xe</string>
 
+    <string name="contribution">Đóng góp</string>
+    <string name="home">Trang chủ</string>
+    <string name="favourite">Quan tâm</string>
+    <string name="news">Tin tức</string>
     <string name="home_login_facebook">Đăng nhập với Facebook"</string>
 
     <string name="search_location">Tìm kiếm địa điểm</string>
@@ -39,7 +42,6 @@
     <string name="set_locaton_for">Đặt địa chỉ</string>
     <string name="have_set">Đã cài đặt</string>
     <string name="latest_news">Tin tức mới nhất</string>
-    <string name="contribution">Đóng góp</string>
     <string name="traffic_jam_location">Vị trí kẹt xe*</string>
     <string name="current">Hiện tại</string>
     <string name="other_choose_map">Khác (Chọn bản đồ)</string>

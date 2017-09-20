@@ -27,7 +27,7 @@ import me.riddhimanadib.library.NavigationPage;
  */
 
 public class MainActivity extends BottomBarHolderActivity {
-
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +36,10 @@ public class MainActivity extends BottomBarHolderActivity {
     }
 
     private List<NavigationPage> getNavigationPage() {
-        NavigationPage page1 = new NavigationPage("Trang chủ", ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
-        NavigationPage page2 = new NavigationPage("Quan tâm", ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
-        NavigationPage page3 = new NavigationPage("Tin tức", ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
-        NavigationPage page4 = new NavigationPage("Đóng góp", ContextCompat.getDrawable(this, R.mipmap.ic_contribute), ContributeFragment.newInstance());
+        NavigationPage page1 = new NavigationPage(getString(R.string.home), ContextCompat.getDrawable(this, R.mipmap.ic_home), HomeFragment.newInstance());
+        NavigationPage page2 = new NavigationPage(getString(R.string.favourite), ContextCompat.getDrawable(this, R.mipmap.ic_favourite), FavouriteFragment.newInstance());
+        NavigationPage page3 = new NavigationPage(getString(R.string.news), ContextCompat.getDrawable(this, R.mipmap.ic_news), NewsFragment.newInstance());
+        NavigationPage page4 = new NavigationPage(getString(R.string.contribution), ContextCompat.getDrawable(this, R.mipmap.ic_contribute), ContributeFragment.newInstance());
         // add them in a list
         List<NavigationPage> navigationPages = new ArrayList<>();
         navigationPages.add(page1);
