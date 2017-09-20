@@ -253,6 +253,16 @@ public class ChooseLocationView extends AppCompatActivity implements
             }
         }
         mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                if (gpsTracker.canGetLocation()) {
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), KeyUtils.DEFAULT_MAP_ZOOM));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void showLoading() {

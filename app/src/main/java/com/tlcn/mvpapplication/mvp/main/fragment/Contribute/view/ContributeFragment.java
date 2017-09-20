@@ -103,6 +103,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         imvTakePhoto.setOnClickListener(this);
         imvGallery.setOnClickListener(this);
         imvVideo.setOnClickListener(this);
+        rdbOther.setOnClickListener(this);
         if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current) {
             if (gpsTracker.canGetLocation()) {
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
@@ -120,9 +121,6 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                             Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.rdb_other:
-                        Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                        intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.contribution));
-                        startActivityForResult(intent, 101);
                         break;
                 }
             }
@@ -186,6 +184,11 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                     contribution.setCreated(DateUtils.getCurrentDate());
                     mPresenter.sendContribution(contribution);
                 }
+                break;
+            case R.id.rdb_other:
+                Intent intent = new Intent(getContext(), ChooseLocationView.class);
+                intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.contribution));
+                startActivityForResult(intent, 101);
                 break;
             case R.id.imv_take_photo:
                 break;
