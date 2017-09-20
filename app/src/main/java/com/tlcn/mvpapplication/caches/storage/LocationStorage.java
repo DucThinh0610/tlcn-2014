@@ -47,7 +47,7 @@ public class LocationStorage implements ILocationStorage {
     }
 
     @Override
-    public void clearHouseLocation() {
+    public void removeHouseLocation() {
         editor.remove(LAT_HOUSE);
         editor.remove(LOG_HOUSE);
         editor.commit();
@@ -68,7 +68,7 @@ public class LocationStorage implements ILocationStorage {
     }
 
     @Override
-    public void clearWorkLocation() {
+    public void removeWorkLocation() {
         editor.remove(LAT_WORK);
         editor.remove(LOG_WORK);
         editor.commit();
@@ -89,7 +89,7 @@ public class LocationStorage implements ILocationStorage {
     }
 
     @Override
-    public void clearOtherLocation() {
+    public void removeOtherLocation() {
         editor.remove(LAT_OTHER);
         editor.remove(LOG_OTHER);
         editor.commit();

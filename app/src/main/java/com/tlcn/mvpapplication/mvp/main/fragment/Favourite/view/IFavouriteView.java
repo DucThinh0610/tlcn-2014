@@ -10,6 +10,8 @@ public interface IFavouriteView extends IView{
 
     void getListNewsSuccess();
 
+    void changeLocationSuccess();
+
     void onFail(String message);
 
     void showLoading();

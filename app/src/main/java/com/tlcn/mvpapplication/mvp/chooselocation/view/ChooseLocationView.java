@@ -55,6 +55,9 @@ public class ChooseLocationView extends AppCompatActivity implements
         PlaceSearchAdapter.OnItemClick,
         OnMapReadyCallback {
 
+    private final int SAVE_RESULT_CODE = 101;
+    private final int SAVE_COM_RESULT_CODE = 102;
+
     //Todo: Binding
     @Bind(R.id.imv_back_activity)
     ImageView imvBackActivity;
@@ -161,7 +164,7 @@ public class ChooseLocationView extends AppCompatActivity implements
                     Intent intent = new Intent();
                     intent.putExtra(KeyUtils.INTENT_KEY_LATITUDE, location.latitude);
                     intent.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, location.longitude);
-                    setResult(101, intent);
+                    setResult(SAVE_RESULT_CODE, intent);
                     finish();
                 } else finish();
                 break;
@@ -169,7 +172,7 @@ public class ChooseLocationView extends AppCompatActivity implements
                 Intent intent2 = new Intent();
                 intent2.putExtra(KeyUtils.INTENT_KEY_LATITUDE, mGoogleMap.getCameraPosition().target.latitude);
                 intent2.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, mGoogleMap.getCameraPosition().target.longitude);
-                setResult(102, intent2);
+                setResult(SAVE_COM_RESULT_CODE, intent2);
                 finish();
                 break;
             case R.id.cv_choose_on_map:

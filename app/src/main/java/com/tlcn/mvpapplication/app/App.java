@@ -9,7 +9,7 @@ import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 public class App extends Application {
     private GoogleApiHelper googleApiHelper;
     private static App mInstance;
-    private LocationStorage mPreferenceUtils;
+    private LocationStorage mLocationStorage;
     private Context mContext;
     @Override
     public void onCreate() {
@@ -28,12 +28,12 @@ public class App extends Application {
         return this.googleApiHelper;
     }
 
-    public LocationStorage getPreferenceUtilsInstance(){
-        if(mPreferenceUtils == null) {
-            mPreferenceUtils = new LocationStorage(this);
-            return mPreferenceUtils;
+    public LocationStorage getLocationStorageInstance(){
+        if(mLocationStorage == null) {
+            mLocationStorage = new LocationStorage(this);
+            return mLocationStorage;
         }
-        return mPreferenceUtils;
+        return mLocationStorage;
     }
     public Context getContextInstance(){
         if(mContext == null) {
@@ -42,8 +42,8 @@ public class App extends Application {
         }
         return mContext;
     }
-    public static LocationStorage getPreferenceUtils(){
-        return getInstance().getPreferenceUtilsInstance();
+    public static LocationStorage getLocationStorage(){
+        return getInstance().getLocationStorageInstance();
     }
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();

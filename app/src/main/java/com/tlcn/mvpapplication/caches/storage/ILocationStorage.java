@@ -10,13 +10,13 @@ public interface ILocationStorage {
 
     void createHouseLocation(LatLng location);
     LatLng getHouseLocation();
-    void clearHouseLocation();
+    void removeHouseLocation();
 
     void createWorkLocation(LatLng location);
     LatLng getWorkLocation();
-    void clearWorkLocation();
+    void removeWorkLocation();
 
     void createOtherLocation(LatLng location);
     LatLng getOtherLocation();
-    void clearOtherLocation();
+    void removeOtherLocation();
 }

@@ -30,7 +30,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     private List<News> list;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    private LocationStorage mPreferenceUtils;
+    private LocationStorage mLocationStorage;
 
     public void attachView(IFavouriteView view) {
         super.attachView(view);
@@ -43,7 +43,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void onCreate() {
         super.onCreate();
-        mPreferenceUtils = App.getPreferenceUtils();
+        mLocationStorage = App.getLocationStorage();
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference().child(KeyUtils.NEWS);
         list = new ArrayList<>();
@@ -64,12 +64,12 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 for (DataSnapshot data : listData) {
                     News item = data.getValue(News.class);
                     LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
-                    LogUtils.LOGE("item",mPreferenceUtils.getOtherLocation().toString() + " "+ start.toString());
-                    LogUtils.LOGE("item2",Utilities.calculationByDistance(start,mPreferenceUtils.getOtherLocation())+"");
+                    LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " "+ start.toString());
+                    LogUtils.LOGE("item2",Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation())+"");
                     if(item.isStatus()) {
-                        if (Utilities.calculationByDistance(start, mPreferenceUtils.getHouseLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
-                                || Utilities.calculationByDistance(start, mPreferenceUtils.getWorkLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
-                                || Utilities.calculationByDistance(start, mPreferenceUtils.getOtherLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD)
+                        if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
+                                || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
+                                || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD)
                             list.add(item);
                     }
                 }
@@ -96,16 +96,37 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
 
     @Override
     public void setHouseLocation(LatLng location) {
-        mPreferenceUtils.createHouseLocation(location);
+        mLocationStorage.createHouseLocation(location);
+        getView().changeLocationSuccess();
     }
 
     @Override
     public void setWorkLocation(LatLng location) {
-        mPreferenceUtils.createWorkLocation(location);
+        mLocationStorage.createWorkLocation(location);
+        getView().changeLocationSuccess();
     }
 
     @Override
     public void setOtherLocation(LatLng location) {
-        mPreferenceUtils.createOtherLocation(location);
+        mLocationStorage.createOtherLocation(location);
+        getView().changeLocationSuccess();
+    }
+
+    @Override
+    public void removeHouseLocation() {
+        mLocationStorage.removeHouseLocation();
+        getView().changeLocationSuccess();
+    }
+
+    @Override
+    public void removeWorkLocation() {
+        mLocationStorage.removeWorkLocation();
+        getView().changeLocationSuccess();
+    }
+
+    @Override
+    public void removeOtherLocation() {
+        mLocationStorage.removeOtherLocation();
+        getView().changeLocationSuccess();
     }
 }

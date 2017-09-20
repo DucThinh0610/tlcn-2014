@@ -37,6 +37,12 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         return new FavouriteFragment();
     }
 
+    private final int HOUSE_RESQUEST_CODE = 101;
+    private final int WORK_RESQUEST_CODE = 102;
+    private final int OTHER_RESQUEST_CODE = 103;
+
+    private final int SAVE_RESULT_CODE = 101;
+    private final int SAVE_COM_RESULT_CODE = 102;
     //Todo: Binding
     @Bind(R.id.rcv_favourite)
     RecyclerView rcvFavourite;
@@ -59,35 +65,50 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     private DialogProgress mProgressDialog;
     FavouritePresenter mPresenter = new FavouritePresenter();
     NewsAdapter newsAdapter;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101) {
+        if (requestCode == HOUSE_RESQUEST_CODE) {
             //Todo: House
-            if (resultCode == 101 || resultCode == 102) {
+            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setHouseLocation(location);
                     tvLocationHouse.setText(getString(R.string.have_set));
                 }
             }
-        } else if (requestCode == 102) {
+            else {
+                mPresenter.removeHouseLocation();
+                tvLocationHouse.setText(getString(R.string.add_location_house));
+            }
+        } else if (requestCode == WORK_RESQUEST_CODE) {
             //Todo: Work
-            if (resultCode == 101 || resultCode == 102) {
+            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setWorkLocation(location);
                     tvLocationWork.setText(getString(R.string.have_set));
                 }
             }
-        } else {
+            else {
+                mPresenter.removeWorkLocation();
+                tvLocationWork.setText(getString(R.string.add_location_work));
+            }
+        } else if(requestCode == OTHER_RESQUEST_CODE){
             //Todo: Other
-            if (resultCode == 101 || resultCode == 102) {
+            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setOtherLocation(location);
                     tvLocationOther.setText(getString(R.string.have_set));
                 }
+            }
+            else {
+                mPresenter.removeOtherLocation();
+                tvLocationOther.setText(getString(R.string.add_other_location));
+                lnlOther.setVisibility(View.GONE);
+                tvAdd.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -115,13 +136,13 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     private void initData(View v) {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
-        if(App.getPreferenceUtils().getHouseLocation().latitude != 0){
+        if (App.getLocationStorage().getHouseLocation().latitude != 0) {
             tvLocationHouse.setText(getString(R.string.have_set));
         }
-        if(App.getPreferenceUtils().getWorkLocation().latitude != 0){
+        if (App.getLocationStorage().getWorkLocation().latitude != 0) {
             tvLocationWork.setText(getString(R.string.have_set));
         }
-        if(App.getPreferenceUtils().getOtherLocation().latitude != 0){
+        if (App.getLocationStorage().getOtherLocation().latitude != 0) {
             lnlOther.setVisibility(View.VISIBLE);
             tvAdd.setVisibility(View.GONE);
             tvLocationOther.setText(getString(R.string.have_set));
@@ -137,10 +158,14 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         }
     }
 
+    @Override
+    public void changeLocationSuccess() {
+
+    }
 
     @Override
     public void onFail(String message) {
-        Toast.makeText(getContext(),message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -159,23 +184,23 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             case R.id.lnl_house:
                 Intent intent = new Intent(getContext(), ChooseLocationView.class);
                 intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.house));
-                if (App.getPreferenceUtils().getHouseLocation().latitude == 0) {
-                    startActivityForResult(intent, 101);
-                } else showDialog(intent,101);
+                if (App.getLocationStorage().getHouseLocation().latitude == 0) {
+                    startActivityForResult(intent, HOUSE_RESQUEST_CODE);
+                } else showDialog(intent, HOUSE_RESQUEST_CODE);
                 break;
             case R.id.lnl_work:
                 Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
                 intent2.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.work));
-                if (App.getPreferenceUtils().getWorkLocation().latitude == 0) {
-                    startActivityForResult(intent2, 102);
-                } else showDialog(intent2,102);
+                if (App.getLocationStorage().getWorkLocation().latitude == 0) {
+                    startActivityForResult(intent2, WORK_RESQUEST_CODE);
+                } else showDialog(intent2, WORK_RESQUEST_CODE);
                 break;
             case R.id.lnl_other:
                 Intent intent3 = new Intent(getContext(), ChooseLocationView.class);
                 intent3.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.other));
-                if (App.getPreferenceUtils().getOtherLocation().latitude == 0) {
-                    startActivityForResult(intent3, 103);
-                } else showDialog(intent3,103);
+                if (App.getLocationStorage().getOtherLocation().latitude == 0) {
+                    startActivityForResult(intent3, OTHER_RESQUEST_CODE);
+                } else showDialog(intent3, OTHER_RESQUEST_CODE);
                 break;
             case R.id.tv_add:
                 lnlOther.setVisibility(View.VISIBLE);
@@ -194,7 +219,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                startActivityForResult(intent,code);
+                startActivityForResult(intent, code);
             }
         });
 

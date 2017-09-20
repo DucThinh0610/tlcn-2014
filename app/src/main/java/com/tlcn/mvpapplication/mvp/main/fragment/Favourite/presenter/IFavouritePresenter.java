@@ -14,4 +14,10 @@ public interface IFavouritePresenter {
     void setWorkLocation(LatLng location);
 
     void setOtherLocation(LatLng location);
+
+    void removeHouseLocation();
+
+    void removeWorkLocation();
+
+    void removeOtherLocation();
 }
