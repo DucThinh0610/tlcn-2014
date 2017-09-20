@@ -23,6 +23,7 @@ import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -157,21 +158,21 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         switch (view.getId()) {
             case R.id.lnl_house:
                 Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                intent.putExtra("title", getString(R.string.house));
+                intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.house));
                 if (App.getPreferenceUtils().getHouseLocation().latitude == 0) {
                     startActivityForResult(intent, 101);
                 } else showDialog(intent,101);
                 break;
             case R.id.lnl_work:
                 Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
-                intent2.putExtra("title", getString(R.string.work));
+                intent2.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.work));
                 if (App.getPreferenceUtils().getWorkLocation().latitude == 0) {
                     startActivityForResult(intent2, 102);
                 } else showDialog(intent2,102);
                 break;
             case R.id.lnl_other:
                 Intent intent3 = new Intent(getContext(), ChooseLocationView.class);
-                intent3.putExtra("title", getString(R.string.other));
+                intent3.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.other));
                 if (App.getPreferenceUtils().getOtherLocation().latitude == 0) {
                     startActivityForResult(intent3, 103);
                 } else showDialog(intent3,103);

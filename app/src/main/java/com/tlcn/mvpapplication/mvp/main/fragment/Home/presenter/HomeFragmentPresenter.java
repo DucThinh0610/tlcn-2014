@@ -9,6 +9,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
@@ -19,6 +20,7 @@ import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeFragmentView;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +83,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                     getView().getDetailPlaceSuccess(places);
                     places.release();
                 } else {
-                    getView().onFail("Can't get detail place!");
+                    getView().onFail(App.getContext().getString(R.string.cant_get_detail_place));
                 }
             }
         });
@@ -90,13 +92,13 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     @Override
     public void getDirectionFromTwoPoint() {
         if (lngEnd == null || lngStart == null) {
-            getView().onFail("Null");
+            getView().onFail(App.getContext().getString(R.string.null_data));
             return;
         }
         getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
-                "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig", true).enqueue(new RestCallback<GetDirectionResponse>() {
+                KeyUtils.KEY_DIRECTION_API, true).enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
             public void success(GetDirectionResponse res) {
                 getView().onStartFindDirection();

@@ -5,6 +5,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.mvp.details.view.IDetailsView;
@@ -49,7 +51,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                     }
                 }
                 getView().hideLoading();
-                getView().onFail("Không tìm thấy bài viết");
+                getView().onFail(App.getContext().getString(R.string.post_is_not_found));
             }
 
             @Override

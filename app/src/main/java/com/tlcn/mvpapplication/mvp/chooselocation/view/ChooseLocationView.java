@@ -159,16 +159,16 @@ public class ChooseLocationView extends AppCompatActivity implements
             case R.id.tv_save:
                 if (location != null) {
                     Intent intent = new Intent();
-                    intent.putExtra("latitude", location.latitude);
-                    intent.putExtra("longitude", location.longitude);
+                    intent.putExtra(KeyUtils.INTENT_KEY_LATITUDE, location.latitude);
+                    intent.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, location.longitude);
                     setResult(101, intent);
                     finish();
                 } else finish();
                 break;
             case R.id.tv_save_com:
                 Intent intent2 = new Intent();
-                intent2.putExtra("latitude", mGoogleMap.getCameraPosition().target.latitude);
-                intent2.putExtra("longitude", mGoogleMap.getCameraPosition().target.longitude);
+                intent2.putExtra(KeyUtils.INTENT_KEY_LATITUDE, mGoogleMap.getCameraPosition().target.latitude);
+                intent2.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, mGoogleMap.getCameraPosition().target.longitude);
                 setResult(102, intent2);
                 finish();
                 break;

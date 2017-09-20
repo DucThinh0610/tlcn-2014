@@ -27,6 +27,7 @@ import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.Contribute
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,14 +72,14 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         if (requestCode == 101) {
             if (resultCode == 101 || resultCode == 102) {
                 if (data.getExtras() != null) {
-                    postLocation = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                    postLocation = new LatLng(data.getDoubleExtra(KeyUtils.INTENT_KEY_LATITUDE, 0), data.getDoubleExtra(KeyUtils.INTENT_KEY_LONGITUDE, 0));
                 }
             } else {
                 rdbCurrent.setChecked(true);
                 if (gpsTracker.canGetLocation()) {
                     postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
                 } else
-                    Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -106,7 +107,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
             if (gpsTracker.canGetLocation()) {
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             } else
-                Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
         }
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -116,11 +117,11 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                         if (gpsTracker.canGetLocation()) {
                             postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
                         } else
-                            Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.rdb_other:
                         Intent intent = new Intent(getContext(), ChooseLocationView.class);
-                        intent.putExtra("title", getString(R.string.contribution));
+                        intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.contribution));
                         startActivityForResult(intent, 101);
                         break;
                 }
@@ -158,7 +159,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
 
     @Override
     public void onSuccess() {
-        Toast.makeText(getContext(), "Cảm ơn bạn đã đóng góp cho chúng tôi!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
     }
 
     @Override

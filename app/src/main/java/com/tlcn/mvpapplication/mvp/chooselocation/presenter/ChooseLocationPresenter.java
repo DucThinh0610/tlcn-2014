@@ -7,6 +7,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.IChooseLocationView;
@@ -46,7 +47,7 @@ public class ChooseLocationPresenter extends BasePresenter implements IChooseLoc
                 if (places.getCount() == 1) {
                     getView().getDetailPlaceSuccess(places);
                 } else {
-                    getView().onFail("Can't get detail place!");
+                    getView().onFail(App.getContext().getString(R.string.cant_get_detail_place));
                 }
             }
         });

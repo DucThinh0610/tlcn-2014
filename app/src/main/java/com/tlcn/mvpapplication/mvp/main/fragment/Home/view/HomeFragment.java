@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getContext(), "Authentication failed.",
+                            Toast.makeText(getContext(), getString(R.string.authentication_failed),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -259,14 +259,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         lnl_xemthongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Xem thông tin", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
         lnl_chiduong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Chỉ đường", Toast.LENGTH_SHORT).show();
                 mPresenter.getDirectionFromTwoPoint();
                 dialog.dismiss();
             }
