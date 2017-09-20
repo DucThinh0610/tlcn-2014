@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.R;
@@ -22,7 +23,6 @@ import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -139,7 +139,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void onFail(String message) {
-        LogUtils.LOGE("ERROR",message);
+        Toast.makeText(getContext(),message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

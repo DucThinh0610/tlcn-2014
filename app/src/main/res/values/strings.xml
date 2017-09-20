@@ -64,5 +64,6 @@
     <string name="yes">Có</string>
     <string name="you_have_set_location_do_you_want_modify">Bạn đã cài đặt vị trí này\nBạn có muốn thay đổi?</string>
     <string name="log_out">Đăng xuất</string>
+    <string name="detailed_news">Chi tiết tin tức</string>
 </resources>
 

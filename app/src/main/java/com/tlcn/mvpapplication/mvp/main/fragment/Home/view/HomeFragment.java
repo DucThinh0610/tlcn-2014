@@ -67,8 +67,8 @@ import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 CameraUpdate cameraUpdate;
                 if (mPresenter.getCameraPosition() == null) {
-                    cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM);
+                    cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), KeyUtils.DEFAULT_MAP_ZOOM);
                 } else {
                     cameraUpdate = CameraUpdateFactory.newCameraPosition(mPresenter.getCameraPosition());
                 }

@@ -8,13 +8,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
+import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,8 +63,8 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
                 Collections.sort(list, new Comparator<News>() {
                     @Override
                     public int compare(News news, News t1) {
-                        Date date1 = Utilities.parseStringToDate(news.getCreated());
-                        Date date2 = Utilities.parseStringToDate(t1.getCreated());
+                        Date date1 = DateUtils.parseStringToDate(news.getCreated());
+                        Date date2 = DateUtils.parseStringToDate(t1.getCreated());
                         return date2.compareTo(date1);
                     }
                 });

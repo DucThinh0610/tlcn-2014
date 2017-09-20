@@ -11,6 +11,7 @@ import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.IFavouriteView;
+import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
@@ -58,6 +59,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for (DataSnapshot data : listData) {
                     News item = data.getValue(News.class);
@@ -74,8 +76,8 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 Collections.sort(list, new Comparator<News>() {
                     @Override
                     public int compare(News news, News t1) {
-                        Date date1 = Utilities.parseStringToDate(news.getCreated());
-                        Date date2 = Utilities.parseStringToDate(t1.getCreated());
+                        Date date1 = DateUtils.parseStringToDate(news.getCreated());
+                        Date date2 = DateUtils.parseStringToDate(t1.getCreated());
                         return date2.compareTo(date1);
                     }
                 });

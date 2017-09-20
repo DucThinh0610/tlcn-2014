@@ -24,7 +24,7 @@
                 android:layout_centerInParent="true"
                 android:text="@string/latest_news"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

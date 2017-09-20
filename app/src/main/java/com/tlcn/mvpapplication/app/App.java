@@ -27,8 +27,10 @@ public class App extends Application {
     }
 
     public LocationStorage getPreferenceUtilsInstance(){
-        if(mPreferenceUtils == null)
-            return new LocationStorage(this);
+        if(mPreferenceUtils == null) {
+            mPreferenceUtils = new LocationStorage(this);
+            return mPreferenceUtils;
+        }
         return mPreferenceUtils;
     }
 

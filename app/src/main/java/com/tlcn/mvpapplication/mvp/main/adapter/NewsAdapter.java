@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.main.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.model.News;
-import com.tlcn.mvpapplication.utils.Utilities;
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
+import com.tlcn.mvpapplication.utils.DateUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         final News item = list.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.rtbLevel.setRating((float) item.getRating());
-        holder.tvTime.setText(Utilities.getTimeAgo(mContext, Utilities.parseStringToDate(item.getCreated())));
+        holder.tvTime.setText(DateUtils.getTimeAgo(mContext, DateUtils.parseStringToDate(item.getCreated())));
         holder.tvDescription.setText(item.getDescription());
         String numlike = item.getNum_like() + "";
         String numdislike = item.getNum_dislike() + "";
@@ -57,7 +60,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             @Override
             public void onClick(View view) {
                 //Todo:Handle Event Button XemChiTiet Click
-
+                Intent intent = new Intent(mContext, DetailsView.class);
+                intent.putExtra(KeyUtils.INTENT_KEY_ID,item.getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
             }
         });
         holder.lnlLike.setOnClickListener(new View.OnClickListener() {

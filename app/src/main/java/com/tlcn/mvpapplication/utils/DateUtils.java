@@ -1,6 +1,9 @@
 package com.tlcn.mvpapplication.utils;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.tlcn.mvpapplication.R;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,46 +19,79 @@ import java.util.TimeZone;
  */
 
 public class DateUtils {
-    public static String getTimeAgo(Context context, Date date) {
-        final long SECOND_MILLIS = 1000;
-        final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
-        final long HOUR_MILLIS = 60 * MINUTE_MILLIS;
-        final long DAY_MILLIS = 24 * HOUR_MILLIS;
-        final long WEEK_MILLIS = 7 * DAY_MILLIS;
-        final long MONTH_MILLIS = 30 * DAY_MILLIS;
-        final long YEAR_MILLIS = 365 * DAY_MILLIS;
+    public static String getTimeAgo(Context context, Date startDate) {
+        Date endDate = Calendar.getInstance().getTime();
+        String result = "";
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
 
-        long time = date.getTime();
-        if (time < 1000000000000L) {
-            // if timestamp given in seconds, convert to millis
-            time *= 1000;
-        }
-        Calendar cal = Calendar.getInstance();
-        long now = cal.getTime().getTime();
-        if (time > now || time <= 0) {
-            return "";
-        }
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+        long monthsInMilli = daysInMilli * 28;
+        long yearsInMilli = monthsInMilli * 12;
 
-        final long diff = now - time;
-        if (diff < MINUTE_MILLIS) {
-            return "Vừa xong";
-        } else if (diff < 50 * MINUTE_MILLIS) {
-            return diff / MINUTE_MILLIS + " phút trước";
-        } else if (diff < 24 * HOUR_MILLIS) {
-            return diff / HOUR_MILLIS + "giờ trước";
-        } else if (diff < 48 * HOUR_MILLIS) {
-            return "Hôm qua";
-        } else if (diff < 7 * DAY_MILLIS) {
-            return diff / DAY_MILLIS + "ngày trước";
-        } else if (diff < 30 * DAY_MILLIS) {
-            return diff / WEEK_MILLIS + "tuần trước";
-        } else if (diff < 365 * DAY_MILLIS) {
-            return diff / MONTH_MILLIS + "tháng trước";
+        long weeksInMilli = daysInMilli * 7;
+
+        long elapsedYears = different / yearsInMilli;
+
+        long elapsedMonths = different / monthsInMilli;
+
+        long elapsedWeeks = different / weeksInMilli;
+
+        long elapsedDays = different / daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+
+        if (elapsedYears >= 1) {
+            result = elapsedYears + " " + context.getString(R.string.year) + " " + context.getString(R.string.ago);
+        } else if (elapsedMonths >= 1) {
+            result = elapsedMonths + " " + context.getString(R.string.month) + " " + context.getString(R.string.ago);
+        } else if (elapsedWeeks >= 1) {
+            result = elapsedWeeks + " " + context.getString(R.string.week) + " " + context.getString(R.string.ago);
+        } else if (elapsedDays >= 1) {
+            result = elapsedDays + " " + context.getString(R.string.day) + " " + context.getString(R.string.ago);
+        } else if (elapsedHours >= 1) {
+            result = elapsedHours + " " + context.getString(R.string.hour) + " " + context.getString(R.string.ago);
+        } else if (elapsedMinutes >= 1) {
+            result = elapsedMinutes + " " + context.getString(R.string.minute) + " " + context.getString(R.string.ago);
         } else {
-            return diff / YEAR_MILLIS + "năm trước";
+            result = context.getString(R.string.now);
         }
+        return result;
+    }
+    public static Date parseStringToDate(String date) {
+        if (date == null || date.equals("")) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            Log.e("Obuut", "ParseException: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+        return null;
     }
 
+    public static String formatDateToString(String sDate){
+        if (sDate == null || sDate.equals("")) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        try {
+            Date date = sdf.parse(sDate);
+            SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm:ss, dd-MM-yyyy", Locale.US);
+            return sdfResult.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static String getCurrentDate() {
         DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         serverDateFormat.setTimeZone(TimeZone.getDefault());

@@ -38,7 +38,7 @@ import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.chooselocation.presenter.ChooseLocationPresenter;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.service.GPSTracker;
-import com.tlcn.mvpapplication.utils.Utilities;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -90,6 +90,7 @@ public class ChooseLocationView extends AppCompatActivity implements
     private GPSTracker gpsTracker;
     private boolean isFirst = true;
     private LatLng location;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,14 +157,13 @@ public class ChooseLocationView extends AppCompatActivity implements
                 finish();
                 break;
             case R.id.tv_save:
-                if(location != null) {
+                if (location != null) {
                     Intent intent = new Intent();
                     intent.putExtra("latitude", location.latitude);
                     intent.putExtra("longitude", location.longitude);
                     setResult(101, intent);
                     finish();
-                }
-                else finish();
+                } else finish();
                 break;
             case R.id.tv_save_com:
                 Intent intent2 = new Intent();
@@ -249,7 +249,7 @@ public class ChooseLocationView extends AppCompatActivity implements
         }
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), Utilities.DEFAULT_MAP_ZOOM));
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), KeyUtils.DEFAULT_MAP_ZOOM));
             }
         }
         mGoogleMap.setMyLocationEnabled(true);

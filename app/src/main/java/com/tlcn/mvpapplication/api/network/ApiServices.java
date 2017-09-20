@@ -2,8 +2,6 @@ package com.tlcn.mvpapplication.api.network;
 
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
-import com.tlcn.mvpapplication.model.Contribution;
-import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
 import retrofit2.Call;
@@ -25,7 +23,4 @@ public interface ApiServices {
 
     @POST("contribute")
     Call<BaseResponse> contribute(@Body ContributionRequest contribution);
-
-    @GET("test")
-    Call<Result> test();
 }

@@ -57,6 +57,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
             @Override
             public void success(BaseResponse res) {
                 getView().hideLoading();
+                getView().onSuccess();
             }
 
             @Override

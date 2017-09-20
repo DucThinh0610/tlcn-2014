@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
@@ -21,13 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
-import com.tlcn.mvpapplication.model.Contribution;
-import com.tlcn.mvpapplication.model.Result;
+import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.ContributePresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,8 +62,27 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     //Todo: Declaring
     ContributePresenter mPresenter = new ContributePresenter();
     private DialogProgress mProgressDialog;
-    LatLng currentLocation;
+    LatLng postLocation;
     GPSTracker gpsTracker;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            if (resultCode == 101 || resultCode == 102) {
+                if (data.getExtras() != null) {
+                    postLocation = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                }
+            } else {
+                rdbCurrent.setChecked(true);
+                if (gpsTracker.canGetLocation()) {
+                    postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+                } else
+                    Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,20 +102,26 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         imvTakePhoto.setOnClickListener(this);
         imvGallery.setOnClickListener(this);
         imvVideo.setOnClickListener(this);
-        if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current)
-            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
-
+        if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current) {
+            if (gpsTracker.canGetLocation()) {
+                postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+            } else
+                Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+        }
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                switch (i){
+                switch (i) {
                     case R.id.rdb_current:
-                        if(gpsTracker.canGetLocation()){
-                            currentLocation = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
-                        }
-                        else Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
+                        if (gpsTracker.canGetLocation()) {
+                            postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+                        } else
+                            Toast.makeText(getContext(), "Vui lòng kiểm tra lại chức năng vị trí", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.rdb_other:
+                        Intent intent = new Intent(getContext(), ChooseLocationView.class);
+                        intent.putExtra("title", getString(R.string.contribution));
+                        startActivityForResult(intent, 101);
                         break;
                 }
             }
@@ -133,28 +157,34 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     }
 
     @Override
-    public void onFail(String message) {
+    public void onSuccess() {
+        Toast.makeText(getContext(), "Cảm ơn bạn đã đóng góp cho chúng tôi!", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onFail(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_send:
                 ContributionRequest contribution = new ContributionRequest();
                 contribution.setDevice_id(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
                 String user_id = "";
-                if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 }
                 contribution.setUser_id(user_id);
-                contribution.setLatitude(currentLocation.latitude);
-                contribution.setLongitude(currentLocation.longitude);
-                contribution.setLevel(sbLevel.getProgress());
-                contribution.setDescription(edtDescription.getText().toString());
-                contribution.setCreated(DateUtils.getCurrentDate());
-
-                mPresenter.sendContribution(contribution);
+                if (postLocation.latitude != 0) {
+                    contribution.setLatitude(postLocation.latitude);
+                    contribution.setLongitude(postLocation.longitude);
+                    contribution.setLevel(sbLevel.getProgress());
+                    contribution.setDescription(edtDescription.getText().toString());
+                    contribution.setCreated(DateUtils.getCurrentDate());
+                    mPresenter.sendContribution(contribution);
+                }
                 break;
             case R.id.imv_take_photo:
                 break;
