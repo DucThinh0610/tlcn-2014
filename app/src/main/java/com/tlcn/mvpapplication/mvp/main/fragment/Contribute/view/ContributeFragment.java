@@ -176,7 +176,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                     user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 }
                 contribution.setUser_id(user_id);
-                if (postLocation.latitude != 0) {
+                if (postLocation.latitude != 0 || postLocation == null) {
                     contribution.setLatitude(postLocation.latitude);
                     contribution.setLongitude(postLocation.longitude);
                     contribution.setLevel(sbLevel.getProgress());

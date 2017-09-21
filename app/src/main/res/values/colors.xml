@@ -21,7 +21,8 @@
     <color name="color_splash_end">#ffffff</color>
 
     <color name="color_background_button">#8c0070ff</color>
-
+    <color name="color_yes">#03d200</color>
+    <color name="color_no">#ff0000</color>
     <color name="color_background_button_login">#ff0000</color>
     <color name="grey_divider">#CFCFCF</color>
     <color name="black">#000000</color>
