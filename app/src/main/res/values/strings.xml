@@ -71,6 +71,7 @@
     <string name="please_check_your_location">Vui lòng kiểm tra lại chức năng vị trí!</string>
     <string name="cant_get_detail_place">Không thể lấy chi tiết địa điểm</string>
     <string name="post_is_not_found">Không tìm thấy bài viết</string>
+    <string name="there_is_not_current_infomation">Hiện tại chưa có thông tin về địa điểm</string>
     <string name="null_data">Không có dữ liệu</string>
     <string name="authentication_failed">Xác thực tài khoản không thành công!</string>
 </resources>

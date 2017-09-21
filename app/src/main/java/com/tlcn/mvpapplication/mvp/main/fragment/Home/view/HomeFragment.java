@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,7 +64,9 @@ import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.model.direction.Route;
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
@@ -70,8 +74,10 @@ import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,7 +94,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeFragmentView, GoogleMap.OnPolylineClickListener {
+        IHomeFragmentView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -128,6 +134,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     SupportMapFragment supportMapFragment;
     CallbackManager mCallbackManager;
     FirebaseAuth mFirebaseAuth;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -184,6 +191,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnMapLongClickListener(this);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
@@ -211,6 +219,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         });
         mGoogleMap.setOnPolylineClickListener(this);
     }
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -240,7 +249,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                             });
                             btnLogin.setVisibility(View.GONE);
                             lnlLoginSuccess.setVisibility(View.VISIBLE);
-                            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()),imvAvatar);
+                            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()), imvAvatar);
                             tvName.setText(user.getDisplayName());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -251,6 +260,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     }
                 });
     }
+
     private void showDialog() {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_chiduong);
@@ -259,6 +269,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         lnl_xemthongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.getDetailNews(currentMarker.getPosition());
                 dialog.dismiss();
             }
         });
@@ -302,7 +313,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void initData() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_header_navigation,null);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_header_navigation, null);
         final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
         final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);
         CircleImageView imvAvatar = (CircleImageView) v.findViewById(R.id.imv_avatar);
@@ -311,14 +322,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(HomeFragment.this,asList("email", "public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(HomeFragment.this, asList("email", "public_profile"));
             }
         });
-        if(mFirebaseAuth.getCurrentUser() !=null) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
             FirebaseUser user = mFirebaseAuth.getCurrentUser();
             btnLogin.setVisibility(View.GONE);
             lnlLoginSuccess.setVisibility(View.VISIBLE);
-            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()),imvAvatar);
+            ImageLoader.load(getContext(), String.valueOf(user.getPhotoUrl()), imvAvatar);
             tvName.setText(user.getDisplayName());
             tvLogOut.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -329,8 +340,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     mFirebaseAuth.signOut();
                 }
             });
-        }
-        else {
+        } else {
             btnLogin.setVisibility(View.VISIBLE);
             lnlLoginSuccess.setVisibility(View.GONE);
         }
@@ -374,6 +384,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void getDetailNewsSuccess(News res) {
+        if (res != null) {
+            Intent intent = new Intent(getContext(), DetailsView.class);
+            intent.putExtra(KeyUtils.INTENT_KEY_ID,res.getId());
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void getDetailPlaceSuccess(PlaceBuffer places) {
         if (null != currentMarker) {
             currentMarker.remove();
@@ -394,6 +413,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void getDirectionSuccess(List<Route> routes) {
+        mGoogleMap.clear();
         for (Route route : routes) {
             originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .title(route.getLeg().get(0).getStartAddress())
@@ -514,4 +534,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        List<Address> addressList;
+        try {
+            addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String address = addressList.get(0).getAddressLine(0);
+            if(null != currentMarker) {
+                currentMarker.remove();
+            }
+            mPresenter.setLngEnd(latLng);
+            currentMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(address));
+            currentMarker.showInfoWindow();
+        } catch (IOException e) {
+            Toast.makeText(getContext(),e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    };
 }
