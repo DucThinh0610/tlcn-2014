@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -46,6 +47,10 @@ public class News implements Serializable{
     @Expose
     private String created_by;
 
+    @SerializedName("images")
+    @Expose
+    private List<Image> images;
+
     @SerializedName("num_rating")
     @Expose
     private long num_rating;
@@ -53,7 +58,7 @@ public class News implements Serializable{
 
     }
 
-    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by, long num_rating) {
+    public News(long id, String title, double rating, String created, long num_like, long num_dislike, String description, double latitude, double longitude, boolean status, String created_by, List<Image> images, long num_rating) {
         this.id = id;
         this.title = title;
         this.rating = rating;
@@ -65,6 +70,7 @@ public class News implements Serializable{
         this.longitude = longitude;
         this.status = status;
         this.created_by = created_by;
+        this.images = images;
         this.num_rating = num_rating;
     }
 
@@ -162,5 +168,13 @@ public class News implements Serializable{
 
     public void setNum_rating(long num_rating) {
         this.num_rating = num_rating;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

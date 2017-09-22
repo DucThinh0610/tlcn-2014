@@ -14,14 +14,15 @@
     <color name="colorNavAccentUnselected">#878787</color>
     <!--END: Custom color for Bottom -->
 
-    <color name="color_white">#ffffff</color>
+    <color name="white">#ffffff</color>
 
     <color name="color_splash_start">#FF0070FF</color>
     <color name="color_splash_center">#FF4F9CFF</color>
     <color name="color_splash_end">#ffffff</color>
 
     <color name="color_background_button">#8c0070ff</color>
-
+    <color name="color_yes">#03d200</color>
+    <color name="color_no">#ff0000</color>
     <color name="color_background_button_login">#ff0000</color>
     <color name="grey_divider">#CFCFCF</color>
     <color name="black">#000000</color>
@@ -37,4 +38,5 @@
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
     <color name="yellow">#ffee00</color>
+    <color name="soft_grey">#F2F2F2</color>
 </resources>

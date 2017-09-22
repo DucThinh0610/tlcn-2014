@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.tlcn.mvpapplication.mvp.main.view.MainActivity">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text= "@string/contribution"
+                android:text="@string/contribution"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -308,6 +309,16 @@
                         android:textColor="@color/color_main" />
                 </LinearLayout>
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imv_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                android:maxHeight="200dp"
+                android:layout_gravity="center" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -34,5 +34,5 @@ public class AppManager {
         if (httpApi == null) httpApi = new HttpHelper(URL_LOCAL);
         return httpApi;
     }
-    public final static String URL_LOCAL = "http://192.168.0.100:1234/";
+    public final static String URL_LOCAL = "http://192.168.0.112:1234/";
 }

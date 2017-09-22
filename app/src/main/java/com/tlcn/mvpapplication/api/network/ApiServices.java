@@ -3,15 +3,19 @@ package com.tlcn.mvpapplication.api.network;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
-import com.tlcn.mvpapplication.model.Contribution;
 import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -33,4 +37,10 @@ public interface ApiServices {
 
     @POST("info")
     Call<GetInfoResponse> getInfoPlace(@Body GetInfoRequest getInfoRequest);
+
+    @Multipart
+    @POST("upload")
+    Call<UploadFileResponse> uploadFile(
+            @Part MultipartBody.Part file
+    );
 }

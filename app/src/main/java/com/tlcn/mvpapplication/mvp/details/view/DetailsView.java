@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.mvp.details.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.mvp.details.adapter.ImagesAdapter;
 import com.tlcn.mvpapplication.mvp.details.presenter.DetailsPresenter;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -51,6 +53,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     DetailsPresenter mPresenter = new DetailsPresenter();
     SupportMapFragment supportMapFragment;
     GoogleMap mGoogleMap;
+    ImagesAdapter imagesAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +112,19 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     }
 
     @Override
-    public void getNewsSuccess(News result) {
-        if (result != null) {
+    public void getImagesSuccess() {
+        if(mPresenter.getNews()!=null){
+            imagesAdapter = new ImagesAdapter(this, mPresenter.getNews().getImages());
+            rcvImages.setNestedScrollingEnabled(false);
+            rcvImages.setLayoutManager(new LinearLayoutManager(this));
+            rcvImages.setAdapter(imagesAdapter);
+        }
+    }
+
+    @Override
+    public void getNewsSuccess() {
+        if (mPresenter.getNews() != null) {
+            News result = mPresenter.getNews();
             tvTitle.setText(result.getTitle());
             tvCreatedAt.setText(DateUtils.formatDateToString(result.getCreated()));
             tvDescription.setText(result.getDescription());
@@ -118,7 +132,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                 mGoogleMap.addMarker(
                         new MarkerOptions()
                                 .position(new LatLng(result.getLatitude(),result.getLongitude()))
-                                .title("Vị trí kẹt xe")
+                                .title(getString(R.string.traffic_jam_location_non_star))
                 ).showInfoWindow();
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(result.getLatitude(),result.getLongitude()),KeyUtils.DEFAULT_MAP_ZOOM));
             }
