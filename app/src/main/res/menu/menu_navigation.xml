@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:title="@string/setting"
-        android:id="@+id/setting"
-        android:icon="@drawable/ic_settings_main"/>
-    <item
-        android:title="@string/about_info"
-        android:id="@+id/about_info"
-        android:icon="@drawable/ic_info_outline_main"/>
-    <item
-        android:title="@string/feedback"
-        android:id="@+id/feedback"
-        android:icon="@drawable/ic_feedback_main"/>
-    <item
-        android:title="@string/share_app"
-        android:id="@+id/share_app"
-        android:icon="@drawable/ic_share_main"/>
+
+    <group android:id="@+id/gr_info">
+        <item
+            android:title="@string/about_info"
+            android:id="@+id/about_info"
+            android:icon="@drawable/ic_info_outline_main"/>
+        <item
+            android:title="@string/feedback"
+            android:id="@+id/feedback"
+            android:icon="@drawable/ic_feedback_main"/>
+        <item
+            android:title="@string/share_app"
+            android:id="@+id/share_app"
+            android:icon="@drawable/ic_share_main"/>
+    </group>
+    <group android:id="@+id/gr_setting">
+        <item
+            android:title="@string/setting"
+            android:id="@+id/setting"
+            android:icon="@drawable/ic_settings_main"/>
+    </group>
+
 </menu>

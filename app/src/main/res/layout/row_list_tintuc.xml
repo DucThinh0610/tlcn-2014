@@ -35,7 +35,8 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -48,17 +49,29 @@
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
-                    <android.support.v7.widget.AppCompatRatingBar
-                        android:id="@+id/rtb_level"
-                        style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:progressBackgroundTint="@color/color_main"
-                        android:progressTint="@color/color_main"
-                        android:secondaryProgressTint="@color/color_main" />
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <android.support.v7.widget.AppCompatRatingBar
+                            android:id="@+id/rtb_level"
+                            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:progressBackgroundTint="@color/color_main"
+                            android:progressTint="@color/color_main"
+                            android:secondaryProgressTint="@color/color_main" />
+                        <TextView
+                            android:id="@+id/tv_num_rating"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textStyle="italic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_time"
@@ -66,6 +79,20 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textSize="13sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_stopped"
+                        android:layout_width="match_parent"
+                        android:text="@string/stopped"
+                        android:textColor="@color/color_no"
+                        android:textStyle="bold"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 
