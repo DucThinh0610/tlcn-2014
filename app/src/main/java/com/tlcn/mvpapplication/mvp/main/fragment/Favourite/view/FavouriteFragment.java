@@ -160,7 +160,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void changeLocationSuccess() {
-        setTargetFragment(this,101);
+        mPresenter.getListNewsResult();
     }
     @Override
     public void onFail(String message) {

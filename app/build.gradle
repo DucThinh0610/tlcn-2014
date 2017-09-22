@@ -15,12 +15,12 @@ android {
         dev {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
-            buildConfigField("String", "SERVER_URL_API", '" https://tlcn-2014.herokuapp.com/"')
+            buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
-            buildConfigField("String", "SERVER_URL_API", '" https://tlcn-2014.herokuapp.com/"')
+            buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
         }
     }
     buildTypes {
