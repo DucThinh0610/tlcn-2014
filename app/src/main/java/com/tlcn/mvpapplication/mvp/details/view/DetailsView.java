@@ -115,6 +115,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     public void getImagesSuccess() {
         if(mPresenter.getNews()!=null){
             imagesAdapter = new ImagesAdapter(this, mPresenter.getNews().getImages());
+            rcvImages.setNestedScrollingEnabled(false);
             rcvImages.setLayoutManager(new LinearLayoutManager(this));
             rcvImages.setAdapter(imagesAdapter);
             rcvImages.setNestedScrollingEnabled(false);

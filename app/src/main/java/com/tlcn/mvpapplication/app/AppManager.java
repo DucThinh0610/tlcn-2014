@@ -30,4 +30,9 @@ public class AppManager {
         if (httpServer == null) httpServer = new HttpHelper(BuildConfig.SERVER_URL_API);
         return httpServer;
     }
+    synchronized static public HttpHelper http_local() {
+        if (httpApi == null) httpApi = new HttpHelper(URL_LOCAL);
+        return httpApi;
+    }
+    public final static String URL_LOCAL = "http://192.168.0.112:1234/";
 }

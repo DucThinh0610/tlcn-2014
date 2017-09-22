@@ -33,14 +33,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmentPresenter {
+    private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd;
     private List<Route> routes = new ArrayList<>();
-
+    private List<News> listPlace = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private CameraPosition mCameraPosition;
-
 
     public void setCameraPosition(CameraPosition cameraPosition) {
         this.mCameraPosition = cameraPosition;
@@ -61,6 +61,21 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
 
     public void setLngEnd(LatLng lngEnd) {
         this.lngEnd = lngEnd;
+    }
+
+
+    public int getBoundRadiusLoad() {
+        return boundRadiusLoad;
+    }
+
+    public void setBoundRadiusLoad(int boundRadiusLoad) {
+        this.boundRadiusLoad = boundRadiusLoad;
+    }
+
+    public List<News> getListPlace() {
+        if (listPlace==null)
+            listPlace=new ArrayList<>();
+        return listPlace;
     }
 
     @Override
@@ -137,7 +152,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 for (DataSnapshot data : listData) {
                     News item = data.getValue(News.class);
                     LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
-                    if(item.isStatus()) {
+                    if (item.isStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
                             getView().getDetailNewsSuccess(item);
                             getView().hideLoading();
@@ -155,6 +170,40 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 getView().onFail(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void getInfoPlace(final LatLng latLng) {
+        if (this.mCameraPosition == null)
+            return;
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+                listPlace.clear();
+                for (DataSnapshot data : dataSnapshots) {
+                    News item = data.getValue(News.class);
+                    LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
+                    if (item.isStatus()) {
+                        if (Utilities.calculationByDistance(start, latLng) <= boundRadiusLoad) {
+                            listPlace.add(item);
+                        }
+                    }
+                }
+                if (listPlace.size() == 0) {
+                    getView().showDialogConfirmNewRadius();
+                } else {
+                    getView().showPlaces();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getView().hideLoading();
+                getView().onFail(databaseError.getMessage());
+            }
+        });
+
     }
 
     private String convertLatLngToString(LatLng latLng) {

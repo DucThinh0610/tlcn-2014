@@ -74,6 +74,7 @@
     <string name="there_is_not_current_infomation">Hiện tại chưa có thông tin về địa điểm</string>
     <string name="null_data">Không có dữ liệu</string>
     <string name="authentication_failed">Xác thực tài khoản không thành công!</string>
+    <string name="dont_asj_again">Không hỏi lại lần nữa.</string>
     <string name="created_by">Đăng bởi</string>
     <string name="traffic_jam_location_non_star">Vị trí kẹt xe</string>
     <string name="rating">đánh giá</string>

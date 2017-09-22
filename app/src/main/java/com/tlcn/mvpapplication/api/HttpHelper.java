@@ -6,7 +6,9 @@ import com.tlcn.mvpapplication.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HttpHelper {
     Retrofit retrofit;
@@ -19,6 +21,8 @@ public class HttpHelper {
         okHttpClientBuilder.addInterceptor(logging);
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClientBuilder.build())
                 .build();

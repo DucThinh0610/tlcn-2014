@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -47,6 +48,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -63,6 +68,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
+import com.tlcn.mvpapplication.dialog.ConfirmDialog;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.model.direction.Route;
@@ -118,6 +124,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     RelativeLayout rlLocation;
 
     private DialogProgress mProgressDialog;
+    private ConfirmDialog mConfirmDialog;
     private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
@@ -126,7 +133,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
-
+    private List<Marker> placeMarker = new ArrayList<>();
+    List<Circle> temps=new ArrayList<>();
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -387,7 +395,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void getDetailNewsSuccess(News res) {
         if (res != null) {
             Intent intent = new Intent(getContext(), DetailsView.class);
-            intent.putExtra(KeyUtils.INTENT_KEY_ID,res.getId());
+            intent.putExtra(KeyUtils.INTENT_KEY_ID, res.getId());
             startActivity(intent);
         }
     }
@@ -478,6 +486,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void showDialogConfirmNewRadius() {
+        if (mConfirmDialog == null || !mConfirmDialog.isShowing()) {
+            mConfirmDialog = new ConfirmDialog(getContext(), "Mở rộng tìm kiếm",
+                    "Không tìm thấy thông tin. Bạn muốn mở rộng tìm kiếm?",
+                    new ConfirmDialog.IClickConfirmListener() {
+                        @Override
+                        public void onClickOk(boolean isChecked) {
+
+                        }
+
+                        @Override
+                        public void onClickCancel(boolean isChecked) {
+                            onCameraIdle();
+                            mPresenter.setBoundRadiusLoad(mPresenter.getBoundRadiusLoad() + 100);
+                            mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+                        }
+                    });
+            mConfirmDialog.show();
+        }
+    }
+
+    @Override
+    public void showPlaces() {
+        if (placeMarker != null) {
+            for (Marker marker : placeMarker) {
+                marker.remove();
+            }
+        }
+        for (News item : mPresenter.getListPlace()) {
+//            BitmapDescriptor bitmapDescriptor;
+//            if (item.getRating() < 40) {
+//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
+//            } else if (item.getRating() >= 40 && item.getRating() <= 80) {
+//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
+//            } else {
+//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
+//            }
+            placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(item.getLatitude(), item.getLongitude()))));
+        }
+    }
+
+    @Override
     public void showLoading() {
         showDialogLoading();
     }
@@ -502,6 +553,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCameraIdle() {
         mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
+        mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+        Circle circle = mGoogleMap.addCircle(new CircleOptions()
+                .center(mGoogleMap.getCameraPosition().target)
+                .radius(mPresenter.getBoundRadiusLoad())
+                .strokeColor(getResources().getColor(R.color.color_transparent))
+                .fillColor(getResources().getColor(R.color.color_bound_transparent)));
+        for (Circle item:temps){
+            item.remove();
+        }
+        temps.add(circle);
     }
 
 
@@ -542,14 +603,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         try {
             addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addressList.get(0).getAddressLine(0);
-            if(null != currentMarker) {
+            if (null != currentMarker) {
                 currentMarker.remove();
             }
             mPresenter.setLngEnd(latLng);
             currentMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(address));
             currentMarker.showInfoWindow();
         } catch (IOException e) {
-            Toast.makeText(getContext(),e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
-    };
+    }
+
+    ;
 }

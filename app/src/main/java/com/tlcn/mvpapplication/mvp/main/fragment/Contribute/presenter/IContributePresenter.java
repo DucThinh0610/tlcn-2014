@@ -8,4 +8,6 @@ import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 
 public interface IContributePresenter {
     void sendContribution(ContributionRequest contribution);
+
+    void uploadImage();
 }
