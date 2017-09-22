@@ -25,6 +25,7 @@ public class LocationStorage implements ILocationStorage {
     private static final String LOG_WORK = "log_work";
     private static final String LAT_OTHER = "lat_other";
     private static final String LOG_OTHER = "log_other";
+    private static final String ASK_EXTEND_BOUND = "ASK_EXTEND_BOUND";
 
     public LocationStorage(Context context) {
         this.mContext = context;

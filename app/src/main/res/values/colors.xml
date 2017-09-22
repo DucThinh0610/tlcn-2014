@@ -30,4 +30,11 @@
     <color name="color_transparent">#00000000</color>
     <color name="color_polyline">#afafaf</color>
     <color name="color_polyline_chose">#398fec</color>
+    <color name="bg_error">#ff7d7d</color>
+    <color name="blue">#009DF7</color>
+
+    <color name="color_bound_transparent">#20000000</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="yellow">#ffee00</color>
 </resources>

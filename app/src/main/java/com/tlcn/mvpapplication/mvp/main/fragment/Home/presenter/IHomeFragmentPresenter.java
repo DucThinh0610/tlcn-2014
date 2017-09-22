@@ -12,4 +12,6 @@ public interface IHomeFragmentPresenter {
     void getDirectionFromTwoPoint();
 
     void getDetailNews(LatLng latLng);
+
+    void getInfoPlace(LatLng latLng);
 }

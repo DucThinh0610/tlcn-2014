@@ -18,4 +18,8 @@ public interface IHomeFragmentView extends IView{
     void getDirectionSuccess(List<Route> routes);
 
     void onStartFindDirection();
+
+    void showDialogConfirmNewRadius();
+
+    void showPlaces();
 }
