@@ -118,6 +118,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
             rcvImages.setNestedScrollingEnabled(false);
             rcvImages.setLayoutManager(new LinearLayoutManager(this));
             rcvImages.setAdapter(imagesAdapter);
+            rcvImages.setNestedScrollingEnabled(false);
         }
     }
 

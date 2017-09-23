@@ -42,8 +42,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         holder.tvDescription.setText(item.getDescription());
         String numlike = item.getNum_like() + "";
         String numdislike = item.getNum_dislike() + "";
+        String numrating = "("+item.getNum_rating()+" "+mContext.getString(R.string.rating)+")";
         holder.tvNumLike.setText(numlike);
         holder.tvNumDislike.setText(numdislike);
+        holder.tvNumRating.setText(numrating);
         holder.lnlItemTinTuc.setLongClickable(false);
         holder.lnlItemTinTuc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +56,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
                 } else if (holder.lnlDescription.getVisibility() == View.VISIBLE) {
                     holder.lnlDescription.setVisibility(View.GONE);
                 }
+            }
+        });
+        holder.tvStopped.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo:Handle Event TextView Stopped Click
             }
         });
         holder.btnDetails.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +101,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         TextView tvDescription;
         TextView tvNumLike;
         TextView tvNumDislike;
+        TextView tvNumRating;
+        TextView tvStopped;
         Button btnDetails;
         LinearLayout lnlDescription;
         LinearLayout lnlItemTinTuc;
@@ -107,6 +117,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             tvDescription = (TextView) v.findViewById(R.id.tv_description);
             tvNumLike = (TextView) v.findViewById(R.id.tv_num_like);
             tvNumDislike = (TextView) v.findViewById(R.id.tv_num_dislike);
+            tvNumRating = (TextView) v.findViewById(R.id.tv_num_rating);
+            tvStopped = (TextView) v.findViewById(R.id.tv_stopped);
             btnDetails = (Button) v.findViewById(R.id.btn_details);
             lnlDescription = (LinearLayout) v.findViewById(R.id.lnl_description);
             lnlItemTinTuc = (LinearLayout) v.findViewById(R.id.lnl_item_tintuc);
