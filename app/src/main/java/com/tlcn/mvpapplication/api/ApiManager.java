@@ -15,7 +15,7 @@ import okhttp3.MultipartBody;
 
 public class ApiManager {
     public void addContribution(ContributionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).contribute(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_api_server().from(ApiServices.class).contribute(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -43,7 +43,7 @@ public class ApiManager {
     }
 
     public void uploadFile(final MultipartBody.Part file, final ApiCallback<UploadFileResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
+        AppManager.http_api_server().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
                 callback.success(res);
