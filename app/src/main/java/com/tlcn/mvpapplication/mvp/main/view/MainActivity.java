@@ -15,6 +15,7 @@ import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.ContributeFragm
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.FavouriteFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.HomeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.NewsFragment;
+import com.tlcn.mvpapplication.utils.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,11 @@ public class MainActivity extends BottomBarHolderActivity {
         navigationPages.add(page3);
         navigationPages.add(page4);
         return navigationPages;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogUtils.showExitDialog(MainActivity.this);
     }
 
     @Override
