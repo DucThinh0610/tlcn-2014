@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication;
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -8,12 +9,18 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
+import com.tlcn.mvpapplication.service.GPSTracker;
+import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.SystemUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.security.MessageDigest;
@@ -28,11 +35,15 @@ import java.util.Map;
  */
 
 public class SplashActivity extends AppCompatActivity {
+    private final Handler handler = new Handler();
+
+    GPSTracker gpsTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        gpsTracker = new GPSTracker(this);
         // check android 6.0
         if (Build.VERSION.SDK_INT >= 23) {
             // Marshmallow+
@@ -44,22 +55,31 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        handler.removeCallbacks(waitTask);
-        super.onBackPressed();
-    }
-
-    private final Handler handler = new Handler();
-    private final Runnable waitTask = new Runnable() {
-        public void run() {
-
-            if (Utilities.isConnectingToInternet(getBaseContext())) {
-                // vao trang home
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            gpsTracker = new GPSTracker(this);
+            if(gpsTracker.canGetLocation()){
+                Intent intent = new Intent(SplashActivity.this, SplashActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 finish();
-            } else {
+            }
+            else SystemUtils.exitApplication(SplashActivity.this);
+        }
+    }
 
+    private final Runnable waitTask = new Runnable() {
+        public void run() {
+            if (Utilities.isConnectingToInternet(getBaseContext())) {
+                if (gpsTracker.canGetLocation()) {
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    DialogUtils.showSettingDialog(SplashActivity.this,101);
+                }
+            } else {
                 Toast.makeText(getBaseContext(), "Please check your network connection!.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_MAIN, null);
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -150,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void insertDummyContact() {
-        handler.postDelayed(waitTask, 3000);
+        handler.postDelayed(waitTask, 1000);
     }
 
     private boolean addPermission(List<String> permissionsList, String permission) {
@@ -215,6 +235,30 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    public void showSettingsAlert() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_open_location);
+        dialog.setTitle("");
+        dialog.setCanceledOnTouchOutside(false);
+        Button btnYes = (Button) dialog.findViewById(R.id.btn_yes);
+        Button btnNo = (Button) dialog.findViewById(R.id.btn_no);
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(intent, 101);
+            }
+        });
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                SystemUtils.exitApplication(SplashActivity.this);
+            }
+        });
+        dialog.show();
+    }
 
     public void generateHashkey() {
         try {
