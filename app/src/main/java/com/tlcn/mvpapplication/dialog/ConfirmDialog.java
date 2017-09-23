@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,11 +63,11 @@ public class ConfirmDialog extends Dialog {
         setContentView(R.layout.dialog_confirm);
         TextView tvTitle = (TextView) findViewById(R.id.tv_title);
         TextView tvMessage = (TextView) findViewById(R.id.tv_message);
-        final CheckBox cbAsk = (CheckBox) findViewById(R.id.cb_ask_again);
-        Button btnExit = (Button) findViewById(R.id.btn_exit);
-        Button btnOk = (Button) findViewById(R.id.btn_ok);
+        TextView btnExit = (TextView) findViewById(R.id.btn_exit);
+        TextView btnOk = (TextView) findViewById(R.id.btn_ok);
         tvMessage.setText(mMessage);
         tvTitle.setText(mTitle);
+        tvTitle.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,14 +78,14 @@ public class ConfirmDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
-                mCallback.onClickOk(cbAsk.isChecked());
+                mCallback.onClickOk();
             }
         });
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                mCallback.onClickCancel(cbAsk.isChecked());
+                mCallback.onClickCancel();
             }
         });
 
@@ -92,8 +93,8 @@ public class ConfirmDialog extends Dialog {
 
     public interface IClickConfirmListener {
 
-        void onClickOk(boolean isChecked);
+        void onClickOk();
 
-        void onClickCancel(boolean isChecked);
+        void onClickCancel();
     }
 }

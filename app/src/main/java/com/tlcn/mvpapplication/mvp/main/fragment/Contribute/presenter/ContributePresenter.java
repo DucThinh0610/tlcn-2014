@@ -38,6 +38,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
             @Override
             public void success(BaseResponse res) {
                 getView().hideLoading();
+
                 uploadImage();
             }
 
@@ -57,6 +58,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
         getManager().uploadFile(this.mtlPart, new ApiCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
+                mtlPart = null;
                 getView().onSuccess();
             }
 

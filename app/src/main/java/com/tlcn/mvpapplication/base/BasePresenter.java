@@ -1,10 +1,13 @@
 package com.tlcn.mvpapplication.base;
 
 import com.tlcn.mvpapplication.api.ApiManager;
+import com.tlcn.mvpapplication.app.App;
+import com.tlcn.mvpapplication.caches.storage.LocalStorage;
 
 public abstract class BasePresenter {
     private ApiManager manager = new ApiManager();
     private IView mView;
+    private LocalStorage mStorage;
 
     public void attachView(IView view) {
         mView = view;
@@ -27,7 +30,7 @@ public abstract class BasePresenter {
 
 
     public void onCreate() {
-
+        mStorage = new LocalStorage(App.getSharedPreferences());
     }
 
 
@@ -37,5 +40,9 @@ public abstract class BasePresenter {
 
     public ApiManager getManager() {
         return this.manager;
+    }
+
+    public LocalStorage getStorage() {
+        return mStorage;
     }
 }

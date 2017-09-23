@@ -41,6 +41,11 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private CameraPosition mCameraPosition;
+    private boolean continousShowDialog = true;
+
+    public void setContinousShowDialog(boolean continousShowDialog) {
+        this.continousShowDialog = continousShowDialog;
+    }
 
     public void setCameraPosition(CameraPosition cameraPosition) {
         this.mCameraPosition = cameraPosition;
@@ -73,8 +78,8 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     }
 
     public List<News> getListPlace() {
-        if (listPlace==null)
-            listPlace=new ArrayList<>();
+        if (listPlace == null)
+            listPlace = new ArrayList<>();
         return listPlace;
     }
 
@@ -190,7 +195,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                         }
                     }
                 }
-                if (listPlace.size() == 0) {
+                if (listPlace.size() == 0 && boundRadiusLoad < 500 && continousShowDialog) {
                     getView().showDialogConfirmNewRadius();
                 } else {
                     getView().showPlaces();

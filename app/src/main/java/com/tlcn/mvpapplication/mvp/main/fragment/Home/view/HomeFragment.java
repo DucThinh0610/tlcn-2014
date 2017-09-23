@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -65,6 +67,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.IconGenerator;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
@@ -134,7 +138,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private List<Marker> placeMarker = new ArrayList<>();
-    List<Circle> temps=new ArrayList<>();
+    List<Circle> temps = new ArrayList<>();
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -488,19 +492,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void showDialogConfirmNewRadius() {
         if (mConfirmDialog == null || !mConfirmDialog.isShowing()) {
-            mConfirmDialog = new ConfirmDialog(getContext(), "Mở rộng tìm kiếm",
-                    "Không tìm thấy thông tin. Bạn muốn mở rộng tìm kiếm?",
+            mConfirmDialog = new ConfirmDialog(getContext(), "Không tìm thấy thông tin.",
+                    "Bạn có muốn mở rộng tìm kiếm?",
                     new ConfirmDialog.IClickConfirmListener() {
                         @Override
-                        public void onClickOk(boolean isChecked) {
-
-                        }
-
-                        @Override
-                        public void onClickCancel(boolean isChecked) {
+                        public void onClickOk() {
                             onCameraIdle();
                             mPresenter.setBoundRadiusLoad(mPresenter.getBoundRadiusLoad() + 100);
                             mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+                        }
+
+                        @Override
+                        public void onClickCancel() {
+                            mPresenter.setContinousShowDialog(false);
                         }
                     });
             mConfirmDialog.show();
@@ -515,15 +519,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             }
         }
         for (News item : mPresenter.getListPlace()) {
-//            BitmapDescriptor bitmapDescriptor;
-//            if (item.getRating() < 40) {
-//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
-//            } else if (item.getRating() >= 40 && item.getRating() <= 80) {
-//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
-//            } else {
-//                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
-//            }
+//            IconGenerator iconGenerator = new IconGenerator(getContext());
+            BitmapDescriptor bitmapDescriptor;
+            if (item.getRating() < 40) {
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
+            } else if (item.getRating() >= 40 && item.getRating() <= 80) {
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
+            } else {
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
+            }
             placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
+                    .icon(bitmapDescriptor)
                     .position(new LatLng(item.getLatitude(), item.getLongitude()))));
         }
     }
@@ -559,7 +565,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 .radius(mPresenter.getBoundRadiusLoad())
                 .strokeColor(getResources().getColor(R.color.color_transparent))
                 .fillColor(getResources().getColor(R.color.color_bound_transparent)));
-        for (Circle item:temps){
+        for (Circle item : temps) {
             item.remove();
         }
         temps.add(circle);
