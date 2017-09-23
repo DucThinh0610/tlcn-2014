@@ -8,5 +8,8 @@ import com.tlcn.mvpapplication.base.IView;
 
 public interface IContributeView extends IView {
     void onSuccess();
+
     void onFail(String message);
+
+    void removeImageView();
 }

@@ -39,6 +39,10 @@ public class ContributionRequest implements Serializable {
     @Expose
     private String description;
 
+    @SerializedName("file")
+    @Expose
+    private String file;
+
     public String getUser_id() {
         return user_id;
     }
@@ -93,5 +97,13 @@ public class ContributionRequest implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }

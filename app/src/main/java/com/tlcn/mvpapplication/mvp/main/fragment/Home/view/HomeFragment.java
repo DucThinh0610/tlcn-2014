@@ -219,13 +219,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                showDialog();
+                showDialog(marker);
             }
         });
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                showDialog();
+                showDialog(marker);
                 return false;
             }
         });
@@ -273,7 +273,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 });
     }
 
-    private void showDialog() {
+    private void showDialog(final Marker marker) {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_chiduong);
         LinearLayout lnl_xemthongtin = (LinearLayout) dialog.findViewById(R.id.lnl_xemthongtin);
@@ -281,7 +281,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         lnl_xemthongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.getDetailNews(currentMarker.getPosition());
+                mPresenter.getDetailNews(marker.getPosition());
                 dialog.dismiss();
             }
         });

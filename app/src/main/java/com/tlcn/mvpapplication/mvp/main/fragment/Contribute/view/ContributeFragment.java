@@ -165,23 +165,27 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     }
 
     @Override
+    public void removeImageView() {
+        imvImage.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_send:
-                ContributionRequest contribution = new ContributionRequest();
-                contribution.setDevice_id(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+                mPresenter.contribution.setDevice_id(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
                 String user_id = "";
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 }
-                contribution.setUser_id(user_id);
+                mPresenter.contribution.setUser_id(user_id);
                 if (postLocation.latitude != 0 || postLocation == null) {
-                    contribution.setLatitude(postLocation.latitude);
-                    contribution.setLongitude(postLocation.longitude);
-                    contribution.setLevel(sbLevel.getProgress());
-                    contribution.setDescription(edtDescription.getText().toString());
-                    contribution.setCreated(DateUtils.getCurrentDate());
-                    mPresenter.sendContribution(contribution);
+                    mPresenter.contribution.setLatitude(postLocation.latitude);
+                    mPresenter.contribution.setLongitude(postLocation.longitude);
+                    mPresenter.contribution.setLevel(sbLevel.getProgress());
+                    mPresenter.contribution.setDescription(edtDescription.getText().toString());
+                    mPresenter.contribution.setCreated(DateUtils.getCurrentDate());
+                    mPresenter.sendContribution();
                 }
                 break;
             case R.id.rdb_other:
@@ -249,6 +253,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 assert file != null;
                 mPresenter.setMtlPart(FileUtils.createMultipartBodyPart(getContext(),
                         FileUtils.convertUriToFile(getContext(), Uri.parse(file.getPath()))));
+                imvImage.setVisibility(View.VISIBLE);
                 ImageLoader.loadImageFromPath(getContext(), file.getPath(), imvImage, 10);
             }
         }

@@ -11,6 +11,8 @@ import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.IContributeView
 import okhttp3.MultipartBody;
 
 public class ContributePresenter extends BasePresenter implements IContributePresenter {
+    public ContributionRequest contribution = new ContributionRequest();
+
     private MultipartBody.Part mtlPart;
 
     public void setMtlPart(MultipartBody.Part mtlPart) {
@@ -32,14 +34,20 @@ public class ContributePresenter extends BasePresenter implements IContributePre
     }
 
     @Override
-    public void sendContribution(ContributionRequest contribution) {
+    public void sendContribution() {
         getView().showLoading();
         getManager().addContribution(contribution, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
-                getView().hideLoading();
-
-                uploadImage();
+                if (mtlPart == null) {
+                    getView().onSuccess();
+                    contribution=new ContributionRequest();
+                    getView().hideLoading();
+                }
+                else {
+                    uploadImage();
+                    getView().hideLoading();
+                }
             }
 
             @Override
@@ -52,14 +60,13 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
     @Override
     public void uploadImage() {
-        if (mtlPart == null) {
-            return;
-        }
         getManager().uploadFile(this.mtlPart, new ApiCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
                 mtlPart = null;
-                getView().onSuccess();
+                contribution.setFile(res.getImageFile().getUrl());
+                sendContribution();
+                getView().removeImageView();
             }
 
             @Override
