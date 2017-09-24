@@ -5,6 +5,7 @@ import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
@@ -46,6 +47,20 @@ public class ApiManager {
         AppManager.http_api_server().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void action(ActionRequest request, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_api_server().from(ApiServices.class).action(request).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
                 callback.success(res);
             }
 

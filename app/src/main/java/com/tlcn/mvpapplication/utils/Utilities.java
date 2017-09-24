@@ -54,4 +54,26 @@ public class Utilities {
 
         return new LatLng(new_lat, new_long);
     }
+
+    public static String getAcronymNumber(int number){
+        String result = "";
+        if(number/1000000 >=1){
+            result = (int) number/1000000 +"m";
+        } else if(number / 1000 >=1){
+            result = (int) number/1000 +"k";
+        }
+        else result = number +"";
+        return result;
+    }
+
+    public static String getAcronymNumber(long number){
+        String result;
+        if(number/1000000 >=1){
+            result = (int) number/1000000 +"Tr";
+        } else if(number / 1000 >=1){
+            result = (int) number/1000 +"N";
+        }
+        else result = number +"";
+        return result;
+    }
 }

@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.api.network;
 
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
@@ -9,7 +10,6 @@ import com.tlcn.mvpapplication.model.Result;
 import com.tlcn.mvpapplication.model.UserInfoGit;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -43,4 +43,7 @@ public interface ApiServices {
     Call<UploadFileResponse> uploadFile(
             @Part MultipartBody.Part file
     );
+
+    @POST("action")
+    Call<BaseResponse> action(@Body ActionRequest action);
 }

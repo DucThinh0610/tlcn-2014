@@ -16,4 +16,9 @@ public class BaseResponse implements Serializable {
     @SerializedName("message")
     @Expose
     public String message;
+
+    @Override
+    public String toString() {
+        return code +" "+message;
+    }
 }

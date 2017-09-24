@@ -152,7 +152,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult());
+            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult(),this);
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }

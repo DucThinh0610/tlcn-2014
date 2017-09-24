@@ -64,7 +64,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult());
+            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult(),this);
             rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvNews.setAdapter(newsAdapter);
         }
