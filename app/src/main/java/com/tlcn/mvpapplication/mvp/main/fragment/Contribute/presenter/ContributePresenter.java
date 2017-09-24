@@ -35,19 +35,12 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
     @Override
     public void sendContribution() {
-        getView().showLoading();
         getManager().addContribution(contribution, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
-                if (mtlPart == null) {
-                    getView().onSuccess();
-                    contribution=new ContributionRequest();
-                    getView().hideLoading();
-                }
-                else {
-                    uploadImage();
-                    getView().hideLoading();
-                }
+                getView().hideLoading();
+                contribution = new ContributionRequest();
+                getView().onSuccess();
             }
 
             @Override
@@ -60,19 +53,25 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
     @Override
     public void uploadImage() {
-        getManager().uploadFile(this.mtlPart, new ApiCallback<UploadFileResponse>() {
-            @Override
-            public void success(UploadFileResponse res) {
-                mtlPart = null;
-                contribution.setFile(res.getImageFile().getUrl());
-                sendContribution();
-                getView().removeImageView();
-            }
+        getView().showLoading();
+        if(mtlPart==null){
+            sendContribution();
+        }
+        else {
+            getManager().uploadFile(this.mtlPart, new ApiCallback<UploadFileResponse>() {
+                @Override
+                public void success(UploadFileResponse res) {
+                    mtlPart = null;
+                    contribution.setFile(res.getImageFile().getUrl());
+                    sendContribution();
+                    getView().removeImageView();
+                }
 
-            @Override
-            public void failure(RestError error) {
-                getView().onFail(error.message);
-            }
-        });
+                @Override
+                public void failure(RestError error) {
+                    sendContribution();
+                }
+            });
+        }
     }
 }
