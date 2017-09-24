@@ -184,7 +184,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                     mPresenter.contribution.setLevel(sbLevel.getProgress());
                     mPresenter.contribution.setDescription(edtDescription.getText().toString());
                     mPresenter.contribution.setCreated(DateUtils.getCurrentDate());
-                    mPresenter.sendContribution();
+                    mPresenter.uploadImage();
                 }
                 break;
             case R.id.rdb_other:
