@@ -39,9 +39,10 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     private List<News> listPlace = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mReference;
+    public DatabaseReference mReference;
     private CameraPosition mCameraPosition;
     private boolean continousShowDialog = true;
+    public ValueEventListener mListenerDetail;
 
     public void setContinousShowDialog(boolean continousShowDialog) {
         this.continousShowDialog = continousShowDialog;
@@ -181,7 +182,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     public void getInfoPlace(final LatLng latLng) {
         if (this.mCameraPosition == null)
             return;
-        mReference.addValueEventListener(new ValueEventListener() {
+        mListenerDetail = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
@@ -207,7 +208,8 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 getView().hideLoading();
                 getView().onFail(databaseError.getMessage());
             }
-        });
+        };
+        mReference.addValueEventListener(mListenerDetail);
 
     }
 

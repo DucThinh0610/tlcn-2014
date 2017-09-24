@@ -1,12 +1,11 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -67,8 +66,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.maps.android.ui.BubbleIconFactory;
-import com.google.maps.android.ui.IconGenerator;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
@@ -146,6 +143,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     SupportMapFragment supportMapFragment;
     CallbackManager mCallbackManager;
     FirebaseAuth mFirebaseAuth;
+    private Context mContext;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -509,6 +507,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     });
             mConfirmDialog.show();
         }
+        Log.d("ASDasd", "Showdialog");
     }
 
     @Override
@@ -620,5 +619,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    ;
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("State", "Pause Home Fragment");
+        if (mPresenter.mListenerDetail != null) {
+            mPresenter.mReference.removeEventListener(mPresenter.mListenerDetail);
+            Log.d("Pause", "Pause Listener");
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext=context;
+    }
 }
