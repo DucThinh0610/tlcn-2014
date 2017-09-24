@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 
@@ -54,6 +55,36 @@ public class DialogUtils {
         dialog.show();
     }
 
+    public static void showSettingDialog(final Fragment fragment, final int requestCode){
+        final Dialog dialog = new Dialog(fragment.getContext());
+        dialog.setContentView(R.layout.dialog_open_location);
+        dialog.setCanceledOnTouchOutside(true);
+        Button btnYes = (Button) dialog.findViewById(R.id.btn_yes);
+        Button btnNo = (Button) dialog.findViewById(R.id.btn_no);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                dialog.dismiss();
+                SystemUtils.exitApplication(fragment.getActivity());
+            }
+        });
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                fragment.startActivityForResult(intent, requestCode);
+            }
+        });
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                SystemUtils.exitApplication(fragment.getActivity());
+            }
+        });
+        dialog.show();
+    }
     public static void showExitDialog(final Activity activity){
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_wanna_exit);

@@ -8,10 +8,8 @@ import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
@@ -106,8 +103,10 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current) {
             if (gpsTracker.canGetLocation()) {
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
-            } else
+            } else {
                 Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
+                DialogUtils.showSettingDialog(this,102);
+            }
         }
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -243,8 +242,18 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 rdbCurrent.setChecked(true);
                 if (gpsTracker.canGetLocation()) {
                     postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
-                } else
+                } else {
                     Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        if(requestCode == 102){
+            gpsTracker = new GPSTracker(getContext());
+            if (gpsTracker.canGetLocation()) {
+                rdbCurrent.setChecked(true);
+                postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+            } else {
+                Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
             }
         }
         if (resultCode == RESULT_OK) {
