@@ -105,7 +105,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             } else {
                 Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
-                DialogUtils.showSettingDialog(this,102);
+                DialogUtils.showSettingLocationDialog(this,102);
             }
         }
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

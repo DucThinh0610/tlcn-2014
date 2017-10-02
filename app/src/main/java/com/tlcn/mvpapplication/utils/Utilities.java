@@ -76,4 +76,13 @@ public class Utilities {
         else result = number +"";
         return result;
     }
+
+    public static String getDistanceString(int number){
+        String s ="";
+        if(number >= 1000)
+            s = (double)number/1000 + " km";
+        else
+            s = number + " m";
+        return s;
+    }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context="com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView">
 
@@ -184,8 +184,8 @@
         android:id="@+id/rl_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/map"
@@ -195,15 +195,17 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             tools:context="com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView" />
+
         <FrameLayout
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
             <ImageView
-                android:layout_marginBottom="27dp"
-                android:src="@mipmap/icon_marker"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="27dp"
+                android:src="@mipmap/icon_marker" />
         </FrameLayout>
 
     </RelativeLayout>
@@ -211,8 +213,36 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_choose_current_location"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_location_main" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:text="@string/choose_current_location"
+                    android:textColor="@color/color_main"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:layout_below="@+id/cv_choose_current_location"
             android:id="@+id/cv_choose_on_map"
             android:layout_width="match_parent"
             android:layout_height="60dp"

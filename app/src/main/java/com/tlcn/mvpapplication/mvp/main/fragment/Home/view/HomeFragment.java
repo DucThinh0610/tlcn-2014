@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,6 +76,7 @@ import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
+import com.tlcn.mvpapplication.mvp.setting.view.SettingView;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -294,6 +295,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void initListener() {
+        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.setting:
+                        startActivity(new Intent(getContext(), SettingView.class));
+                        break;
+                    case R.id.feedback:
+                        break;
+                    case R.id.about_info:
+                        break;
+                    case R.id.share_app:
+                        break;
+                }
+                return false;
+            }
+        });
         imvMenu.setOnClickListener(this);
         fsdFloating.addOnMenuItemClickListener(this);
         rlLocation.setOnClickListener(this);

@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +39,7 @@ import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.chooselocation.presenter.ChooseLocationPresenter;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.service.GPSTracker;
+import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
@@ -56,9 +58,10 @@ public class ChooseLocationView extends AppCompatActivity implements
         OnMapReadyCallback {
 
     private final int SAVE_RESULT_CODE = 101;
-    private final int SAVE_COM_RESULT_CODE = 102;
 
     //Todo: Binding
+    @Bind(R.id.cv_choose_current_location)
+    CardView cvChooseCurrentLocation;
     @Bind(R.id.imv_back_activity)
     ImageView imvBackActivity;
     @Bind(R.id.tv_save)
@@ -109,6 +112,7 @@ public class ChooseLocationView extends AppCompatActivity implements
 
     private void initListener() {
         //các sự kiện click view được khai báo ở đây
+        cvChooseCurrentLocation.setOnClickListener(this);
         imvBackActivity.setOnClickListener(this);
         cvChooseOnMap.setOnClickListener(this);
         tvSave.setOnClickListener(this);
@@ -172,7 +176,7 @@ public class ChooseLocationView extends AppCompatActivity implements
                 Intent intent2 = new Intent();
                 intent2.putExtra(KeyUtils.INTENT_KEY_LATITUDE, mGoogleMap.getCameraPosition().target.latitude);
                 intent2.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, mGoogleMap.getCameraPosition().target.longitude);
-                setResult(SAVE_COM_RESULT_CODE, intent2);
+                setResult(SAVE_RESULT_CODE, intent2);
                 finish();
                 break;
             case R.id.cv_choose_on_map:
@@ -206,7 +210,36 @@ public class ChooseLocationView extends AppCompatActivity implements
                         });
 
                 break;
+            case R.id.cv_choose_current_location:
+                if (gpsTracker.canGetLocation()) {
+                    Intent intent3 = new Intent();
+                    intent3.putExtra(KeyUtils.INTENT_KEY_LATITUDE, gpsTracker.getLatitude());
+                    intent3.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, gpsTracker.getLongitude());
+                    setResult(SAVE_RESULT_CODE, intent3);
+                    finish();
+                } else {
+                    DialogUtils.showSettingLocationDialog(this, 101);
+                }
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            gpsTracker = new GPSTracker(this);
+            if (gpsTracker.canGetLocation()) {
+                Intent intent3 = new Intent();
+                intent3.putExtra(KeyUtils.INTENT_KEY_LATITUDE, gpsTracker.getLatitude());
+                intent3.putExtra(KeyUtils.INTENT_KEY_LONGITUDE, gpsTracker.getLongitude());
+                setResult(SAVE_RESULT_CODE, intent3);
+                finish();
+            } else {
+                Toast.makeText(this, getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     @Override

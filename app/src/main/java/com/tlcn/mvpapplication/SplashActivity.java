@@ -36,7 +36,6 @@ import java.util.Map;
 
 public class SplashActivity extends AppCompatActivity {
     private final Handler handler = new Handler();
-
     GPSTracker gpsTracker;
 
     @Override
@@ -77,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    DialogUtils.showSettingDialog(SplashActivity.this,101);
+                    DialogUtils.showSettingLocationDialog(SplashActivity.this,101);
                 }
             } else {
                 Toast.makeText(getBaseContext(), "Please check your network connection!.", Toast.LENGTH_SHORT).show();

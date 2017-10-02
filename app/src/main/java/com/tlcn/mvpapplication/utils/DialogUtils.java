@@ -24,7 +24,7 @@ public class DialogUtils {
         return progressDialog;
     }
 
-    public static void showSettingDialog(final Activity activity, final int resquestCode){
+    public static void showSettingLocationDialog(final Activity activity, final int resquestCode){
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_open_location);
         dialog.setCanceledOnTouchOutside(true);
@@ -55,7 +55,7 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showSettingDialog(final Fragment fragment, final int requestCode){
+    public static void showSettingLocationDialog(final Fragment fragment, final int requestCode){
         final Dialog dialog = new Dialog(fragment.getContext());
         dialog.setContentView(R.layout.dialog_open_location);
         dialog.setCanceledOnTouchOutside(true);
