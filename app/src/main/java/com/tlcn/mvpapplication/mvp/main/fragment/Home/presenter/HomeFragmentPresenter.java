@@ -158,7 +158,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 for (DataSnapshot data : listData) {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
-                    if (item.getStatus() == 0) {
+                    if (item.getStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
                             getView().getDetailNewsSuccess(item);
                             getView().hideLoading();
@@ -190,7 +190,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 for (DataSnapshot data : dataSnapshots) {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
-                    if (item.getStatus() == 0) {
+                    if (item.getStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= boundRadiusLoad) {
                             listPlace.add(item);
                         }

@@ -19,7 +19,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
+import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -32,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/24/2017.
  */
 
-public class FavouriteFragment extends Fragment implements IFavouriteView, View.OnClickListener {
+public class FavouriteFragment extends Fragment implements IFavouriteView, View.OnClickListener, LocationAdapter.OnItemClick {
     public static FavouriteFragment newInstance() {
         return new FavouriteFragment();
     }
@@ -64,7 +66,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     //Todo: Declaring
     private DialogProgress mProgressDialog;
     FavouritePresenter mPresenter = new FavouritePresenter();
-    NewsAdapter newsAdapter;
+    LocationAdapter newsAdapter;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -152,7 +154,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult(),this);
+            newsAdapter = new LocationAdapter( mPresenter.getListNewsResult(),getContext(),this);
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }
@@ -241,5 +243,15 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
+    }
+
+    @Override
+    public void OnClickDetail(int id) {
+
+    }
+
+    @Override
+    public void OnClickShare(Locations item) {
+
     }
 }

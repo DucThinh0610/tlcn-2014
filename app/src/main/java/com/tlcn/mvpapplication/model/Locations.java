@@ -6,10 +6,11 @@ public class Locations implements Serializable {
     private int id;
     private double lat;
     private double lng;
-    private int status;
-    private double level;
+    private boolean status;
+    private double current_level;
     private String last_modify;
-    private String description;
+    private String title;
+    private int rate;
 
     public int getId() {
         return id;
@@ -35,20 +36,20 @@ public class Locations implements Serializable {
         this.lng = lng;
     }
 
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
     public double getLevel() {
-        return level;
+        return current_level;
     }
 
     public void setLevel(double level) {
-        this.level = level;
+        this.current_level = level;
     }
 
     public String getLast_modify() {
@@ -59,11 +60,27 @@ public class Locations implements Serializable {
         this.last_modify = last_modify;
     }
 
-    public String getDescription() {
-        return description;
+    public double getCurrent_level() {
+        return current_level;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCurrent_level(double current_level) {
+        this.current_level = current_level;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 }

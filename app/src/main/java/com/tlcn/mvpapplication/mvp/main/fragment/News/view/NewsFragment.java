@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.presenter.NewsPresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/23/2017.
  */
 
-public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener {
+public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener, LocationAdapter.OnItemClick {
     public static NewsFragment newInstance() {
         return new NewsFragment();
     }
@@ -36,7 +38,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     //Todo: Declaring
     private DialogProgress mProgressDialog;
     NewsPresenter mPresenter = new NewsPresenter();
-    NewsAdapter newsAdapter;
+    LocationAdapter newsAdapter;
 
     @Nullable
     @Override
@@ -64,7 +66,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new NewsAdapter(getContext(), mPresenter.getListNewsResult(),this);
+            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(),getContext(), this);
             rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvNews.setAdapter(newsAdapter);
         }
@@ -101,5 +103,15 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void onRefresh() {
         mPresenter.getListNews();
+    }
+
+    @Override
+    public void OnClickDetail(int id) {
+
+    }
+
+    @Override
+    public void OnClickShare(Locations item) {
+
     }
 }

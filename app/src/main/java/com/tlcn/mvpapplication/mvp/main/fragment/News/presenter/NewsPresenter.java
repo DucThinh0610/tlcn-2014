@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tlcn.mvpapplication.base.BasePresenter;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -23,11 +23,11 @@ import java.util.List;
 
 public class NewsPresenter  extends BasePresenter implements INewsPresenter {
 
-    private List<News> list;
+    private List<Locations> list;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
 
-    public List<News> getListNewsResult(){
+    public List<Locations> getListNewsResult(){
         return list;
     }
 
@@ -42,7 +42,7 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
     public void onCreate() {
         super.onCreate();
         mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.NEWS);
+        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         list = new ArrayList<>();
     }
 
@@ -55,16 +55,16 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
                 list.clear();
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for(DataSnapshot data : listData){
-                    News item = data.getValue(News.class);
-                    if(item.isStatus()) {
+                    Locations item = data.getValue(Locations.class);
+                    if(item.getStatus()) {
                         list.add(item);
                     }
                 }
-                Collections.sort(list, new Comparator<News>() {
+                Collections.sort(list, new Comparator<Locations>() {
                     @Override
-                    public int compare(News news, News t1) {
-                        Date date1 = DateUtils.parseStringToDate(news.getCreated());
-                        Date date2 = DateUtils.parseStringToDate(t1.getCreated());
+                    public int compare(Locations news, Locations t1) {
+                        Date date1 = DateUtils.parseStringToDate(news.getLast_modify());
+                        Date date2 = DateUtils.parseStringToDate(t1.getLast_modify());
                         return date2.compareTo(date1);
                     }
                 });

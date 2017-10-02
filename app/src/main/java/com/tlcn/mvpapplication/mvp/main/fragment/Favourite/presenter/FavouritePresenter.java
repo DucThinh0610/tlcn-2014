@@ -9,7 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.IFavouriteView;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 public class FavouritePresenter extends BasePresenter implements IFavouritePresenter {
-    private List<News> list;
+    private List<Locations> list;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private LocationStorage mLocationStorage;
@@ -45,11 +45,11 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         super.onCreate();
         mLocationStorage = App.getLocationStorage();
         mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.NEWS);
+        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         list = new ArrayList<>();
     }
 
-    public List<News> getListNewsResult() {
+    public List<Locations> getListNewsResult() {
         return list;
     }
 
@@ -62,22 +62,22 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 list.clear();
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for (DataSnapshot data : listData) {
-                    News item = data.getValue(News.class);
-                    LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
+                    Locations item = data.getValue(Locations.class);
+                    LatLng start = new LatLng(item.getLat(), item.getLng());
                     LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " "+ start.toString());
                     LogUtils.LOGE("item2",Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation())+"");
-                    if(item.isStatus()) {
+                    if(item.getStatus()) {
                         if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
                                 || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
                                 || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD)
                             list.add(item);
                     }
                 }
-                Collections.sort(list, new Comparator<News>() {
+                Collections.sort(list, new Comparator<Locations>() {
                     @Override
-                    public int compare(News news, News t1) {
-                        Date date1 = DateUtils.parseStringToDate(news.getCreated());
-                        Date date2 = DateUtils.parseStringToDate(t1.getCreated());
+                    public int compare(Locations locations, Locations t1) {
+                        Date date1 = DateUtils.parseStringToDate(locations.getLast_modify());
+                        Date date2 = DateUtils.parseStringToDate(t1.getLast_modify());
                         return date2.compareTo(date1);
                     }
                 });
