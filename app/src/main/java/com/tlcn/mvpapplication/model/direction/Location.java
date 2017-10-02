@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.model;
+package com.tlcn.mvpapplication.model.direction;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
