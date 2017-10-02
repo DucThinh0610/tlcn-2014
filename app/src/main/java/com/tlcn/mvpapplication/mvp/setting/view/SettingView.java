@@ -27,8 +27,8 @@ public class SettingView extends AppCompatActivity implements ISettingView, View
     LinearLayout lnlChangeLanguage;
     @Bind(R.id.rl_notification)
     RelativeLayout rlNotication;
-    @Bind(R.id.switch_notification)
-    Switch switchNotification;
+    @Bind(R.id.tv_state)
+    TextView tvState;
     @Bind(R.id.tv_num_distance)
     TextView tvNumDistance;
     @Bind(R.id.sb_distance)
