@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +70,7 @@ import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.ConfirmDialog;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
@@ -394,7 +393,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void getDetailNewsSuccess(News res) {
+    public void getDetailNewsSuccess(Locations res) {
         if (res != null) {
             Intent intent = new Intent(getContext(), DetailsView.class);
             intent.putExtra(KeyUtils.INTENT_KEY_ID, res.getId());
@@ -517,19 +516,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 marker.remove();
             }
         }
-        for (News item : mPresenter.getListPlace()) {
+        for (Locations item : mPresenter.getListPlace()) {
 //            IconGenerator iconGenerator = new IconGenerator(getContext());
             BitmapDescriptor bitmapDescriptor;
-            if (item.getRating() < 40) {
+            if (item.getLevel() < 50) {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
-            } else if (item.getRating() >= 40 && item.getRating() <= 80) {
+            } else if (item.getLevel() >= 50 && item.getLevel() <= 80) {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
             } else {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
             }
             placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
                     .icon(bitmapDescriptor)
-                    .position(new LatLng(item.getLatitude(), item.getLongitude()))));
+                    .position(new LatLng(item.getLat(), item.getLng()))));
         }
     }
 
@@ -562,8 +561,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         Circle circle = mGoogleMap.addCircle(new CircleOptions()
                 .center(mGoogleMap.getCameraPosition().target)
                 .radius(mPresenter.getBoundRadiusLoad())
-                .strokeColor(getResources().getColor(R.color.color_transparent))
-                .fillColor(getResources().getColor(R.color.color_bound_transparent)));
+                .strokeColor(mContext.getResources().getColor(R.color.color_transparent))
+                .fillColor(mContext.getResources().getColor(R.color.color_bound_transparent)));
         for (Circle item : temps) {
             item.remove();
         }
@@ -632,6 +631,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext=context;
+        mContext = context;
     }
 }

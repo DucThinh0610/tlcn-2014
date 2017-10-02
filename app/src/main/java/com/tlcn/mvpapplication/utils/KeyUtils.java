@@ -13,6 +13,7 @@ public class KeyUtils {
     //TODO: KEY FOR FIREBASE REFERENCE
     public static final String NEWS = "news";
     public static final String IMAGES = "images";
+    public static final String LOCATIONS="locations";
 
     //TODO: KEY FOR VALIDATION
     public static final int DEFAULT_DISTANCE_TO_LOAD = 100;

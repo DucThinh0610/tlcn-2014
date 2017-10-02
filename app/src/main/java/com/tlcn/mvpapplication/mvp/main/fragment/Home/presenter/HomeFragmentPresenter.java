@@ -23,7 +23,7 @@ import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeFragmentView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -36,7 +36,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd;
     private List<Route> routes = new ArrayList<>();
-    private List<News> listPlace = new ArrayList<>();
+    private List<Locations> listPlace = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private FirebaseDatabase mDatabase;
     public DatabaseReference mReference;
@@ -78,7 +78,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         this.boundRadiusLoad = boundRadiusLoad;
     }
 
-    public List<News> getListPlace() {
+    public List<Locations> getListPlace() {
         if (listPlace == null)
             listPlace = new ArrayList<>();
         return listPlace;
@@ -91,7 +91,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
             mGoogleApiClient = App.getGoogleApiHelper().getGoogleApiClient();
         }
         mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.NEWS);
+        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         mCameraPosition = MapStorage.getInstance().getCameraPosition();
     }
 
@@ -156,9 +156,9 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for (DataSnapshot data : listData) {
-                    News item = data.getValue(News.class);
-                    LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
-                    if (item.isStatus()) {
+                    Locations item = data.getValue(Locations.class);
+                    LatLng start = new LatLng(item.getLat(), item.getLng());
+                    if (item.getStatus() == 0) {
                         if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
                             getView().getDetailNewsSuccess(item);
                             getView().hideLoading();
@@ -188,9 +188,9 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
                 listPlace.clear();
                 for (DataSnapshot data : dataSnapshots) {
-                    News item = data.getValue(News.class);
-                    LatLng start = new LatLng(item.getLatitude(), item.getLongitude());
-                    if (item.isStatus()) {
+                    Locations item = data.getValue(Locations.class);
+                    LatLng start = new LatLng(item.getLat(), item.getLng());
+                    if (item.getStatus() == 0) {
                         if (Utilities.calculationByDistance(start, latLng) <= boundRadiusLoad) {
                             listPlace.add(item);
                         }

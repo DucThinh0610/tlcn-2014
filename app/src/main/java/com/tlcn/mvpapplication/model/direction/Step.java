@@ -2,7 +2,6 @@ package com.tlcn.mvpapplication.model.direction;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.tlcn.mvpapplication.model.Location;
 
 import java.io.Serializable;
 
