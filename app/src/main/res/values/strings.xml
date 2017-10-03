@@ -86,6 +86,11 @@
     <string name="completed">Xong</string>
     <string name="cancel">Hủy</string>
     <string name="current_distance">Hiện tại:</string>
-
+    <string name="on">Bật</string>
+    <string name="off">Tắt</string>
+    <string name="notification">Thông báo</string>
+    <string name="change_language">Đổi ngôn ngữ</string>
+    <string name="distance_of_search">Khoảng cách tìm kiếm:</string>
+    <string name="get_notification_from_app">nhận thông báo từ</string>
 </resources>
 

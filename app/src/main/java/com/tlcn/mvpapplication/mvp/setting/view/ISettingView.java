@@ -7,5 +7,5 @@ import com.tlcn.mvpapplication.base.IView;
  */
 
 public interface ISettingView extends IView {
-
+    void onStateChangeSuccess(boolean state);
 }

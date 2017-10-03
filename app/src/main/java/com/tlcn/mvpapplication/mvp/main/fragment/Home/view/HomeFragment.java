@@ -190,8 +190,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onStart() {
         super.onStart();
-
-
     }
 
     @Override

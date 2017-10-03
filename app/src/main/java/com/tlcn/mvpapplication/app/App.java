@@ -7,11 +7,13 @@ import android.preference.PreferenceManager;
 
 import com.facebook.FacebookSdk;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
+import com.tlcn.mvpapplication.caches.storage.NotificationStorage;
 
 public class App extends Application {
     private GoogleApiHelper googleApiHelper;
     private static App mInstance;
     private LocationStorage mLocationStorage;
+    private NotificationStorage mNotificationStorage;
     private static Context mContext;
     private static SharedPreferences mSharedPreferences;
 
@@ -35,12 +37,23 @@ public class App extends Application {
         return this.googleApiHelper;
     }
 
+
     public LocationStorage getLocationStorageInstance() {
         if (mLocationStorage == null) {
             mLocationStorage = new LocationStorage(this);
-            return mLocationStorage;
         }
         return mLocationStorage;
+    }
+
+    public NotificationStorage getNotificationStorageInstance() {
+        if (mNotificationStorage == null) {
+            mNotificationStorage = new NotificationStorage(this);
+        }
+        return mNotificationStorage;
+    }
+
+    public static NotificationStorage getNotificationStorage() {
+        return getInstance().getNotificationStorageInstance();
     }
 
     public static LocationStorage getLocationStorage() {

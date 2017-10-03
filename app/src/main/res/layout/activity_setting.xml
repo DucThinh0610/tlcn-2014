@@ -53,7 +53,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:gravity="left"
-            android:text="Đổi ngôn ngữ"
+            android:text="@string/change_language"
             android:textColor="@color/color_main"
             android:textSize="18sp" />
     </LinearLayout>
@@ -79,12 +79,11 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/imv_notification"
             android:gravity="center"
-            android:text="Thông báo"
+            android:text="@string/notification"
             android:textColor="@color/color_main"
             android:textSize="18sp" />
 
         <TextView
-            android:text="On"
             android:textSize="18sp"
             android:textColor="@color/color_yes"
             android:layout_alignParentRight="true"
@@ -105,7 +104,7 @@
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Khoảng cách tìm kiếm:"
+            android:text="@string/distance_of_search"
             android:textColor="@color/color_main"
             android:textSize="18sp" />
 
@@ -116,8 +115,7 @@
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@id/tv_distance"
             android:paddingLeft="10dp"
-            android:text="500m"
-            android:textColor="@color/color_no"
+            android:textColor="@color/red"
             android:textSize="18sp" />
 
         <SeekBar

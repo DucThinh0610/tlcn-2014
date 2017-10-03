@@ -5,4 +5,5 @@ package com.tlcn.mvpapplication.mvp.setting.presenter;
  */
 
 public interface ISettingPresenter {
+    void setNotificationState(boolean state);
 }
