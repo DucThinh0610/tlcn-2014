@@ -55,6 +55,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                 mListener.OnClickShare(item);
             }
         });
+        holder.tvStopped.setVisibility(item.getStatus() ? View.VISIBLE : View.GONE);
+        holder.tvStopped.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickStopped(item.getId());
+            }
+        });
     }
 
     @Override
@@ -89,5 +96,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         void OnClickShare(Locations item);
 
         void OnClickDetail(Locations item);
+
+        void onClickStopped(String id);
     }
 }

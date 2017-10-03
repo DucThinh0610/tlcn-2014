@@ -2,11 +2,17 @@ package com.tlcn.mvpapplication.mvp.details.presenter;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.api.network.ApiCallback;
+import com.tlcn.mvpapplication.api.network.BaseResponse;
+import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.Post;
@@ -25,6 +31,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     private DatabaseReference mReference;
     private List<Post> mListPost;
     private Locations mLocation;
+    FirebaseAuth mFirebaseAuth;
+    FirebaseUser user;
 
     public Locations getLocation() {
         return mLocation;
@@ -44,6 +52,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         mListPost = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        user = mFirebaseAuth.getCurrentUser();
     }
 
     public void attachView(IDetailsView view) {
@@ -61,6 +71,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+                mListPost.clear();
                 for (DataSnapshot data : dataSnapshots) {
                     Post item = data.getValue(Post.class);
                     mListPost.add(item);
@@ -84,5 +95,35 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
             }
         });
         Log.d("asd", mReference.child(KeyUtils.NEWS).child(mLocation.getId()).toString());
+    }
+
+    @Override
+    public void actionDislike(String idPost) {
+        getManager().action(new ActionRequest(user.getUid(), 2, idPost), new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().onActionSuccess();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().onFail(error.message);
+            }
+        });
+    }
+
+    @Override
+    public void actionLike(String idPost) {
+        getManager().action(new ActionRequest(user.getUid(), 1, idPost), new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().onActionSuccess();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().onFail(error.message);
+            }
+        });
     }
 }

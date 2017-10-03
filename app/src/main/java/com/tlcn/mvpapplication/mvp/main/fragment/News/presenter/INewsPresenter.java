@@ -6,4 +6,6 @@ package com.tlcn.mvpapplication.mvp.main.fragment.News.presenter;
 
 public interface INewsPresenter {
     void getListNews();
+
+    void onChangeStopped(String id);
 }
