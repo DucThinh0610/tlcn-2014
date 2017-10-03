@@ -41,7 +41,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     public void onBindViewHolder(LocationViewHolder holder, int position) {
         final Locations item = mList.get(position);
         holder.tvTitle.setText(item.getTitle());
-        holder.rtbLevel.setRating((float) item.getLevel() / 20);
+        holder.rtbLevel.setRating((float) item.getLevel());
         holder.tvTime.setText(DateUtils.getTimeAgo(mContext, DateUtils.parseStringToDate(item.getLast_modify())));
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override

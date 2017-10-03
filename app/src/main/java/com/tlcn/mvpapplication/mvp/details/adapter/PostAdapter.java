@@ -54,9 +54,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else
             holder.tvDes.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.getUrl_image())) {
-            ImageLoader.loadWithProgressBar(mContext, BuildConfig.API_URL + item.getUrl_image(), holder.imvImage, holder.prBar);
+            ImageLoader.loadWithProgressBar(mContext, BuildConfig.SERVER_URL_API + item.getUrl_image(), holder.imvImage, holder.prBar);
         } else {
             holder.imvImage.setVisibility(View.GONE);
+            holder.prBar.setVisibility(View.GONE);
         }
         holder.rlDislike.setOnClickListener(new View.OnClickListener() {
             @Override
