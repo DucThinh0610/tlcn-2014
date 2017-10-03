@@ -7,8 +7,8 @@ import com.tlcn.mvpapplication.base.IView;
  */
 
 public interface IDetailsView extends IView {
-    void getImagesSuccess();
-    void getNewsSuccess();
 
     void onFail(String message);
+
+    void getPostSuccess();
 }

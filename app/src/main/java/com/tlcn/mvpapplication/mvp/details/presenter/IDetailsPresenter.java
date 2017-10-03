@@ -5,5 +5,6 @@ package com.tlcn.mvpapplication.mvp.details.presenter;
  */
 
 public interface IDetailsPresenter {
-    void getDetailedNews(long id);
+
+    void getListPostFromSV();
 }

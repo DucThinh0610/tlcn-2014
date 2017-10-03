@@ -18,8 +18,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.mvp.details.adapter.ImagesAdapter;
+import com.tlcn.mvpapplication.mvp.details.adapter.PostAdapter;
 import com.tlcn.mvpapplication.mvp.details.presenter.DetailsPresenter;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -28,13 +31,15 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static android.R.attr.data;
+
 /**
  * Created by tskil on 9/20/2017.
  */
 
 public class DetailsView extends AppCompatActivity implements IDetailsView,
         View.OnClickListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback, PostAdapter.OnItemClick {
     //Todo: Binding
     @Bind(R.id.tv_title_header)
     TextView tvTitleHeader;
@@ -53,7 +58,8 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     DetailsPresenter mPresenter = new DetailsPresenter();
     SupportMapFragment supportMapFragment;
     GoogleMap mGoogleMap;
-    ImagesAdapter imagesAdapter;
+    PostAdapter mPostAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +81,16 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     private void initData() {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         if (getIntent().getExtras() != null) {
-            long id = getIntent().getLongExtra(KeyUtils.INTENT_KEY_ID, 0);
-            mPresenter.getDetailedNews(id);
+            ObjectSerializable objectSerialized = (ObjectSerializable) getIntent().getSerializableExtra(KeyUtils.KEY_INTENT_LOCATION);
+            mPresenter.setLocation(objectSerialized.getObject());
+            mPresenter.getListPostFromSV();
         }
+        tvTitle.setText(mPresenter.getLocation().getTitle());
+        tvCreatedAt.setText(DateUtils.formatDateToString(mPresenter.getLocation().getLast_modify()));
+        mPostAdapter = new PostAdapter(mPresenter.getListPost(), DetailsView.this, this);
+        rcvImages.setLayoutManager(new LinearLayoutManager(this));
+        rcvImages.setNestedScrollingEnabled(false);
+        rcvImages.setAdapter(mPostAdapter);
     }
 
     @Override
@@ -112,42 +125,36 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     }
 
     @Override
-    public void getImagesSuccess() {
-        if(mPresenter.getNews()!=null){
-            imagesAdapter = new ImagesAdapter(this, mPresenter.getNews().getImages());
-            rcvImages.setNestedScrollingEnabled(false);
-            rcvImages.setLayoutManager(new LinearLayoutManager(this));
-            rcvImages.setAdapter(imagesAdapter);
-            rcvImages.setNestedScrollingEnabled(false);
-        }
-    }
-
-    @Override
-    public void getNewsSuccess() {
-        if (mPresenter.getNews() != null) {
-            News result = mPresenter.getNews();
-            tvTitle.setText(result.getTitle());
-            tvCreatedAt.setText(DateUtils.formatDateToString(result.getCreated()));
-            tvDescription.setText(result.getDescription());
-            if (mGoogleMap != null){
-                mGoogleMap.addMarker(
-                        new MarkerOptions()
-                                .position(new LatLng(result.getLatitude(),result.getLongitude()))
-                                .title(getString(R.string.traffic_jam_location_non_star))
-                ).showInfoWindow();
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(result.getLatitude(),result.getLongitude()),KeyUtils.DEFAULT_MAP_ZOOM));
-            }
-        }
-    }
-
-    @Override
     public void onFail(String message) {
-        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void getPostSuccess() {
+        mPostAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+        if (mGoogleMap != null) {
+            mGoogleMap.addMarker(
+                    new MarkerOptions()
+                            .position(new LatLng(mPresenter.getLocation().getLat(), mPresenter.getLocation().getLng()))
+                            .title(getString(R.string.traffic_jam_location_non_star))
+            ).showInfoWindow();
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPresenter.getLocation().getLat(), mPresenter.getLocation().getLng()), KeyUtils.DEFAULT_MAP_ZOOM));
+        }
+    }
+
+    @Override
+    public void onClickDislike(String id) {
+
+    }
+
+    @Override
+    public void onClickLike(String id) {
+
     }
 }

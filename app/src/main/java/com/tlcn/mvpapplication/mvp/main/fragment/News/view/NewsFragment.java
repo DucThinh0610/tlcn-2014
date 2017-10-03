@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.News.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +14,12 @@ import android.view.ViewGroup;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.ObjectSerializable;
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
-import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.presenter.NewsPresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,7 +69,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(),getContext(), this);
+            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(), getContext(), this);
             rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvNews.setAdapter(newsAdapter);
         }
@@ -80,11 +83,13 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
 
     @Override
     public void showLoading() {
+        swpLayout.setRefreshing(false);
         showDialogLoading();
     }
 
     @Override
     public void hideLoading() {
+        swpLayout.setRefreshing(false);
         dismissDialogLoading();
     }
 
@@ -106,8 +111,11 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     }
 
     @Override
-    public void OnClickDetail(int id) {
-
+    public void OnClickDetail(Locations item) {
+        Intent intent = new Intent(getActivity(), DetailsView.class);
+        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, new ObjectSerializable(item));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

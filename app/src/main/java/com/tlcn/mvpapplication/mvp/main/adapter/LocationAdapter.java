@@ -46,12 +46,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo:Handle Event Button XemChiTiet Click
-                mListener.OnClickDetail(item.getId());
-                Intent intent = new Intent(mContext, DetailsView.class);
-                intent.putExtra(KeyUtils.INTENT_KEY_ID, item.getId());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                mListener.OnClickDetail(item);
             }
         });
         holder.rlShare.setOnClickListener(new View.OnClickListener() {
@@ -86,11 +81,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             ButterKnife.bind(this, itemView);
         }
     }
-    private OnItemClick mListener;
-    public interface OnItemClick{
 
-        void OnClickDetail(int id);
+    private OnItemClick mListener;
+
+    public interface OnItemClick {
 
         void OnClickShare(Locations item);
+
+        void OnClickDetail(Locations item);
     }
 }

@@ -1,15 +1,15 @@
 package com.tlcn.mvpapplication.mvp.details.presenter;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
-import com.tlcn.mvpapplication.model.Image;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.mvp.details.view.IDetailsView;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -20,21 +20,28 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by tskil on 9/20/2017.
- */
-
 public class DetailsPresenter extends BasePresenter implements IDetailsPresenter {
-    News mNews;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    List<Image> images;
+    private List<Post> mListPost;
+    private Locations mLocation;
+
+    public Locations getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(Object o) {
+        this.mLocation = (Locations) o;
+    }
+
+    public List<Post> getListPost() {
+        return mListPost;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mNews = new News();
-        images = new ArrayList<Image>();
+        mListPost = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
     }
@@ -48,61 +55,34 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     }
 
     @Override
-    public void getDetailedNews(final long id) {
+    public void getListPostFromSV() {
         getView().showLoading();
-        mReference.child(KeyUtils.NEWS).addValueEventListener(new ValueEventListener() {
+        mReference.child(KeyUtils.NEWS).child(mLocation.getId()).limitToLast(20).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-                for (DataSnapshot data : listData) {
-                    final News item = data.getValue(News.class);
-                    if (item.getId() == id) {
-                        getView().hideLoading();
-                        mReference.child(KeyUtils.IMAGES).child(data.getKey()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot imagesSnapshot) {
-                                images.clear();
-                                Iterable<DataSnapshot> imagesSnapshotChildren = imagesSnapshot.getChildren();
-                                for (DataSnapshot d : imagesSnapshotChildren) {
-                                    Image it = d.getValue(Image.class);
-                                    images.add(it);
-                                }
-                                Collections.sort(images, new Comparator<Image>() {
-                                    @Override
-                                    public int compare(Image image, Image t1) {
-                                        Date date1 = DateUtils.parseStringToDate(image.getCreated_at());
-                                        Date date2 = DateUtils.parseStringToDate(t1.getCreated_at());
-                                        return date2.compareTo(date1);
-                                    }
-                                });
-                                mNews.setImages(images);
-                                getView().getImagesSuccess();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                getView().hideLoading();
-                                getView().onFail(databaseError.toString());
-                            }
-                        });
-                        mNews = item;
-                        getView().getNewsSuccess();
-                        return;
-                    }
+                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+                for (DataSnapshot data : dataSnapshots) {
+                    Post item = data.getValue(Post.class);
+                    mListPost.add(item);
                 }
+                Collections.sort(mListPost, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        Date date1 = DateUtils.parseStringToDate(o1.getCreated_at());
+                        Date date2 = DateUtils.parseStringToDate(o2.getCreated_at());
+                        return date2.compareTo(date1);
+                    }
+                });
+                getView().getPostSuccess();
                 getView().hideLoading();
-                getView().onFail(App.getContext().getString(R.string.post_is_not_found));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 getView().hideLoading();
-                getView().onFail(databaseError.toString());
+                getView().onFail(databaseError.getMessage());
             }
         });
-    }
-
-    public News getNews() {
-        return mNews;
+        Log.d("asd", mReference.child(KeyUtils.NEWS).child(mLocation.getId()).toString());
     }
 }

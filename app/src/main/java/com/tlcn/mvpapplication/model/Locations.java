@@ -3,7 +3,7 @@ package com.tlcn.mvpapplication.model;
 import java.io.Serializable;
 
 public class Locations implements Serializable {
-    private int id;
+    private String id;
     private double lat;
     private double lng;
     private boolean status;
@@ -12,11 +12,11 @@ public class Locations implements Serializable {
     private String title;
     private int rate;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

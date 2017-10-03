@@ -63,6 +63,7 @@ public class DateUtils {
         }
         return result;
     }
+
     public static Date parseStringToDate(String date) {
         if (date == null || date.equals("")) {
             return null;
@@ -78,7 +79,7 @@ public class DateUtils {
         return null;
     }
 
-    public static String formatDateToString(String sDate){
+    public static String formatDateToString(String sDate) {
         if (sDate == null || sDate.equals("")) {
             return null;
         }
@@ -92,11 +93,28 @@ public class DateUtils {
         }
         return null;
     }
+
     public static String getCurrentDate() {
         DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         serverDateFormat.setTimeZone(TimeZone.getDefault());
         serverDateFormat.setCalendar(new GregorianCalendar(TimeZone.getDefault()));
         Calendar cal = Calendar.getInstance();
         return serverDateFormat.format(cal.getTime());
+    }
+
+    public static String formatFullDate(String dateStr) {
+        Date date = parseStringToDate(dateStr);
+        String dateFormat = "dd/MM/yyyy";
+        dateFormat += "   HH:mm";
+        return formatDate(date, dateFormat);
+    }
+
+    private static String formatDate(Date date, String desFormat) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat dateResultFormat = new SimpleDateFormat(desFormat, Locale.US);
+        dateResultFormat.setTimeZone(TimeZone.getDefault());
+        return dateResultFormat.format(date);
     }
 }

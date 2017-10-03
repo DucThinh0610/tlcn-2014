@@ -17,10 +17,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by tskil on 9/14/2017.
- */
-
 public class NewsPresenter  extends BasePresenter implements INewsPresenter {
 
     private List<Locations> list;

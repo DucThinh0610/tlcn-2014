@@ -23,6 +23,7 @@ public class KeyUtils {
     public static final String INTENT_KEY_TITLE = "title";
     public static final String INTENT_KEY_LATITUDE = "latitude";
     public static final String INTENT_KEY_LONGITUDE = "longitude";
+    public static final String KEY_INTENT_LOCATION = "KEY_INTENT_LOCATION";
 
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";

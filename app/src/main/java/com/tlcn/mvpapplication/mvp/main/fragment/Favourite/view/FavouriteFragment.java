@@ -22,7 +22,6 @@ import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
-import com.tlcn.mvpapplication.mvp.main.adapter.NewsAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -246,12 +245,12 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     }
 
     @Override
-    public void OnClickDetail(int id) {
+    public void OnClickShare(Locations item) {
 
     }
 
     @Override
-    public void OnClickShare(Locations item) {
+    public void OnClickDetail(Locations item) {
 
     }
 }
