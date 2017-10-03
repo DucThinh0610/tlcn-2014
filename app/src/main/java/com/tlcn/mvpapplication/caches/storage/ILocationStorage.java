@@ -8,6 +8,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 public interface ILocationStorage {
 
+    void createDistanceFavourite(int progress);
+    int getDistanceFavourite();
+
     void createHouseLocation(LatLng location);
     LatLng getHouseLocation();
     void removeHouseLocation();

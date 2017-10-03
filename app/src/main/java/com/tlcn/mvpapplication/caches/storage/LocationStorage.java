@@ -19,6 +19,7 @@ public class LocationStorage implements ILocationStorage {
     private static final String PREF_NAME = "Location";
 
     //TODO: Key of PREF
+    private static final String DISTANCE_FAVOURITE = "dis_fav";
     private static final String LAT_HOUSE = "lat_house";
     private static final String LOG_HOUSE = "log_house";
     private static final String LAT_WORK = "lat_work";
@@ -31,6 +32,17 @@ public class LocationStorage implements ILocationStorage {
         this.mContext = context;
         pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = pref.edit();
+    }
+
+    @Override
+    public void createDistanceFavourite(int progress) {
+        editor.putInt(DISTANCE_FAVOURITE, progress);
+        editor.commit();
+    }
+
+    @Override
+    public int getDistanceFavourite() {
+        return pref.getInt(DISTANCE_FAVOURITE, 50);
     }
 
     @Override

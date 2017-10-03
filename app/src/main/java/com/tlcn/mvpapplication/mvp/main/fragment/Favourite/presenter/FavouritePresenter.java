@@ -56,6 +56,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void getListNews() {
         getView().showLoading();
+        final int distanceToLoad = mLocationStorage.getDistanceFavourite()*20;
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,9 +68,9 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                     LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " "+ start.toString());
                     LogUtils.LOGE("item2",Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation())+"");
                     if(item.getStatus()) {
-                        if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
-                                || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD
-                                || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD)
+                        if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= distanceToLoad
+                                || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= distanceToLoad
+                                || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= distanceToLoad)
                             list.add(item);
                     }
                 }
@@ -92,6 +93,12 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 getView().onFail(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void setFavouriteDistance(int progress) {
+        mLocationStorage.createDistanceFavourite(progress);
+        getView().changeDistanceFavouriteSuccess();
     }
 
     @Override

@@ -43,7 +43,6 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     private final int OTHER_RESQUEST_CODE = 103;
 
     private final int SAVE_RESULT_CODE = 101;
-    private final int SAVE_COM_RESULT_CODE = 102;
     //Todo: Binding
     @Bind(R.id.rcv_favourite)
     RecyclerView rcvFavourite;
@@ -72,40 +71,37 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == HOUSE_RESQUEST_CODE) {
             //Todo: House
-            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
+            if (resultCode == SAVE_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setHouseLocation(location);
                     tvLocationHouse.setText(getString(R.string.have_set));
                 }
-            }
-            else {
+            } else {
                 mPresenter.removeHouseLocation();
                 tvLocationHouse.setText(getString(R.string.add_location_house));
             }
         } else if (requestCode == WORK_RESQUEST_CODE) {
             //Todo: Work
-            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
+            if (resultCode == SAVE_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setWorkLocation(location);
                     tvLocationWork.setText(getString(R.string.have_set));
                 }
-            }
-            else {
+            } else {
                 mPresenter.removeWorkLocation();
                 tvLocationWork.setText(getString(R.string.add_location_work));
             }
-        } else if(requestCode == OTHER_RESQUEST_CODE){
+        } else if (requestCode == OTHER_RESQUEST_CODE) {
             //Todo: Other
-            if (resultCode == SAVE_RESULT_CODE || resultCode == SAVE_COM_RESULT_CODE) {
+            if (resultCode == SAVE_RESULT_CODE) {
                 if (data.getExtras() != null) {
                     LatLng location = new LatLng(data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
                     mPresenter.setOtherLocation(location);
                     tvLocationOther.setText(getString(R.string.have_set));
                 }
-            }
-            else {
+            } else {
                 mPresenter.removeOtherLocation();
                 tvLocationOther.setText(getString(R.string.add_other_location));
                 lnlOther.setVisibility(View.GONE);
@@ -153,7 +149,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     @Override
     public void getListNewsSuccess() {
         if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new LocationAdapter( mPresenter.getListNewsResult(),getContext(),this);
+            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(), getContext(), this);
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }
@@ -163,6 +159,12 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     public void changeLocationSuccess() {
         mPresenter.getListNews();
     }
+
+    @Override
+    public void changeDistanceFavouriteSuccess() {
+    
+    }
+
     @Override
     public void onFail(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

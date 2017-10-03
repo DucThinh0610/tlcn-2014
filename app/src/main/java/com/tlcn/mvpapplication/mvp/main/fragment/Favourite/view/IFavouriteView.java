@@ -12,6 +12,8 @@ public interface IFavouriteView extends IView{
 
     void changeLocationSuccess();
 
+    void changeDistanceFavouriteSuccess();
+
     void onFail(String message);
 
     void showLoading();
