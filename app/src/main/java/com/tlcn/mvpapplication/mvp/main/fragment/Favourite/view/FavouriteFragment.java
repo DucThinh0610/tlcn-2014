@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.Utilities;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,6 +62,8 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     TextView tvLocationWork;
     @Bind(R.id.tv_location_other)
     TextView tvLocationOther;
+    @Bind(R.id.tv_distance)
+    TextView tvDistance;
 
     //Todo: Declaring
     private DialogProgress mProgressDialog;
@@ -129,6 +133,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         lnlWork.setOnClickListener(this);
         lnlOther.setOnClickListener(this);
         tvAdd.setOnClickListener(this);
+        tvDistance.setOnClickListener(this);
     }
 
     private void initData(View v) {
@@ -144,6 +149,8 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             tvAdd.setVisibility(View.GONE);
             tvLocationOther.setText(getString(R.string.have_set));
         }
+
+        tvDistance.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
     }
 
     @Override
@@ -162,7 +169,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void changeDistanceFavouriteSuccess() {
-    
+        mPresenter.getListNews();
     }
 
     @Override
@@ -207,6 +214,51 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             case R.id.tv_add:
                 lnlOther.setVisibility(View.VISIBLE);
                 tvAdd.setVisibility(View.GONE);
+                break;
+            case R.id.tv_distance:
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialog_distance_favourite_location);
+                Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                Button btnCompleted = (Button) dialog.findViewById(R.id.btn_completed);
+                final SeekBar sbDistance = (SeekBar) dialog.findViewById(R.id.sb_distance);
+                final TextView tvDistanceDialog = (TextView) dialog.findViewById(R.id.tv_distance);
+
+                tvDistanceDialog.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                sbDistance.setProgress(App.getLocationStorage().getDistanceFavourite());
+
+                sbDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        tvDistanceDialog.setText(Utilities.getDistanceString(i*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                btnCompleted.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPresenter.setFavouriteDistance(sbDistance.getProgress());
+                        tvDistance.setText(Utilities.getDistanceString(sbDistance.getProgress()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
                 break;
         }
     }

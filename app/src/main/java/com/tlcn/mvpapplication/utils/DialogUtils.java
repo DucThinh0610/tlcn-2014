@@ -85,6 +85,7 @@ public class DialogUtils {
         });
         dialog.show();
     }
+
     public static void showExitDialog(final Activity activity){
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_wanna_exit);

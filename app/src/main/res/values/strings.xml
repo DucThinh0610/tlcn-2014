@@ -75,7 +75,7 @@
     <string name="null_data">Không có dữ liệu</string>
     <string name="authentication_failed">Xác thực tài khoản không thành công!</string>
     <string name="dont_asj_again">Không hỏi lại lần nữa.</string>
-    <string name="created_by">Đăng bởi</string>
+    <string name="created_by">Đăng bởi</string>H
     <string name="traffic_jam_location_non_star">Vị trí kẹt xe</string>
     <string name="rating">đánh giá</string>
     <string name="stopped">Đã dừng</string>
@@ -83,6 +83,9 @@
     <string name="you_wanna_exit">Bạn muốn thoát ứng dụng\nKẹt xe 24H?</string>
     <string name="choose_current_location">Chọn vị trí hiện tại</string>
     <string name="share">Share</string>
+    <string name="completed">Xong</string>
+    <string name="cancel">Hủy</string>
+    <string name="current_distance">Hiện tại:</string>
 
 </resources>
 

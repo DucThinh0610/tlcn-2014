@@ -17,6 +17,7 @@ public class KeyUtils {
 
     //TODO: KEY FOR VALIDATION
     public static final int DEFAULT_DISTANCE_TO_LOAD = 100;
+    public static final int DEFAULT_NUMBER_MULTIPLY_DISTANCE = 20;
 
     //TODO: KEY FOR PUTING INTENT
     public static final String INTENT_KEY_ID = "id";
