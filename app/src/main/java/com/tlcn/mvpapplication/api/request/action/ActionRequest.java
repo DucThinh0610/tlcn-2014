@@ -5,40 +5,29 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by tskil on 9/24/2017.
- */
-
 public class ActionRequest implements Serializable {
-    @SerializedName("id")
+    @SerializedName("user_id")
     @Expose
-    long id;
+    private String user_id;
 
     @SerializedName("type")
     @Expose
-    int type;
+    private Integer type;
 
-    public ActionRequest(){
+    @SerializedName("news_id")
+    @Expose
+    private String news_id;
 
-    }
-    public ActionRequest(int id, int type) {
-        this.id = id;
+    public ActionRequest(String user_id, int type, String news_id) {
+        this.user_id = user_id;
         this.type = type;
+        this.news_id = news_id;
     }
+    @SerializedName("id")
+    @Expose
+    private String idLocation;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
+    public ActionRequest(String idLocation) {
+        this.idLocation = idLocation;
     }
 }

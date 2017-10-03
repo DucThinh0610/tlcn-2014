@@ -10,4 +10,6 @@ public interface INewsView extends IView {
     void getListNewsSuccess();
 
     void onFail(String message);
+
+    void notifyChangeStopped();
 }

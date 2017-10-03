@@ -253,4 +253,9 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     public void OnClickDetail(Locations item) {
 
     }
+
+    @Override
+    public void onClickStopped(String id) {
+
+    }
 }

@@ -135,6 +135,11 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     }
 
     @Override
+    public void onActionSuccess() {
+        mPostAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
@@ -150,11 +155,11 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void onClickDislike(String id) {
-
+        mPresenter.actionDislike(id);
     }
 
     @Override
     public void onClickLike(String id) {
-
+        mPresenter.actionLike(id);
     }
 }

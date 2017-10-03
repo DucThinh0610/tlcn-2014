@@ -70,4 +70,17 @@ public class ApiManager {
             }
         });
     }
+    public void actionStop(ActionRequest request, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_api_server().from(ApiServices.class).actionStop(request).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
 }

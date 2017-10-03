@@ -5,6 +5,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.api.network.ApiCallback;
+import com.tlcn.mvpapplication.api.network.BaseResponse;
+import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
@@ -17,13 +21,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class NewsPresenter  extends BasePresenter implements INewsPresenter {
+public class NewsPresenter extends BasePresenter implements INewsPresenter {
 
     private List<Locations> list;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
 
-    public List<Locations> getListNewsResult(){
+    public List<Locations> getListNewsResult() {
         return list;
     }
 
@@ -31,9 +35,10 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
         super.attachView(view);
     }
 
-    public INewsView getView(){
+    public INewsView getView() {
         return (INewsView) getIView();
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,9 +55,9 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-                for(DataSnapshot data : listData){
+                for (DataSnapshot data : listData) {
                     Locations item = data.getValue(Locations.class);
-                    if(item.getStatus()) {
+                    if (item.getStatus()) {
                         list.add(item);
                     }
                 }
@@ -72,6 +77,21 @@ public class NewsPresenter  extends BasePresenter implements INewsPresenter {
             public void onCancelled(DatabaseError databaseError) {
                 getView().hideLoading();
                 getView().onFail(databaseError.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onChangeStopped(String id) {
+        getManager().actionStop(new ActionRequest(id), new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().notifyChangeStopped();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().onFail(error.message);
             }
         });
     }

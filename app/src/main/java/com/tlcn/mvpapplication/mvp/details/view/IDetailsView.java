@@ -11,4 +11,6 @@ public interface IDetailsView extends IView {
     void onFail(String message);
 
     void getPostSuccess();
+
+    void onActionSuccess();
 }

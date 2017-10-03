@@ -7,4 +7,8 @@ package com.tlcn.mvpapplication.mvp.details.presenter;
 public interface IDetailsPresenter {
 
     void getListPostFromSV();
+
+    void actionDislike(String idPost);
+
+    void actionLike(String idPost);
 }

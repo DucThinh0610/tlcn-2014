@@ -82,6 +82,11 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     }
 
     @Override
+    public void notifyChangeStopped() {
+        newsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void showLoading() {
         swpLayout.setRefreshing(false);
         showDialogLoading();
@@ -116,6 +121,11 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
         intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, new ObjectSerializable(item));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClickStopped(String id) {
+        mPresenter.onChangeStopped(id);
     }
 
     @Override
