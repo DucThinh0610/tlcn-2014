@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +12,7 @@ import android.widget.TextView;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.model.Locations;
-import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.utils.DateUtils;
-import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.List;
 
@@ -69,7 +66,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         return mList.size();
     }
 
-    public class LocationViewHolder extends RecyclerView.ViewHolder {
+    class LocationViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.tv_title)
         TextView tvTitle;
         @Bind(R.id.rtb_level)
@@ -83,7 +80,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         @Bind(R.id.rl_share)
         RelativeLayout rlShare;
 
-        public LocationViewHolder(View itemView) {
+        LocationViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

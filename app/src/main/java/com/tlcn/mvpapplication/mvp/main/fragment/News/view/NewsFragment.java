@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
@@ -21,6 +22,8 @@ import com.tlcn.mvpapplication.mvp.main.fragment.News.presenter.NewsPresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -28,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/23/2017.
  */
 
-public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener, LocationAdapter.OnItemClick {
+public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener, LocationAdapter.OnItemClick, View.OnClickListener {
     public static NewsFragment newInstance() {
         return new NewsFragment();
     }
@@ -38,6 +41,8 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     RecyclerView rcvNews;
     @Bind(R.id.swp_layout)
     SwipeRefreshLayout swpLayout;
+    @Bind(R.id.tv_saved_list_news)
+    TextView tvSavedListNews;
     //Todo: Declaring
     private DialogProgress mProgressDialog;
     NewsPresenter mPresenter = new NewsPresenter();
@@ -59,17 +64,18 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     private void initListener(View v) {
         //các sự kiện click view được khai báo ở đây
         swpLayout.setOnRefreshListener(this);
+        tvSavedListNews.setOnClickListener(this);
     }
 
     private void initData(View v) {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
-
+        swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
     }
 
     @Override
-    public void getListNewsSuccess() {
-        if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(), getContext(), this);
+    public void getListNewsSuccess(List<Locations> result) {
+        if (result != null) {
+            newsAdapter = new LocationAdapter(result, getContext(), this);
             rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvNews.setAdapter(newsAdapter);
         }
@@ -131,5 +137,14 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void OnClickShare(Locations item) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_saved_list_news:
+//                startActivity(new Intent(getContext(),SavedListNewsView.class));
+                break;
+        }
     }
 }

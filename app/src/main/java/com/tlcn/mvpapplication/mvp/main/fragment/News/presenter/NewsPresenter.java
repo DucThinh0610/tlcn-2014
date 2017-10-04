@@ -70,7 +70,7 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
                     }
                 });
                 getView().hideLoading();
-                getView().getListNewsSuccess();
+                getView().getListNewsSuccess(list);
             }
 
             @Override

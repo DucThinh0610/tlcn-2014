@@ -75,7 +75,7 @@ import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
-import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
+import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomePresenter;
 import com.tlcn.mvpapplication.mvp.setting.view.SettingView;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeFragmentView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
+        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
-    private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
+    private HomePresenter mPresenter = new HomePresenter();
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
@@ -278,7 +278,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         lnl_xemthongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.getDetailNews(marker.getPosition());
+                mPresenter.getDetailLocation(marker.getPosition());
                 dialog.dismiss();
             }
         });
@@ -410,7 +410,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void getDetailNewsSuccess(Locations res) {
+    public void getDetailLocationSuccess(Locations res) {
         if (res != null) {
             Intent intent = new Intent(getContext(), DetailsView.class);
             intent.putExtra(KeyUtils.INTENT_KEY_ID, res.getId());

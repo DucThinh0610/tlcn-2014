@@ -28,6 +28,8 @@ import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -153,10 +155,11 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         tvDistance.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
     }
 
+
     @Override
-    public void getListNewsSuccess() {
-        if (mPresenter.getListNewsResult() != null) {
-            newsAdapter = new LocationAdapter(mPresenter.getListNewsResult(), getContext(), this);
+    public void getListLocationSuccess(List<Locations> result) {
+        if (result != null) {
+            newsAdapter = new LocationAdapter(result, getContext(), this);
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }

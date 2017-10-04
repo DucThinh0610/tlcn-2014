@@ -1,93 +1,5 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.view;
 
-import android.Manifest;
-import android.app.Dialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.base.BaseFragment;
-import com.tlcn.mvpapplication.caches.image.ImageLoader;
-import com.tlcn.mvpapplication.custom_view.EditTextCustom;
-import com.tlcn.mvpapplication.dialog.ConfirmDialog;
-import com.tlcn.mvpapplication.model.Locations;
-import com.tlcn.mvpapplication.model.News;
-import com.tlcn.mvpapplication.model.direction.Route;
-import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
-import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
-import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomeFragmentPresenter;
-import com.tlcn.mvpapplication.service.GPSTracker;
-import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import butterknife.Bind;
-import de.hdodenhof.circleimageview.CircleImageView;
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
-
-import static com.facebook.login.widget.ProfilePictureView.TAG;
-import static java.util.Arrays.asList;
-
 public class HomeFragmentTest {
 //        extends BaseFragment implements View.OnClickListener,
 //        FabSpeedDial.OnMenuItemClickListener,
@@ -95,7 +7,7 @@ public class HomeFragmentTest {
 //        GoogleApiClient.OnConnectionFailedListener,
 //        PlaceSearchAdapter.OnItemClick,
 //        GoogleMap.OnCameraIdleListener,
-//        IHomeFragmentView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
+//        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
 //    public static HomeFragmentTest newInstance() {
 //        return new HomeFragmentTest();
 //    }
@@ -117,7 +29,7 @@ public class HomeFragmentTest {
 //    @Bind(R.id.rl_location)
 //    RelativeLayout rlLocation;
 //
-//    private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
+//    private HomePresenter mPresenter = new HomePresenter();
 //    private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
 //    private Marker currentMarker;
 //

@@ -25,14 +25,14 @@ import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.direction.Route;
-import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeFragmentView;
+import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmentPresenter {
+public class HomePresenter extends BasePresenter implements IHomePresenter {
     private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd;
     private List<Route> routes = new ArrayList<>();
@@ -95,12 +95,12 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
         mCameraPosition = MapStorage.getInstance().getCameraPosition();
     }
 
-    public void attachView(IHomeFragmentView view) {
+    public void attachView(IHomeView view) {
         super.attachView(view);
     }
 
-    public IHomeFragmentView getView() {
-        return (IHomeFragmentView) getIView();
+    public IHomeView getView() {
+        return (IHomeView) getIView();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
     }
 
     @Override
-    public void getDetailNews(final LatLng latLng) {
+    public void getDetailLocation(final LatLng latLng) {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,7 +160,7 @@ public class HomeFragmentPresenter extends BasePresenter implements IHomeFragmen
                     LatLng start = new LatLng(item.getLat(), item.getLng());
                     if (item.getStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
-                            getView().getDetailNewsSuccess(item);
+                            getView().getDetailLocationSuccess(item);
                             getView().hideLoading();
                             return;
                         }

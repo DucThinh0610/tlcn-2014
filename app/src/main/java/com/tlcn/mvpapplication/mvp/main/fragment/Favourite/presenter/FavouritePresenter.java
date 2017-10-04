@@ -84,7 +84,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 });
                 LogUtils.LOGE("itemsize",list.size()+"");
                 getView().hideLoading();
-                getView().getListNewsSuccess();
+                getView().getListLocationSuccess(list);
             }
 
             @Override
