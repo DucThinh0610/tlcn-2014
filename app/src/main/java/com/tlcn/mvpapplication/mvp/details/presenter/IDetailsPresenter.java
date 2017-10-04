@@ -6,6 +6,10 @@ package com.tlcn.mvpapplication.mvp.details.presenter;
 
 public interface IDetailsPresenter {
 
+    void getSaveState();
+
+    void saveLocations();
+
     void getListPostFromSV();
 
     void actionDislike(String idPost);

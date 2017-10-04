@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.api.network;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
+import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
@@ -50,4 +51,7 @@ public interface ApiServices {
 
     @PUT("stopped")
     Call<BaseResponse> actionStop(@Body ActionRequest action);
+
+    @POST("save")
+    Call<BaseResponse> saveLocation(@Body SaveRequest save);
 }

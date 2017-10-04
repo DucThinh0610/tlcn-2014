@@ -16,10 +16,10 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -94,6 +94,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
             }
         });
     }
+
 
     @Override
     public void setFavouriteDistance(int progress) {

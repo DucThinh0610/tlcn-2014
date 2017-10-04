@@ -8,6 +8,10 @@ import com.tlcn.mvpapplication.base.IView;
 
 public interface IDetailsView extends IView {
 
+    void getSaveStateSuccess(boolean isSave);
+
+    void saveLocationSuccess();
+
     void onFail(String message);
 
     void getPostSuccess();

@@ -152,7 +152,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             tvLocationOther.setText(getString(R.string.have_set));
         }
 
-        tvDistance.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
     }
 
 
@@ -257,7 +257,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
                     @Override
                     public void onClick(View view) {
                         mPresenter.setFavouriteDistance(sbDistance.getProgress());
-                        tvDistance.setText(Utilities.getDistanceString(sbDistance.getProgress()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
                         dialog.dismiss();
                     }
                 });

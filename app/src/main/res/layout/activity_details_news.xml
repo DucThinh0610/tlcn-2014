@@ -35,6 +35,14 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/imv_save"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                android:src="@drawable/ic_save_white" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
     <android.support.v4.widget.NestedScrollView

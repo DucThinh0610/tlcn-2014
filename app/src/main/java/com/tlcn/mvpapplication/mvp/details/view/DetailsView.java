@@ -16,12 +16,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
-import com.tlcn.mvpapplication.model.Locations;
-import com.tlcn.mvpapplication.model.News;
 import com.tlcn.mvpapplication.model.ObjectSerializable;
-import com.tlcn.mvpapplication.mvp.details.adapter.ImagesAdapter;
 import com.tlcn.mvpapplication.mvp.details.adapter.PostAdapter;
 import com.tlcn.mvpapplication.mvp.details.presenter.DetailsPresenter;
 import com.tlcn.mvpapplication.utils.DateUtils;
@@ -30,8 +28,6 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import static android.R.attr.data;
 
 /**
  * Created by tskil on 9/20/2017.
@@ -53,6 +49,9 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     RecyclerView rcvImages;
     @Bind(R.id.imv_back)
     ImageView imvBack;
+    @Bind(R.id.imv_save)
+    ImageView imvSave;
+
     //Todo: Declaring
     DialogProgress mProgressDialog;
     DetailsPresenter mPresenter = new DetailsPresenter();
@@ -76,6 +75,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     private void initListener() {
         //các sự kiện click view được khai báo ở đây
         imvBack.setOnClickListener(this);
+        imvSave.setOnClickListener(this);
     }
 
     private void initData() {
@@ -84,6 +84,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
             ObjectSerializable objectSerialized = (ObjectSerializable) getIntent().getSerializableExtra(KeyUtils.KEY_INTENT_LOCATION);
             mPresenter.setLocation(objectSerialized.getObject());
             mPresenter.getListPostFromSV();
+            mPresenter.getSaveState();
         }
         tvTitle.setText(mPresenter.getLocation().getTitle());
         tvCreatedAt.setText(DateUtils.formatDateToString(mPresenter.getLocation().getLast_modify()));
@@ -121,7 +122,31 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
             case R.id.imv_back:
                 finish();
                 break;
+            case R.id.imv_save:
+                if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+                    mPresenter.saveLocations();
+                    mPresenter.getSaveState();
+                }
+                else {
+                    Toast.makeText(this, "abc", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
+    }
+
+    @Override
+    public void getSaveStateSuccess(boolean isSave) {
+        if(isSave){
+            imvSave.setImageResource(R.drawable.ic_save_red);
+        }
+        else {
+            imvSave.setImageResource(R.drawable.ic_save_white);
+        }
+    }
+
+    @Override
+    public void saveLocationSuccess() {
+        mPresenter.getSaveState();
     }
 
     @Override

@@ -14,6 +14,9 @@ public class KeyUtils {
     public static final String NEWS = "news";
     public static final String IMAGES = "images";
     public static final String LOCATIONS="locations";
+    public static final String LIKE = "like";
+    public static final String DISLIKE = "dislike";
+    public static final String SAVE = "save";
 
     //TODO: KEY FOR VALIDATION
     public static final int DEFAULT_DISTANCE_TO_LOAD = 100;

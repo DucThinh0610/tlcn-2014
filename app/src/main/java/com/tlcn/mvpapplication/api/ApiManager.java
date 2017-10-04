@@ -8,6 +8,7 @@ import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
+import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.app.AppManager;
@@ -72,6 +73,21 @@ public class ApiManager {
     }
     public void actionStop(ActionRequest request, final ApiCallback<BaseResponse> callback) {
         AppManager.http_api_server().from(ApiServices.class).actionStop(request).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void saveLocation(SaveRequest request, final ApiCallback<BaseResponse> callback){
+        AppManager.http_api_server().from(ApiServices.class).saveLocation(request).enqueue(new RestCallback<BaseResponse>() {
+
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);

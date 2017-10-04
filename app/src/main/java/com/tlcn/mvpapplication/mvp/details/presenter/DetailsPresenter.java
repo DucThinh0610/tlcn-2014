@@ -13,9 +13,11 @@ import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.Post;
+import com.tlcn.mvpapplication.model.Save;
 import com.tlcn.mvpapplication.mvp.details.view.IDetailsView;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -31,8 +33,9 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     private DatabaseReference mReference;
     private List<Post> mListPost;
     private Locations mLocation;
-    FirebaseAuth mFirebaseAuth;
-    FirebaseUser user;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser user;
+    private SaveRequest save;
 
     public Locations getLocation() {
         return mLocation;
@@ -62,6 +65,31 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     public IDetailsView getView() {
         return (IDetailsView) super.getIView();
+    }
+
+    @Override
+    public void getSaveState() {
+        if (user != null) {
+            mReference.child(KeyUtils.SAVE).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+                    for (DataSnapshot data : dataSnapshots) {
+                        Save item = data.getValue(Save.class);
+                        if (item.getLocation_id().equals(mLocation.getId()) && item.getUser_id().equals(user.getUid())){
+                            getView().getSaveStateSuccess(true);
+                            return;
+                        }
+                    }
+                    getView().getSaveStateSuccess(false);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    getView().onFail(databaseError.getMessage());
+                }
+            });
+        }
     }
 
     @Override
@@ -95,6 +123,26 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
             }
         });
         Log.d("asd", mReference.child(KeyUtils.NEWS).child(mLocation.getId()).toString());
+    }
+
+    @Override
+    public void saveLocations() {
+        getView().showLoading();
+        save = new SaveRequest(mLocation.getId(), user.getUid());
+        getManager().saveLocation(save, new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().hideLoading();
+                getView().saveLocationSuccess();
+                save = new SaveRequest();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+                getView().onFail(error.message);
+            }
+        });
     }
 
     @Override

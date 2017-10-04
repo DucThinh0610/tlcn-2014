@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 public interface IFavouritePresenter {
     void getListNews();
 
+
     void setFavouriteDistance(int progress);
 
     void setHouseLocation(LatLng location);

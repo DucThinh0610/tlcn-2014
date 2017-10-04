@@ -3,6 +3,8 @@ package com.tlcn.mvpapplication.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Html;
+import android.text.Spanned;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -84,5 +86,9 @@ public class Utilities {
         else
             s = number + " m";
         return s;
+    }
+
+    public static Spanned underlineText(String text){
+        return Html.fromHtml("<u>"+text+"</u>");
     }
 }
