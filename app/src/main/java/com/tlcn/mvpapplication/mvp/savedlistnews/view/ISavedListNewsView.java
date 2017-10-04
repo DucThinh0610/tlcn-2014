@@ -1,7 +1,7 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.view;
 
 import com.tlcn.mvpapplication.base.IView;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface ISavedListNewsView extends IView {
 
-    void onGetSavedListNewsSuccess(List<News> result);
+    void onGetSavedListLocationSuccess(List<Locations> result);
 }

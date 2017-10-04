@@ -19,6 +19,7 @@ import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.presenter.NewsPresenter;
+import com.tlcn.mvpapplication.mvp.savedlistnews.view.SavedListNewsView;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
@@ -143,7 +144,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_saved_list_news:
-//                startActivity(new Intent(getContext(),SavedListNewsView.class));
+                startActivity(new Intent(getContext(),SavedListNewsView.class));
                 break;
         }
     }

@@ -1,7 +1,7 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
 import com.tlcn.mvpapplication.base.BasePresenter;
-import com.tlcn.mvpapplication.model.News;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.ISavedListNewsView;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SavedListNewsPresenter extends BasePresenter implements ISavedListNewsPresenter {
 
-    private List<News> list;
+    private List<Locations> list;
 
     public void attachView(ISavedListNewsView view) {
         super.attachView(view);
@@ -31,11 +31,11 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
 
 
     @Override
-    public void getSavedListNews() {
+    public void getSavedListLocation() {
         list.clear();
         getView().showLoading();
 
-
+        getView().onGetSavedListLocationSuccess(list);
         getView().hideLoading();
     }
 }

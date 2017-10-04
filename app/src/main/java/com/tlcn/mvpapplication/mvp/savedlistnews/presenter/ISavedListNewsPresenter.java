@@ -5,5 +5,5 @@ package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
  */
 
 public interface ISavedListNewsPresenter {
-    void getSavedListNews();
+    void getSavedListLocation();
 }
