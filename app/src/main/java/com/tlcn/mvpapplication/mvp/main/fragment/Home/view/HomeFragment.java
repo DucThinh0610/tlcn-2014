@@ -83,6 +83,7 @@ import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -126,19 +127,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     RecyclerView rcvSearch;
     @Bind(R.id.rl_location)
     RelativeLayout rlLocation;
+    @Bind(R.id.imv_center)
+    ImageView imvCenter;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
     private HomePresenter mPresenter = new HomePresenter();
-
-    private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
-    private Marker centerMarker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private List<Marker> placeMarker = new ArrayList<>();
-    List<Circle> temps = new ArrayList<>();
+    Circle circle;
     private boolean isShowCircle = true;
     private LatLng locationCircleCenter;
     private PlaceSearchAdapter mAdapter;
@@ -212,6 +212,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 }
                 mGoogleMap.moveCamera(cameraUpdate);
             }
+            locationCircleCenter = mGoogleMap.getCameraPosition().target;
+            circle = mGoogleMap.addCircle(MapUtils.circleOptions(getContext(),
+                    locationCircleCenter,
+                    mPresenter.getBoundRadiusLoad()));
         }
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -227,7 +231,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mGoogleMap.setOnPolylineClickListener(this);
-        locationCircleCenter = mGoogleMap.getCameraPosition().target;
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -373,7 +376,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
         nvDrawer.addHeaderView(v);
         gpsTracker = new GPSTracker(getContext());
-        mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
+        mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), MapUtils.HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvSearch.setAdapter(mAdapter);
         editSearch.setSingleLine(true);
@@ -512,19 +515,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     new ConfirmDialog.IClickConfirmListener() {
                         @Override
                         public void onClickOk() {
-                            onCameraIdle();
+                            circle.remove();
                             mPresenter.setBoundRadiusLoad(mPresenter.getBoundRadiusLoad() + 100);
-                            mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+                            circle = mGoogleMap.addCircle(MapUtils.circleOptions(getContext(),
+                                    locationCircleCenter,
+                                    mPresenter.getBoundRadiusLoad()));
+                            onCameraIdle();
                         }
 
                         @Override
                         public void onClickCancel() {
-                            mPresenter.setContinousShowDialog(false);
+                            mPresenter.setContinuousShowDialog(false);
                         }
                     });
             mConfirmDialog.show();
         }
-        Log.d("ASDasd", "Showdialog");
     }
 
     @Override
@@ -574,6 +579,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() {
+        imvCenter.setVisibility(View.GONE);
         if (isShowCircle) {
             float[] distance = new float[2];
             CircleOptions opts = new CircleOptions()
@@ -585,16 +591,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     mGoogleMap.getCameraPosition().target.longitude,
                     opts.getCenter().latitude, opts.getCenter().longitude, distance);
             if (distance[0] > opts.getRadius()) {
+                if (circle != null)
+                    circle.remove();
                 opts.center(mGoogleMap.getCameraPosition().target);
-                Circle circle = mGoogleMap.addCircle(opts);
-                mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
-                mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
-                for (Circle item : temps) {
-                    item.remove();
-                }
-                temps.add(circle);
+                circle = mGoogleMap.addCircle(opts);
                 locationCircleCenter = mGoogleMap.getCameraPosition().target;
             }
+            mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
+            mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
         }
     }
 
@@ -650,11 +654,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("State", "Pause Home Fragment");
         if (mPresenter.mListenerDetail != null) {
             mPresenter.mReference.removeEventListener(mPresenter.mListenerDetail);
-            Log.d("Pause", "Pause Listener");
         }
+        mPresenter.saveCurrentStateMap();
     }
 
     @Override
@@ -665,15 +668,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraMove() {
-        if (centerMarker != null)
-            centerMarker.remove();
-        centerMarker = mGoogleMap.addMarker(new MarkerOptions().position(mGoogleMap.getCameraPosition().target));
+        imvCenter.setVisibility(View.VISIBLE);
         CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
         if (cameraPosition.zoom < 14) {
             isShowCircle = false;
-            for (Circle circle : temps) {
-                circle.remove();
-            }
+            circle.remove();
         } else {
             isShowCircle = true;
         }

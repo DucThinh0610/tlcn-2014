@@ -38,19 +38,17 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     private List<Route> routes = new ArrayList<>();
     private List<Locations> listPlace = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private FirebaseDatabase mDatabase;
     public DatabaseReference mReference;
     private CameraPosition mCameraPosition;
-    private boolean continousShowDialog = true;
+    private boolean continuousShowDialog = true;
     public ValueEventListener mListenerDetail;
 
-    public void setContinousShowDialog(boolean continousShowDialog) {
-        this.continousShowDialog = continousShowDialog;
+    public void setContinuousShowDialog(boolean continuousShowDialog) {
+        this.continuousShowDialog = continuousShowDialog;
     }
 
     public void setCameraPosition(CameraPosition cameraPosition) {
         this.mCameraPosition = cameraPosition;
-        MapStorage.getInstance().setCameraPosition(cameraPosition);
     }
 
     public CameraPosition getCameraPosition() {
@@ -90,7 +88,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         if (App.getGoogleApiHelper().isConnected()) {
             mGoogleApiClient = App.getGoogleApiHelper().getGoogleApiClient();
         }
-        mDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         mCameraPosition = MapStorage.getInstance().getCameraPosition();
     }
@@ -196,7 +194,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                         }
                     }
                 }
-                if (listPlace.size() == 0 && boundRadiusLoad < 500 && continousShowDialog) {
+                if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
                     getView().showDialogConfirmNewRadius();
                 } else {
                     getView().showPlaces();
@@ -211,6 +209,12 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         };
         mReference.addValueEventListener(mListenerDetail);
 
+    }
+
+    @Override
+    public void saveCurrentStateMap() {
+        if (mCameraPosition != null)
+            MapStorage.getInstance().setCameraPosition(mCameraPosition);
     }
 
     private String convertLatLngToString(LatLng latLng) {
