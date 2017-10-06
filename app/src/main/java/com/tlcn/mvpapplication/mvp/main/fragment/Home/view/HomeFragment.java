@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -102,7 +104,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
+        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -131,12 +133,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
-
+    private Marker centerMarker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private List<Marker> placeMarker = new ArrayList<>();
     List<Circle> temps = new ArrayList<>();
+    private boolean isShowCircle = true;
+    private LatLng locationCircleCenter;
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -196,6 +200,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMapLongClickListener(this);
+        mGoogleMap.setOnCameraMoveListener(this);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
@@ -222,6 +227,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mGoogleMap.setOnPolylineClickListener(this);
+        locationCircleCenter = mGoogleMap.getCameraPosition().target;
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -291,7 +297,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.setting:
                         startActivity(new Intent(getContext(), SettingView.class));
                         break;
@@ -568,17 +574,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() {
-        mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
-        mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
-        Circle circle = mGoogleMap.addCircle(new CircleOptions()
-                .center(mGoogleMap.getCameraPosition().target)
-                .radius(mPresenter.getBoundRadiusLoad())
-                .strokeColor(mContext.getResources().getColor(R.color.color_transparent))
-                .fillColor(mContext.getResources().getColor(R.color.color_bound_transparent)));
-        for (Circle item : temps) {
-            item.remove();
+        if (isShowCircle) {
+            float[] distance = new float[2];
+            CircleOptions opts = new CircleOptions()
+                    .center(locationCircleCenter)
+                    .radius(mPresenter.getBoundRadiusLoad())
+                    .strokeColor(mContext.getResources().getColor(R.color.color_transparent))
+                    .fillColor(mContext.getResources().getColor(R.color.color_bound_transparent));
+            Location.distanceBetween(mGoogleMap.getCameraPosition().target.latitude,
+                    mGoogleMap.getCameraPosition().target.longitude,
+                    opts.getCenter().latitude, opts.getCenter().longitude, distance);
+            if (distance[0] > opts.getRadius()) {
+                opts.center(mGoogleMap.getCameraPosition().target);
+                Circle circle = mGoogleMap.addCircle(opts);
+                mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
+                mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+                for (Circle item : temps) {
+                    item.remove();
+                }
+                temps.add(circle);
+                locationCircleCenter = mGoogleMap.getCameraPosition().target;
+            }
         }
-        temps.add(circle);
     }
 
 
@@ -644,5 +661,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+    }
+
+    @Override
+    public void onCameraMove() {
+        if (centerMarker != null)
+            centerMarker.remove();
+        centerMarker = mGoogleMap.addMarker(new MarkerOptions().position(mGoogleMap.getCameraPosition().target));
+        CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
+        if (cameraPosition.zoom < 14) {
+            isShowCircle = false;
+            for (Circle circle : temps) {
+                circle.remove();
+            }
+        } else {
+            isShowCircle = true;
+        }
+        if (cameraPosition.zoom > KeyUtils.MAX_MAP_ZOOM) {
+            mGoogleMap.setMaxZoomPreference(KeyUtils.MAX_MAP_ZOOM);
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(KeyUtils.MAX_MAP_ZOOM));
+        }
+        if (cameraPosition.zoom < KeyUtils.MIN_MAP_ZOOM) {
+            mGoogleMap.setMinZoomPreference(KeyUtils.MIN_MAP_ZOOM);
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(KeyUtils.MIN_MAP_ZOOM));
+        }
     }
 }
