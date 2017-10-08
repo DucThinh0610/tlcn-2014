@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -81,6 +83,7 @@ import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,7 +105,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener {
+        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -124,19 +127,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     RecyclerView rcvSearch;
     @Bind(R.id.rl_location)
     RelativeLayout rlLocation;
+    @Bind(R.id.imv_center)
+    ImageView imvCenter;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
     private HomePresenter mPresenter = new HomePresenter();
-
-    private static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
     private Marker currentMarker;
-
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private List<Marker> placeMarker = new ArrayList<>();
-    List<Circle> temps = new ArrayList<>();
+    Circle circle;
+    private boolean isShowCircle = true;
+    private LatLng locationCircleCenter;
     private PlaceSearchAdapter mAdapter;
     GoogleMap mGoogleMap;
     GPSTracker gpsTracker;
@@ -194,8 +198,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleMap.setOnCameraIdleListener(this);
-        mGoogleMap.setOnMapLongClickListener(this);
         if (isFirst) {
             if (gpsTracker.canGetLocation()) {
                 mPresenter.setLngStart(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
@@ -207,6 +209,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 }
                 mGoogleMap.moveCamera(cameraUpdate);
             }
+            locationCircleCenter = mGoogleMap.getCameraPosition().target;
+            circle = mGoogleMap.addCircle(MapUtils.circleOptions(getContext(),
+                    locationCircleCenter,
+                    mPresenter.getBoundRadiusLoad()));
+            mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
         }
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -222,6 +229,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mGoogleMap.setOnPolylineClickListener(this);
+        mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnMapLongClickListener(this);
+        mGoogleMap.setOnCameraMoveListener(this);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -291,7 +301,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.setting:
                         startActivity(new Intent(getContext(), SettingView.class));
                         break;
@@ -367,7 +377,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
         nvDrawer.addHeaderView(v);
         gpsTracker = new GPSTracker(getContext());
-        mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
+        mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), MapUtils.HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvSearch.setAdapter(mAdapter);
         editSearch.setSingleLine(true);
@@ -435,14 +445,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void getDirectionSuccess(List<Route> routes) {
         mGoogleMap.clear();
+        originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                .title(routes.get(0).getLeg().get(0).getStartAddress())
+                .position(routes.get(0).getLeg().get(0).getStartLocation().getLatLag())));
+        destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                .title(routes.get(0).getLeg().get(0).getEndAddress())
+                .position(routes.get(0).getLeg().get(0).getEndLocation().getLatLag())));
         for (Route route : routes) {
-            originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
-                    .title(route.getLeg().get(0).getStartAddress())
-                    .position(route.getLeg().get(0).getStartLocation().getLatLag())));
-            destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
-                    .title(route.getLeg().get(0).getEndAddress())
-                    .position(route.getLeg().get(0).getEndLocation().getLatLag())));
-
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(ContextCompat.getColor(getContext(), R.color.color_polyline)).
@@ -506,19 +515,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                     new ConfirmDialog.IClickConfirmListener() {
                         @Override
                         public void onClickOk() {
-                            onCameraIdle();
+                            circle.remove();
                             mPresenter.setBoundRadiusLoad(mPresenter.getBoundRadiusLoad() + 100);
-                            mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+                            circle = mGoogleMap.addCircle(MapUtils.circleOptions(getContext(),
+                                    locationCircleCenter,
+                                    mPresenter.getBoundRadiusLoad()));
+                            onCameraIdle();
                         }
 
                         @Override
                         public void onClickCancel() {
-                            mPresenter.setContinousShowDialog(false);
+                            mPresenter.setContinuousShowDialog(false);
                         }
                     });
             mConfirmDialog.show();
         }
-        Log.d("ASDasd", "Showdialog");
     }
 
     @Override
@@ -569,16 +580,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCameraIdle() {
         mPresenter.setCameraPosition(mGoogleMap.getCameraPosition());
-        mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
-        Circle circle = mGoogleMap.addCircle(new CircleOptions()
-                .center(mGoogleMap.getCameraPosition().target)
-                .radius(mPresenter.getBoundRadiusLoad())
-                .strokeColor(mContext.getResources().getColor(R.color.color_transparent))
-                .fillColor(mContext.getResources().getColor(R.color.color_bound_transparent)));
-        for (Circle item : temps) {
-            item.remove();
+        imvCenter.setVisibility(View.GONE);
+        if (isShowCircle) {
+            float[] distance = new float[2];
+            CircleOptions opts = new CircleOptions()
+                    .center(locationCircleCenter)
+                    .radius(mPresenter.getBoundRadiusLoad())
+                    .strokeColor(mContext.getResources().getColor(R.color.color_transparent))
+                    .fillColor(mContext.getResources().getColor(R.color.color_bound_transparent));
+            Location.distanceBetween(mGoogleMap.getCameraPosition().target.latitude,
+                    mGoogleMap.getCameraPosition().target.longitude,
+                    opts.getCenter().latitude, opts.getCenter().longitude, distance);
+            if (distance[0] > opts.getRadius()) {
+                if (circle != null)
+                    circle.remove();
+                opts.center(mGoogleMap.getCameraPosition().target);
+                circle = mGoogleMap.addCircle(opts);
+                locationCircleCenter = mGoogleMap.getCameraPosition().target;
+                mPresenter.getInfoPlace(mGoogleMap.getCameraPosition().target);
+            }
         }
-        temps.add(circle);
     }
 
 
@@ -633,16 +654,35 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("State", "Pause Home Fragment");
         if (mPresenter.mListenerDetail != null) {
             mPresenter.mReference.removeEventListener(mPresenter.mListenerDetail);
-            Log.d("Pause", "Pause Listener");
         }
+        mPresenter.saveCurrentStateMap();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+    }
+
+    @Override
+    public void onCameraMove() {
+        imvCenter.setVisibility(View.VISIBLE);
+        CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
+        if (cameraPosition.zoom < 14) {
+            isShowCircle = false;
+            circle.remove();
+        } else {
+            isShowCircle = true;
+        }
+        if (cameraPosition.zoom > KeyUtils.MAX_MAP_ZOOM) {
+            mGoogleMap.setMaxZoomPreference(KeyUtils.MAX_MAP_ZOOM);
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(KeyUtils.MAX_MAP_ZOOM));
+        }
+        if (cameraPosition.zoom < KeyUtils.MIN_MAP_ZOOM) {
+            mGoogleMap.setMinZoomPreference(KeyUtils.MIN_MAP_ZOOM);
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(KeyUtils.MIN_MAP_ZOOM));
+        }
     }
 }

@@ -2,14 +2,10 @@ package com.tlcn.mvpapplication.caches.storage;
 
 import com.google.android.gms.maps.model.CameraPosition;
 
-/**
- * Created by ducthinh on 16/09/2017.
- */
-
 public class MapStorage implements IMapStorage {
     private static final MapStorage INSTANCE = new MapStorage();
 
-    public synchronized static final MapStorage getInstance() {
+    public synchronized static MapStorage getInstance() {
         return MapStorage.INSTANCE;
     }
 

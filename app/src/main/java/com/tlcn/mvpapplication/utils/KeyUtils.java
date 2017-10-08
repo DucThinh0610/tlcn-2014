@@ -6,8 +6,8 @@ package com.tlcn.mvpapplication.utils;
 
 public class KeyUtils {
     //TODO: KEY FOR SETTING GOOGLE_MAP
-    public static final float MIN_MAP_ZOOM = 0f;
-    public static final float MAX_MAP_ZOOM = 23f;
+    public static final float MIN_MAP_ZOOM = 10f;
+    public static final float MAX_MAP_ZOOM = 18f;
     public static final float DEFAULT_MAP_ZOOM = 15f;
 
     //TODO: KEY FOR FIREBASE REFERENCE

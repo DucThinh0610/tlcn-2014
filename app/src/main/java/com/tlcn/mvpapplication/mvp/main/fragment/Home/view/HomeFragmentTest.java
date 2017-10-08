@@ -439,7 +439,7 @@ public class HomeFragmentTest {
 //
 //            @Override
 //            public void onClickCancel() {
-//                mPresenter.setContinousShowDialog(false);
+//                mPresenter.setContinuousShowDialog(false);
 //            }
 //        });
 //    }

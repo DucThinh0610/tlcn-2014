@@ -19,16 +19,11 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.tlcn.mvpapplication.R;
 
 import java.io.File;
-
-import static com.tlcn.mvpapplication.utils.LogUtils.LOGI;
-import static com.tlcn.mvpapplication.utils.LogUtils.makeLogTag;
 
 public class ImageLoader {
 
