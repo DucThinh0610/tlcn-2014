@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.RestCallback;
@@ -24,9 +26,11 @@ import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.LogUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
@@ -37,11 +41,13 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     private LatLng lngStart, lngEnd;
     private List<Route> routes = new ArrayList<>();
     private List<Locations> listPlace = new ArrayList<>();
+    private List<Locations> allLocation = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     public DatabaseReference mReference;
     private CameraPosition mCameraPosition;
     private boolean continuousShowDialog = true;
     public ValueEventListener mListenerDetail;
+    public ValueEventListener mListenerInfoPolyline;
 
     public void setContinuousShowDialog(boolean continuousShowDialog) {
         this.continuousShowDialog = continuousShowDialog;
@@ -134,7 +140,12 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 if (routes != null) {
                     routes.clear();
                 }
-                routes.addAll(res.getRoutes());
+                for (Route route : res.getRoutes()) {
+                    routes.add(new PolylineInfo(route, allLocation).getRoute());
+                }
+                for (Route route : routes) {
+                    LogUtils.d("Response", new Gson().toJson(route));
+                }
                 getView().getDirectionSuccess(routes);
                 getView().hideLoading();
             }
@@ -178,16 +189,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
     @Override
     public void getInfoPlace(final LatLng latLng) {
-        if (this.mCameraPosition == null)
-            return;
         mListenerDetail = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
                 listPlace.clear();
+                allLocation.clear();
                 for (DataSnapshot data : dataSnapshots) {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
+                    allLocation.add(item);
                     if (item.getStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= boundRadiusLoad) {
                             listPlace.add(item);

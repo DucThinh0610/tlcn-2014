@@ -1,9 +1,14 @@
 package com.tlcn.mvpapplication.model.direction;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.utils.DecodePolyLine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ducthinh on 17/09/2017.
@@ -32,6 +37,21 @@ public class Step implements Serializable {
     @SerializedName("html_instructions")
     @Expose
     private String description;
+
+    private List<Locations> locations=new ArrayList<>();
+
+    public List<Locations> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Locations> locations) {
+        this.locations = locations;
+    }
+
+    public void addLocation(Locations locations) {
+        if (locations != null)
+            this.locations.add(locations);
+    }
 
     public Distance getDistance() {
         return distance;
@@ -87,5 +107,11 @@ public class Step implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<LatLng> getPoints() {
+        if (this.polyline == null)
+            return new ArrayList<>();
+        return DecodePolyLine.decodePolyLine(this.polyline.getPoints());
     }
 }
