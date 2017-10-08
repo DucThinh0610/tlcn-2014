@@ -1,10 +1,17 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.api.network.ApiCallback;
+import com.tlcn.mvpapplication.api.network.BaseResponse;
+import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.ISavedListNewsView;
@@ -44,23 +51,93 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
 
     @Override
     public void getSavedListLocation() {
-        list.clear();
         getView().showLoading();
         mSaveReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data : dataSnapshot.getChildren()){
-                    String location_id = data.child("location_id").getValue().toString();
+                list.clear();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Query query = mLocationReference.orderByChild("id").equalTo(data.child("location_id").getValue().toString());
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            getView().hideLoading();
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                Locations item = child.getValue(Locations.class);
+                                list.add(item);
+                            }
+                            getView().onGetSavedListLocationSuccess(list);
+                        }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            getView().hideLoading();
+                            getView().onFailed(databaseError.getMessage());
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                getView().hideLoading();
+                getView().onFailed(databaseError.getMessage());
             }
         });
-        getView().onGetSavedListLocationSuccess(list);
-        getView().hideLoading();
+    }
+
+    @Override
+    public void unSavedLocation(Locations location) {
+        getView().showLoading();
+        SaveRequest request = new SaveRequest(location.getId(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+        getManager().saveLocation(request, new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().hideLoading();
+                getView().notifyDataSetChanged();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+                getView().onFailed(error.message);
+            }
+        });
+    }
+
+    @Override
+    public void contributing(Locations location) {
+        getView().showLoading();
+        ActionRequest request = new ActionRequest(location.getId());
+        if(location.getStatus()) {
+            getManager().actionStop(request, new ApiCallback<BaseResponse>() {
+                @Override
+                public void success(BaseResponse res) {
+                    getView().hideLoading();
+                    getView().onContributingSuccess();
+                }
+
+                @Override
+                public void failure(RestError error) {
+                    getView().hideLoading();
+                    getView().onFailed(error.message);
+                }
+            });
+        }
+        else {
+            getManager().actionOn(request, new ApiCallback<BaseResponse>() {
+                @Override
+                public void success(BaseResponse res) {
+                    getView().hideLoading();
+                    getView().onContributingSuccess();
+                }
+
+                @Override
+                public void failure(RestError error) {
+                    getView().hideLoading();
+                    getView().onFailed(error.message);
+                }
+            });
+        }
     }
 }
