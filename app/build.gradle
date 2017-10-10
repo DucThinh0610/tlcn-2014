@@ -73,5 +73,6 @@ dependencies {
     compile 'javax.inject:javax.inject:1'
     testCompile 'junit:junit:4.12'
     compile 'com.google.maps.android:android-maps-utils:0.4+'
+    compile 'com.sothree.slidinguppanel:library:3.3.0'
 }
 apply plugin: 'com.google.gms.google-services'

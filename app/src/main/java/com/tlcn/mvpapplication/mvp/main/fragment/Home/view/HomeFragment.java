@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -68,6 +69,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
@@ -105,12 +107,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveListener {
+        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveListener, SlidingUpPanelLayout.PanelSlideListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
 
+    private static final String TAG = HomeFragment.class.getSimpleName();
     @Bind(R.id.imv_menu)
     ImageView imvMenu;
     @Bind(R.id.fsd_floating)
@@ -129,6 +132,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     RelativeLayout rlLocation;
     @Bind(R.id.imv_center)
     ImageView imvCenter;
+    @Bind(R.id.sliding_layout)
+    SlidingUpPanelLayout mSlidingUpPanelLayout;
+    @Bind(R.id.rlt_search)
+    RelativeLayout rltSearch;
+    @Bind(R.id.tv_dis_time)
+    TextView tvDistanceTime;
+    @Bind(R.id.rtb_level)
+    AppCompatRatingBar rtbLevel;
+    @Bind(R.id.tv_start_location)
+    TextView tvStartLocation;
+    @Bind(R.id.tv_end_location)
+    TextView tvEndLocation;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
@@ -194,6 +209,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -228,6 +245,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 return false;
             }
         });
+        checkOffset(mPresenter.isStateUI());
+        if (mPresenter.getRoutes().size() != 0) {
+            showDirection();
+        }
         mGoogleMap.setOnPolylineClickListener(this);
         mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMapLongClickListener(this);
@@ -341,6 +362,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
             }
         });
+        mSlidingUpPanelLayout.addPanelSlideListener(this);
     }
 
     private void initData() {
@@ -382,6 +404,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         rcvSearch.setAdapter(mAdapter);
         editSearch.setSingleLine(true);
         editSearch.setEllipsize(TextUtils.TruncateAt.END);
+        mSlidingUpPanelLayout.setAnchorPoint(0.5f);
+        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mSlidingUpPanelLayout.setCoveredFadeColor(getResources().getColor(R.color.transparent));
     }
 
     @Override
@@ -443,45 +468,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void getDirectionSuccess(List<Route> routes) {
+    public void getDirectionSuccess() {
         mGoogleMap.clear();
-        originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
-                .title(routes.get(0).getLeg().get(0).getStartAddress())
-                .position(routes.get(0).getLeg().get(0).getStartLocation().getLatLag())));
-        destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
-                .title(routes.get(0).getLeg().get(0).getEndAddress())
-                .position(routes.get(0).getLeg().get(0).getEndLocation().getLatLag())));
-        for (Route route : routes) {
-            PolylineOptions polylineOptions = new PolylineOptions().
-                    geodesic(true).
-                    color(ContextCompat.getColor(getContext(), R.color.color_polyline)).
-                    width(20).clickable(true);
-
-            for (LatLng latLng : route.getPoints()) {
-                polylineOptions.add(latLng);
-            }
-
-            polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
-        }
+        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        showDirection();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(routes.get(0).getBound().getNortheast().getLatLag());
-        builder.include(routes.get(0).getBound().getSouthwest().getLatLag());
+        builder.include(mPresenter.getRoutes().get(0).getBound().getNortheast().getLatLag());
+        builder.include(mPresenter.getRoutes().get(0).getBound().getSouthwest().getLatLag());
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.15);
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-        for (int i = 0; i < polylinePaths.size(); i++) {
-            Polyline item = polylinePaths.get(i);
-            if (i == 0) {
-                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
-                item.setZIndex(1.0f);
-            } else {
-                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
-                item.setZIndex(0.0f);
-            }
-        }
-
     }
 
     @Override
@@ -556,6 +554,56 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void showDirection() {
+        polylinePaths.clear();
+        originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                .title(mPresenter.getRoutes().get(0).getLeg().get(0).getStartAddress())
+                .position(mPresenter.getRoutes().get(0).getLeg().get(0).getStartLocation().getLatLag())));
+        destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                .title(mPresenter.getRoutes().get(0).getLeg().get(0).getEndAddress())
+                .position(mPresenter.getRoutes().get(0).getLeg().get(0).getEndLocation().getLatLag())));
+        for (Route route : mPresenter.getRoutes()) {
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(ContextCompat.getColor(getContext(), R.color.color_polyline)).
+                    width(20).clickable(true);
+
+            for (LatLng latLng : route.getPoints()) {
+                polylineOptions.add(latLng);
+            }
+            polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
+        }
+        for (int i = 0; i < polylinePaths.size(); i++) {
+            Polyline item = polylinePaths.get(i);
+            if (mPresenter.getRoutes().get(i).isSelected()) {
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
+                item.setZIndex(1.0f);
+                mPresenter.getRoutes().get(i).setSelected(true);
+            } else {
+                item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
+                item.setZIndex(0.0f);
+                mPresenter.getRoutes().get(i).setSelected(false);
+            }
+        }
+        showInfoDirection();
+    }
+
+    @Override
+    public void showInfoDirection() {
+        Route item = new Route();
+        for (Route route : mPresenter.getRoutes()) {
+            if (route.isSelected()) {
+                item = route;
+                break;
+            }
+        }
+        tvDistanceTime.setText(item.getTimeAndDistance());
+        tvEndLocation.setText(item.getEndLocation());
+        tvStartLocation.setText(item.getStartLocation());
+        rtbLevel.setRating(item.getCurrentLevel());
+    }
+
+    @Override
     public void showLoading() {
         showDialogLoading();
     }
@@ -622,15 +670,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPolylineClick(Polyline polyline) {
-        for (Polyline item : polylinePaths) {
+        for (int i = 0; i < polylinePaths.size(); i++) {
+            Polyline item = polylinePaths.get(i);
             if (polyline.getId().equals(item.getId())) {
                 item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline_chose));
                 item.setZIndex(1.0f);
+                mPresenter.getRoutes().get(i).setSelected(true);
             } else {
                 item.setColor(ContextCompat.getColor(getContext(), R.color.color_polyline));
                 item.setZIndex(0.0f);
+                mPresenter.getRoutes().get(i).setSelected(false);
             }
         }
+        showInfoDirection();
     }
 
     @Override
@@ -684,5 +736,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             mGoogleMap.setMinZoomPreference(KeyUtils.MIN_MAP_ZOOM);
             mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(KeyUtils.MIN_MAP_ZOOM));
         }
+    }
+
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+        checkOffset(slideOffset > 0.45f);
+    }
+
+    @Override
+    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+
+    }
+
+    private void checkOffset(boolean isShow) {
+        if (isShow) {
+            rltSearch.setVisibility(View.GONE);
+            rlLocation.setVisibility(View.GONE);
+            mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+
+        } else {
+            rltSearch.setVisibility(View.VISIBLE);
+            rlLocation.setVisibility(View.VISIBLE);
+            mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
+        }
+        mPresenter.setStateUI(isShow);
     }
 }

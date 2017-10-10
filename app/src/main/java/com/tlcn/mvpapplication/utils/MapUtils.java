@@ -17,7 +17,7 @@ public class MapUtils {
                 .fillColor(context.getResources().getColor(R.color.color_bound_transparent));
     }
 
-    static float distanceBetweenTwoPoint(LatLng firstPoint, LatLng secondPoint) {
+    public static float distanceBetweenTwoPoint(LatLng firstPoint, LatLng secondPoint) {
         float[] distance = new float[2];
         Location.distanceBetween(firstPoint.latitude,
                 firstPoint.longitude,

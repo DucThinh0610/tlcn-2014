@@ -15,11 +15,15 @@ public interface IHomeView extends IView{
 
     void onFail(String message);
 
-    void getDirectionSuccess(List<Route> routes);
+    void getDirectionSuccess();
 
     void onStartFindDirection();
 
     void showDialogConfirmNewRadius();
 
     void showPlaces();
+
+    void showDirection();
+
+    void showInfoDirection();
 }

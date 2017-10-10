@@ -38,7 +38,7 @@ public class Step implements Serializable {
     @Expose
     private String description;
 
-    private List<Locations> locations=new ArrayList<>();
+    private List<Locations> locations = new ArrayList<>();
 
     public List<Locations> getLocations() {
         return locations;
@@ -113,5 +113,15 @@ public class Step implements Serializable {
         if (this.polyline == null)
             return new ArrayList<>();
         return DecodePolyLine.decodePolyLine(this.polyline.getPoints());
+    }
+
+    public int getCurrentLevel() {
+        int result = 0;
+        if (locations.size() != 0) {
+            for (Locations location : locations) {
+                result += location.getCurrent_level();
+            }
+        }
+        return result;
     }
 }

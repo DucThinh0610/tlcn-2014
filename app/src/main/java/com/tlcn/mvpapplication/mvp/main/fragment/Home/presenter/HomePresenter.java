@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,7 @@ import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ import java.util.List;
 public class HomePresenter extends BasePresenter implements IHomePresenter {
     private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd;
-    private List<Route> routes = new ArrayList<>();
+    private List<Route> routes;
     private List<Locations> listPlace = new ArrayList<>();
     private List<Locations> allLocation = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
@@ -47,7 +50,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     private CameraPosition mCameraPosition;
     private boolean continuousShowDialog = true;
     public ValueEventListener mListenerDetail;
-    public ValueEventListener mListenerInfoPolyline;
+    private boolean stateUI;
 
     public void setContinuousShowDialog(boolean continuousShowDialog) {
         this.continuousShowDialog = continuousShowDialog;
@@ -57,8 +60,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         this.mCameraPosition = cameraPosition;
     }
 
+    public boolean isStateUI() {
+        return stateUI;
+    }
+
     public CameraPosition getCameraPosition() {
         return mCameraPosition;
+    }
+
+    public List<Route> getRoutes() {
+        return routes;
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -97,6 +108,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         mCameraPosition = MapStorage.getInstance().getCameraPosition();
+        stateUI = MapStorage.getInstance().getStateUI();
+        routes = MapStorage.getInstance().getDirection();
     }
 
     public void attachView(IHomeView view) {
@@ -140,14 +153,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 if (routes != null) {
                     routes.clear();
                 }
-                for (Route route : res.getRoutes()) {
-                    routes.add(new PolylineInfo(route, allLocation).getRoute());
-                }
-                for (Route route : routes) {
-                    LogUtils.d("Response", new Gson().toJson(route));
-                }
-                getView().getDirectionSuccess(routes);
-                getView().hideLoading();
+                new getDirectionTask().execute(res);
             }
 
             @Override
@@ -200,7 +206,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                     LatLng start = new LatLng(item.getLat(), item.getLng());
                     allLocation.add(item);
                     if (item.getStatus()) {
-                        if (Utilities.calculationByDistance(start, latLng) <= boundRadiusLoad) {
+                        if (MapUtils.distanceBetweenTwoPoint(start, latLng) <= boundRadiusLoad) {
                             listPlace.add(item);
                         }
                     }
@@ -226,9 +232,35 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     public void saveCurrentStateMap() {
         if (mCameraPosition != null)
             MapStorage.getInstance().setCameraPosition(mCameraPosition);
+        MapStorage.getInstance().setStateUI(stateUI);
+        if (routes != null) {
+            MapStorage.getInstance().setDirection(routes);
+        }
     }
 
     private String convertLatLngToString(LatLng latLng) {
         return String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
+    }
+
+    public void setStateUI(boolean stateUI) {
+        this.stateUI = stateUI;
+    }
+
+    private class getDirectionTask extends AsyncTask<GetDirectionResponse, Void, Void> {
+
+        @Override
+        protected Void doInBackground(GetDirectionResponse... params) {
+            for (Route route : params[0].getRoutes()) {
+                routes.add(new PolylineInfo(route, allLocation).getRoute());
+            }
+            routes.get(0).setSelected(true);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getView().getDirectionSuccess();
+            getView().hideLoading();
+        }
     }
 }

@@ -35,6 +35,7 @@
     <color name="blue">#009DF7</color>
 
     <color name="color_bound_transparent">#20000000</color>
+    <color name="transparent">#00000000</color>
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
     <color name="yellow">#ffee00</color>

@@ -71,4 +71,5 @@ public class App extends Application {
     public static SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
     }
+
 }

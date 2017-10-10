@@ -15,7 +15,7 @@ public class Distance implements Serializable {
     private String length;
     @SerializedName("value")
     @Expose
-    private String value;
+    private int value;
 
     public String getLength() {
         return length;
@@ -25,11 +25,11 @@ public class Distance implements Serializable {
         this.length = length;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 }

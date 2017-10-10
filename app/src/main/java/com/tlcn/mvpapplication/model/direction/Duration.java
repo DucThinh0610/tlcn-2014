@@ -15,7 +15,7 @@ public class Duration implements Serializable{
     private String times;
     @SerializedName("value")
     @Expose
-    private String value;
+    private int value;
 
     public String getTimes() {
         return times;
@@ -25,11 +25,11 @@ public class Duration implements Serializable{
         this.times = times;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 }
