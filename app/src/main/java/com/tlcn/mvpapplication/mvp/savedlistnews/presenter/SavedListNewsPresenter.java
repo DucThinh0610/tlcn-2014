@@ -52,7 +52,8 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     @Override
     public void getSavedListLocation() {
         getView().showLoading();
-        mSaveReference.addValueEventListener(new ValueEventListener() {
+        Query saveQuery = mSaveReference.orderByChild("user_id").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        saveQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
@@ -62,9 +63,17 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             getView().hideLoading();
+                            boolean isExist = false;
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 Locations item = child.getValue(Locations.class);
-                                list.add(item);
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getId().equals(item.getId())) {
+                                        list.set(i, item);
+                                        isExist = true;
+                                    }
+                                }
+                                if (!isExist)
+                                    list.add(item);
                             }
                             getView().onGetSavedListLocationSuccess(list);
                         }
@@ -76,6 +85,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                         }
                     });
                 }
+                getView().hideLoading();
             }
 
             @Override
@@ -109,7 +119,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     public void contributing(Locations location) {
         getView().showLoading();
         ActionRequest request = new ActionRequest(location.getId());
-        if(location.getStatus()) {
+        if (location.getStatus()) {
             getManager().actionStop(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {
@@ -123,8 +133,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                     getView().onFailed(error.message);
                 }
             });
-        }
-        else {
+        } else {
             getManager().actionOn(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {

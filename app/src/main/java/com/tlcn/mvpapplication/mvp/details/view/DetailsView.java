@@ -128,7 +128,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                     mPresenter.getSaveState();
                 }
                 else {
-                    Toast.makeText(this, "abc", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Vui lòng đăng nhập để thực hiện chức năng!", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

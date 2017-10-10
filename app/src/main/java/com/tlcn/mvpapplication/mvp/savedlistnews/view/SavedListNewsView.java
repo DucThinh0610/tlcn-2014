@@ -45,13 +45,13 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         mPresenter.onCreate();
-        mPresenter.getSavedListLocation();
         initData();
         initListener();
     }
 
     private void initData() {
         swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
+        mPresenter.getSavedListLocation();
     }
 
     private void initListener() {
@@ -98,7 +98,7 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
 
     @Override
     public void onContributingSuccess() {
-        Toast.makeText(this,getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
         mPresenter.getSavedListLocation();
     }
 

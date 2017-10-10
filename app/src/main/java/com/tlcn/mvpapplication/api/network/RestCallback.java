@@ -3,12 +3,8 @@ package com.tlcn.mvpapplication.api.network;
 
 import android.util.Log;
 
-import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.app.App;
-
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +26,13 @@ public abstract class RestCallback<T extends BaseResponse> implements Callback<T
 
         if (response.isSuccessful()) {
             T bodyResponse = response.body();
-            success(bodyResponse);
+            if(bodyResponse.getCode() == 200){
+                success(bodyResponse);
+            }
+            else {
+                RestError error = new RestError(bodyResponse.getCode(), bodyResponse.getMessage());
+                failure(error);
+            }
         } else {
             RestError error = new RestError(API_ERROR_UNKNOWN, "Unknown error");
             failure(error);

@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
@@ -142,9 +144,12 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_saved_list_news:
-                startActivity(new Intent(getContext(),SavedListNewsView.class));
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    startActivity(new Intent(getContext(), SavedListNewsView.class));
+                } else
+                    Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng chức năng !", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
