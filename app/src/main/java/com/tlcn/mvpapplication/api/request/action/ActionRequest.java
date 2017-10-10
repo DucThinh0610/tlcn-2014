@@ -18,6 +18,9 @@ public class ActionRequest implements Serializable {
     @Expose
     private String news_id;
 
+    public ActionRequest() {
+    }
+
     public ActionRequest(String user_id, int type, String news_id) {
         this.user_id = user_id;
         this.type = type;

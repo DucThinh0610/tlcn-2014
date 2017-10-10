@@ -12,4 +12,10 @@ import java.util.List;
 public interface ISavedListNewsView extends IView {
 
     void onGetSavedListLocationSuccess(List<Locations> result);
+
+    void notifyDataSetChanged();
+
+    void onContributingSuccess();
+
+    void onFailed(String message);
 }

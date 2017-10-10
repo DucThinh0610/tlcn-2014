@@ -84,6 +84,19 @@ public class ApiManager {
             }
         });
     }
+    public void actionOn(ActionRequest request, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_api_server().from(ApiServices.class).actionOn(request).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
 
     public void saveLocation(SaveRequest request, final ApiCallback<BaseResponse> callback){
         AppManager.http_api_server().from(ApiServices.class).saveLocation(request).enqueue(new RestCallback<BaseResponse>() {

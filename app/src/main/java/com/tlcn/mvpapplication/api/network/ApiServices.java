@@ -54,4 +54,7 @@ public interface ApiServices {
 
     @POST("save")
     Call<BaseResponse> saveLocation(@Body SaveRequest save);
+
+    @PUT("on")
+    Call<BaseResponse> actionOn(@Body ActionRequest action);
 }

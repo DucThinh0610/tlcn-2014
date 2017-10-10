@@ -21,4 +21,12 @@ public class BaseResponse implements Serializable {
     public String toString() {
         return code +" "+message;
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
