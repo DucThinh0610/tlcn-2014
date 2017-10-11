@@ -162,7 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="asdasdasdas" />
+                        android:maxLines="1"/>
 
                     <ImageView
                         android:id="@+id/imv_transport"
@@ -208,6 +208,7 @@
 
                     <TextView
                         android:id="@+id/tv_count"
+                        android:maxLines="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp" />
@@ -218,7 +219,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_count"
                         android:layout_marginTop="10dp"
-                        android:gravity="center">
+                        android:gravity="center"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="20dp"
@@ -247,7 +249,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ll_start"
                         android:layout_marginTop="10dp"
-                        android:gravity="center">
+                        android:gravity="center"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="20dp"

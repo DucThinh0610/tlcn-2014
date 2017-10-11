@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.tlcn.mvpapplication.utils.DecodePolyLine;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +72,8 @@ public class Route implements Serializable {
             distance += leg.getDistance().getValue();
             time += leg.getDuration().getValue();
         }
-        return (float) distance / 1000 + " Km - " + time / 60 + " phút";
+        return String.valueOf(new DecimalFormat("###.#").format((float) distance / 1000)) + "Km - " +
+                String.valueOf(time / 60) + "Phút";
     }
 
     public int getCurrentLevel() {
@@ -83,6 +85,16 @@ public class Route implements Serializable {
             }
         }
         return count != 0 ? current / count : 0;
+    }
+
+    public String getCountLocation() {
+        int count = 0;
+        for (Step step : this.getLeg().get(0).getStep()) {
+            if (step.getLocations().size() != 0) {
+                count += step.getLocations().size();
+            }
+        }
+        return "Số điểm kẹt hiện tại: " + String.valueOf(count);
     }
 
     public String getStartLocation() {

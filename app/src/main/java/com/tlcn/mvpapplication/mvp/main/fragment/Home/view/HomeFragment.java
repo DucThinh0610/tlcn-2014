@@ -21,6 +21,7 @@ import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -144,6 +145,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     TextView tvStartLocation;
     @Bind(R.id.tv_end_location)
     TextView tvEndLocation;
+    @Bind(R.id.tv_count)
+    TextView tvCountLocation;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
@@ -597,10 +600,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 break;
             }
         }
-        tvDistanceTime.setText(item.getTimeAndDistance());
+        tvDistanceTime.setText(Html.fromHtml(item.getTimeAndDistance()));
         tvEndLocation.setText(item.getEndLocation());
         tvStartLocation.setText(item.getStartLocation());
         rtbLevel.setRating(item.getCurrentLevel());
+        tvCountLocation.setText(Html.fromHtml(item.getCountLocation()));
     }
 
     @Override

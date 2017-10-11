@@ -16,6 +16,25 @@ public class BaseResponse implements Serializable {
     @SerializedName("message")
     @Expose
     public String message;
+    @SerializedName("status")
+    @Expose
+    public String status;
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
