@@ -155,7 +155,7 @@ public class HomeFragmentTest {
 //
 //    private void showDialog(final Marker marker) {
 //        final Dialog dialog = new Dialog(getContext());
-//        dialog.setContentView(R.layout.dialog_chiduong);
+//        dialog.setContentView(R.layout.dialog_direct);
 //        LinearLayout lnl_xemthongtin = (LinearLayout) dialog.findViewById(R.id.lnl_xemthongtin);
 //        LinearLayout lnl_chiduong = (LinearLayout) dialog.findViewById(R.id.lnl_chiduong);
 //        lnl_xemthongtin.setOnClickListener(new View.OnClickListener() {
