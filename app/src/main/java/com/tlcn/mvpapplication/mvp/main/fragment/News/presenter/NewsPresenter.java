@@ -84,7 +84,7 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
     @Override
     public void onChangeStopped(String id) {
         getView().showLoading();
-        getManager().actionStop(new ActionRequest(id), new ApiCallback<BaseResponse>() {
+        getManager().actionStop(new ActionRequest(id,DateUtils.getCurrentDate()), new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 getView().hideLoading();

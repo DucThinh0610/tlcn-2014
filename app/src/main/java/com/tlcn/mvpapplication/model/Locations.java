@@ -83,4 +83,9 @@ public class Locations implements Serializable {
     public void setRate(int rate) {
         this.rate = rate;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId() == ((Locations) obj).getId();
+    }
 }

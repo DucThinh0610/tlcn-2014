@@ -157,6 +157,11 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
 
     @Override
+    public void notifyChangeStopped() {
+        newsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void getListLocationSuccess(List<Locations> result) {
         if (result != null) {
             newsAdapter = new LocationAdapter(result, getContext(), this);
@@ -313,6 +318,6 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void onClickStopped(String id) {
-
+        mPresenter.onChangeStopped(id);
     }
 }

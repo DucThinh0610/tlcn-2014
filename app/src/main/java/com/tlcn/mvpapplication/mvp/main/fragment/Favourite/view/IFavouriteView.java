@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface IFavouriteView extends IView{
 
+    void notifyChangeStopped();
 
     void getListLocationSuccess(List<Locations>result);
 
