@@ -127,7 +127,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     @Override
     public void OnClickDetail(Locations item) {
         Intent intent = new Intent(getActivity(), DetailsView.class);
-        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, new ObjectSerializable(item));
+        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, item.getId());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

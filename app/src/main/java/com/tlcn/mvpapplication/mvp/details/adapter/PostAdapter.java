@@ -1,6 +1,8 @@
 package com.tlcn.mvpapplication.mvp.details.adapter;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,7 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tlcn.mvpapplication.BuildConfig;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.model.Post;
@@ -22,18 +27,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by ducthinh on 03/10/2017.
- */
-
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private List<Post> mList;
     private Context mContext;
+    private StorageReference storageRef;
 
     public PostAdapter(List<Post> mList, Context mContext, OnItemClick mListener) {
         this.mList = mList;
         this.mContext = mContext;
         this.mListener = mListener;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 
     @Override
@@ -42,7 +46,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(final PostViewHolder holder, int position) {
         final Post item = mList.get(position);
         holder.tvTime.setText(DateUtils.formatFullDate(item.getCreated_at()));
         holder.tvUserName.setText(item.getUser_name());
@@ -54,7 +58,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else
             holder.tvDes.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.getUrl_image())) {
-            ImageLoader.loadWithProgressBar(mContext, BuildConfig.SERVER_URL_API + item.getUrl_image(), holder.imvImage, holder.prBar);
+            StorageReference imageRef = storageRef.child("images/" + item.getUrl_image());
+            imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    ImageLoader.loadWithProgressBar(mContext, uri.toString(), holder.imvImage, holder.prBar);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    holder.prBar.setVisibility(View.GONE);
+                    holder.imvImage.setImageResource(R.drawable.ic_error);
+                }
+            });
+
         } else {
             holder.imvImage.setVisibility(View.GONE);
             holder.prBar.setVisibility(View.GONE);

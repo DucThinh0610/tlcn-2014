@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
-import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.mvp.details.adapter.PostAdapter;
 import com.tlcn.mvpapplication.mvp.details.presenter.DetailsPresenter;
 import com.tlcn.mvpapplication.utils.DateUtils;
@@ -28,10 +27,6 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-/**
- * Created by tskil on 9/20/2017.
- */
 
 public class DetailsView extends AppCompatActivity implements IDetailsView,
         View.OnClickListener,
@@ -81,13 +76,10 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     private void initData() {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         if (getIntent().getExtras() != null) {
-            ObjectSerializable objectSerialized = (ObjectSerializable) getIntent().getSerializableExtra(KeyUtils.KEY_INTENT_LOCATION);
-            mPresenter.setLocation(objectSerialized.getObject());
-            mPresenter.getListPostFromSV();
+            mPresenter.setIdLocation(getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION));
+            mPresenter.getInfoLocation();
             mPresenter.getSaveState();
         }
-        tvTitle.setText(mPresenter.getLocation().getTitle());
-        tvCreatedAt.setText(DateUtils.formatDateToString(mPresenter.getLocation().getLast_modify()));
         mPostAdapter = new PostAdapter(mPresenter.getListPost(), DetailsView.this, this);
         rcvImages.setLayoutManager(new LinearLayoutManager(this));
         rcvImages.setNestedScrollingEnabled(false);
@@ -123,11 +115,10 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                 finish();
                 break;
             case R.id.imv_save:
-                if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     mPresenter.saveLocations();
                     mPresenter.getSaveState();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Vui lòng đăng nhập để thực hiện chức năng!", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -136,10 +127,9 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void getSaveStateSuccess(boolean isSave) {
-        if(isSave){
+        if (isSave) {
             imvSave.setImageResource(R.drawable.ic_save_red);
-        }
-        else {
+        } else {
             imvSave.setImageResource(R.drawable.ic_save_white);
         }
     }
@@ -157,6 +147,16 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     @Override
     public void getPostSuccess() {
         mPostAdapter.notifyDataSetChanged();
+        tvTitle.setText(mPresenter.getLocations().getTitle());
+        tvCreatedAt.setText(DateUtils.formatDateToString(mPresenter.getLocations().getLast_modify()));
+        if (mGoogleMap != null) {
+            mGoogleMap.addMarker(
+                    new MarkerOptions()
+                            .position(new LatLng(mPresenter.getLocations().getLat(), mPresenter.getLocations().getLng()))
+                            .title(getString(R.string.traffic_jam_location_non_star))
+            ).showInfoWindow();
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPresenter.getLocations().getLat(), mPresenter.getLocations().getLng()), KeyUtils.DEFAULT_MAP_ZOOM));
+        }
     }
 
     @Override
@@ -168,14 +168,6 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-        if (mGoogleMap != null) {
-            mGoogleMap.addMarker(
-                    new MarkerOptions()
-                            .position(new LatLng(mPresenter.getLocation().getLat(), mPresenter.getLocation().getLng()))
-                            .title(getString(R.string.traffic_jam_location_non_star))
-            ).showInfoWindow();
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPresenter.getLocation().getLat(), mPresenter.getLocation().getLng()), KeyUtils.DEFAULT_MAP_ZOOM));
-        }
     }
 
     @Override

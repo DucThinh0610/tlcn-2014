@@ -78,4 +78,9 @@ public class MainActivity extends BottomBarHolderActivity {
             ipm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    @Override
+    public void onClickedOnBottomNavigationMenu(int menuType) {
+        super.onClickedOnBottomNavigationMenu(menuType);
+    }
 }

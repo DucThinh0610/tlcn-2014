@@ -8,6 +8,13 @@ import android.text.Spanned;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
  * Created by tskil on 8/23/2017.
  */
@@ -57,38 +64,44 @@ public class Utilities {
         return new LatLng(new_lat, new_long);
     }
 
-    public static String getAcronymNumber(int number){
+    public static String getAcronymNumber(int number) {
         String result = "";
-        if(number/1000000 >=1){
-            result = (int) number/1000000 +"m";
-        } else if(number / 1000 >=1){
-            result = (int) number/1000 +"k";
-        }
-        else result = number +"";
+        if (number / 1000000 >= 1) {
+            result = (int) number / 1000000 + "m";
+        } else if (number / 1000 >= 1) {
+            result = (int) number / 1000 + "k";
+        } else result = number + "";
         return result;
     }
 
-    public static String getAcronymNumber(long number){
+    public static String getAcronymNumber(long number) {
         String result;
-        if(number/1000000 >=1){
-            result = (int) number/1000000 +"Tr";
-        } else if(number / 1000 >=1){
-            result = (int) number/1000 +"N";
-        }
-        else result = number +"";
+        if (number / 1000000 >= 1) {
+            result = (int) number / 1000000 + "Tr";
+        } else if (number / 1000 >= 1) {
+            result = (int) number / 1000 + "N";
+        } else result = number + "";
         return result;
     }
 
-    public static String getDistanceString(int number){
-        String s ="";
-        if(number >= 1000)
-            s = (double)number/1000 + " km";
+    public static String getDistanceString(int number) {
+        String s = "";
+        if (number >= 1000)
+            s = (double) number / 1000 + " km";
         else
             s = number + " m";
         return s;
     }
 
-    public static Spanned underlineText(String text){
-        return Html.fromHtml("<u>"+text+"</u>");
+    public static Spanned underlineText(String text) {
+        return Html.fromHtml("<u>" + text + "</u>");
+    }
+
+    public static String createFileName() {
+        DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        serverDateFormat.setTimeZone(TimeZone.getDefault());
+        serverDateFormat.setCalendar(new GregorianCalendar(TimeZone.getDefault()));
+        Calendar cal = Calendar.getInstance();
+        return serverDateFormat.format(cal.getTime()).replaceAll("-", "").replaceAll(":", "");
     }
 }

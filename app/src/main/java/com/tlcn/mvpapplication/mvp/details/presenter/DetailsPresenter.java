@@ -1,7 +1,5 @@
 package com.tlcn.mvpapplication.mvp.details.presenter;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,20 +27,19 @@ import java.util.Date;
 import java.util.List;
 
 public class DetailsPresenter extends BasePresenter implements IDetailsPresenter {
-    private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<Post> mListPost;
-    private Locations mLocation;
-    private FirebaseAuth mFirebaseAuth;
     private FirebaseUser user;
     private SaveRequest save;
+    private String idLocation;
+    private Locations locations;
 
-    public Locations getLocation() {
-        return mLocation;
+    public Locations getLocations() {
+        return locations;
     }
 
-    public void setLocation(Object o) {
-        this.mLocation = (Locations) o;
+    public void setIdLocation(String idLocation) {
+        this.idLocation = idLocation;
     }
 
     public List<Post> getListPost() {
@@ -53,9 +50,9 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     public void onCreate() {
         super.onCreate();
         mListPost = new ArrayList<>();
-        mDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         user = mFirebaseAuth.getCurrentUser();
     }
 
@@ -76,7 +73,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                     Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
                     for (DataSnapshot data : dataSnapshots) {
                         Save item = data.getValue(Save.class);
-                        if (item.getLocation_id().equals(mLocation.getId()) && item.getUser_id().equals(user.getUid())){
+                        if (item.getLocation_id().equals(idLocation) && item.getUser_id().equals(user.getUid())) {
                             getView().getSaveStateSuccess(true);
                             return;
                         }
@@ -95,7 +92,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     @Override
     public void getListPostFromSV() {
         getView().showLoading();
-        mReference.child(KeyUtils.NEWS).child(mLocation.getId()).limitToLast(20).addValueEventListener(new ValueEventListener() {
+        mReference.child(KeyUtils.NEWS).child(idLocation).limitToLast(20).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
@@ -122,13 +119,12 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                 getView().onFail(databaseError.getMessage());
             }
         });
-        Log.d("asd", mReference.child(KeyUtils.NEWS).child(mLocation.getId()).toString());
     }
 
     @Override
     public void saveLocations() {
         getView().showLoading();
-        save = new SaveRequest(mLocation.getId(), user.getUid());
+        save = new SaveRequest(idLocation, user.getUid());
         getManager().saveLocation(save, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
@@ -171,6 +167,26 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
             @Override
             public void failure(RestError error) {
                 getView().onFail(error.message);
+            }
+        });
+    }
+
+    @Override
+    public void getInfoLocation() {
+        mReference.child(KeyUtils.LOCATIONS).child(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    locations = dataSnapshot.getValue(Locations.class);
+                    getListPostFromSV();
+                } else {
+                    getView().onFail("Error!!!");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getView().onFail(databaseError.getMessage());
             }
         });
     }
