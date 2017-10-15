@@ -594,18 +594,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void showInfoDirection() {
-        Route item = new Route();
-        for (Route route : mPresenter.getRoutes()) {
-            if (route.isSelected()) {
-                item = route;
-                break;
-            }
-        }
-        tvDistanceTime.setText(Html.fromHtml(item.getTimeAndDistance()));
-        tvEndLocation.setText(item.getEndLocation());
-        tvStartLocation.setText(item.getStartLocation());
-        rtbLevel.setRating(item.getCurrentLevel());
-        tvCountLocation.setText(Html.fromHtml(item.getCountLocation()));
+        tvDistanceTime.setText(Html.fromHtml(mPresenter.getRouteSelected().getTimeAndDistance()));
+        tvEndLocation.setText(mPresenter.getRouteSelected().getEndLocation());
+        tvStartLocation.setText(mPresenter.getRouteSelected().getStartLocation());
+        rtbLevel.setRating(mPresenter.getRouteSelected().getCurrentLevel());
+        tvCountLocation.setText(Html.fromHtml(mPresenter.getRouteSelected().getCountLocation()));
     }
 
     @Override

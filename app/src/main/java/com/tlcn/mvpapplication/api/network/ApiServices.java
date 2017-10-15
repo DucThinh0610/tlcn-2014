@@ -29,7 +29,8 @@ public interface ApiServices {
     Call<GetDirectionResponse> getDirection(@Query("origin") String origin,
                                             @Query("destination") String destination,
                                             @Query("key") String key,
-                                            @Query("alternatives") boolean alternatives);
+                                            @Query("alternatives") boolean alternatives,
+                                            @Query("language") String language);
 
     @POST("contribute")
     Call<BaseResponse> contribute(@Body ContributionRequest contribution);

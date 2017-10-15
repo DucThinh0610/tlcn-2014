@@ -14,6 +14,7 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 
 /**
@@ -95,6 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setSmallIcon(R.drawable.ic_car)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =

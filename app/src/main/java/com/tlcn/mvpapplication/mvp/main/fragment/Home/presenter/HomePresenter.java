@@ -71,6 +71,17 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         return routes;
     }
 
+    public Route getRouteSelected() {
+        Route item = new Route();
+        for (Route route : routes) {
+            if (route.isSelected()) {
+                item = route;
+                break;
+            }
+        }
+        return item;
+    }
+
     public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
     }
@@ -145,7 +156,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getView().showLoading();
         AppManager.http_api_direction().from(ApiServices.class).getDirection(convertLatLngToString(lngStart),
                 convertLatLngToString(lngEnd),
-                KeyUtils.KEY_DIRECTION_API, true).enqueue(new RestCallback<GetDirectionResponse>() {
+                KeyUtils.KEY_DIRECTION_API, true, "vi").enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
             public void success(GetDirectionResponse res) {
                 getView().onStartFindDirection();
