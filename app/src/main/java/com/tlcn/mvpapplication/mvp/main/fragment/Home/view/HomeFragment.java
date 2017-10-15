@@ -447,7 +447,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void getDetailLocationSuccess(Locations res) {
         if (res != null) {
             Intent intent = new Intent(getContext(), DetailsView.class);
-            intent.putExtra(KeyUtils.INTENT_KEY_ID, res.getId());
+            intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, res.getId());
             startActivity(intent);
         }
     }

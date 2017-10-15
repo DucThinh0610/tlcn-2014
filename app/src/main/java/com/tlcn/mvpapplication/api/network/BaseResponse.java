@@ -12,17 +12,13 @@ import java.io.Serializable;
 public class BaseResponse implements Serializable {
     @SerializedName("code")
     @Expose
-    public int code;
+    private int code;
     @SerializedName("message")
     @Expose
-    public String message;
+    private String message;
     @SerializedName("status")
     @Expose
-    public String status;
-
-    public void setCode(int code) {
-        this.code = code;
-    }
+    private String status;
 
     public void setMessage(String message) {
         this.message = message;
