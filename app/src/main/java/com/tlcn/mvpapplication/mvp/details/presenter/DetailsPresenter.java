@@ -1,7 +1,5 @@
 package com.tlcn.mvpapplication.mvp.details.presenter;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -9,7 +7,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
@@ -30,10 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 public class DetailsPresenter extends BasePresenter implements IDetailsPresenter {
-    private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<Post> mListPost;
-    private FirebaseAuth mFirebaseAuth;
     private FirebaseUser user;
     private SaveRequest save;
     private String idLocation;
@@ -55,9 +50,9 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     public void onCreate() {
         super.onCreate();
         mListPost = new ArrayList<>();
-        mDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         user = mFirebaseAuth.getCurrentUser();
     }
 
@@ -124,7 +119,6 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                 getView().onFail(databaseError.getMessage());
             }
         });
-        Log.d("asd", mReference.child(KeyUtils.NEWS).child(idLocation).toString());
     }
 
     @Override
@@ -179,13 +173,11 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     @Override
     public void getInfoLocation() {
-        Log.d("Locations", mReference.child(KeyUtils.LOCATIONS).equalTo(idLocation).toString());
-        mReference.child(KeyUtils.LOCATIONS).orderByKey().equalTo(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
+        mReference.child(KeyUtils.LOCATIONS).child(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
                     locations = dataSnapshot.getValue(Locations.class);
-                    Log.d("Response", new Gson().toJson(locations));
                     getListPostFromSV();
                 } else {
                     getView().onFail("Error!!!");

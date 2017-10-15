@@ -72,21 +72,21 @@ public class ContributePresenter extends BasePresenter implements IContributePre
     @Override
     public void uploadImage() {
         getView().showLoading();
-        Uri file = Uri.fromFile(fileUpload);
-        Log.d("Request", "images/" + DateUtils.getCurrentDate() + file.getLastPathSegment());
-        StorageReference imageRef = storageRef.child("images/" + Utilities.createFileName() + file.getLastPathSegment());
-        uploadTask = imageRef.putFile(file);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Fail", e.getMessage());
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("Success", "OK");
-            }
-        });
+//        Uri file = Uri.fromFile(fileUpload);
+//        Log.d("Request", "images/" + DateUtils.getCurrentDate() + file.getLastPathSegment());
+//        StorageReference imageRef = storageRef.child("images/" + Utilities.createFileName() + file.getLastPathSegment());
+//        uploadTask = imageRef.putFile(file);
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d("Fail", e.getMessage());
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                Log.d("Success", "OK");
+//            }
+//        });
 
         if (mtlPart == null) {
             sendContribution();
