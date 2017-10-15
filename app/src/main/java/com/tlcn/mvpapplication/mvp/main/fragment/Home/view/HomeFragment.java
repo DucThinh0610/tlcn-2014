@@ -70,6 +70,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
@@ -98,7 +99,6 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
 import static java.util.Arrays.asList;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback,
@@ -270,6 +270,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            mPresenter.pushNotificationToken(user.getUid(), FirebaseInstanceId.getInstance().getToken());
                             View v = nvDrawer.getHeaderView(0);
                             final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
                             final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);

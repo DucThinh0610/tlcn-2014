@@ -26,7 +26,7 @@ public abstract class RestCallback<T extends BaseResponse> implements Callback<T
 
         if (response.isSuccessful()) {
             T bodyResponse = response.body();
-            if (bodyResponse.getCode() == 200 || bodyResponse.status.equals("OK")) {
+            if (bodyResponse.getCode() == 200) {
                 success(bodyResponse);
             } else {
                 RestError error = new RestError(bodyResponse.getCode(), bodyResponse.getMessage());

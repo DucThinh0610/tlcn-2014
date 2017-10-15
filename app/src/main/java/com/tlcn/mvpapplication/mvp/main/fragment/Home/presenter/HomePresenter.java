@@ -2,7 +2,6 @@ package com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -11,15 +10,15 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.ApiServices;
+import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
@@ -236,6 +235,24 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         if (routes != null) {
             MapStorage.getInstance().setDirection(routes);
         }
+    }
+
+    @Override
+    public void pushNotificationToken(String UID, String token) {
+        getView().showLoading();
+        getManager().pushNotificationToken(UID, token, new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().hideLoading();
+                LogUtils.LOGE("MESSAGE", res.getMessage());
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+                getView().onFail(error.message);
+            }
+        });
     }
 
     private String convertLatLngToString(LatLng latLng) {
