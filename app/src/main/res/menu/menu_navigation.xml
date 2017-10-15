@@ -14,6 +14,11 @@
             android:title="@string/share_app"
             android:id="@+id/share_app"
             android:icon="@drawable/ic_share_main"/>
+
+        <item
+            android:title="@string/guide"
+            android:id="@+id/guide"
+            android:icon="@drawable/ic_guide_main"/>
     </group>
     <group android:id="@+id/gr_setting">
         <item

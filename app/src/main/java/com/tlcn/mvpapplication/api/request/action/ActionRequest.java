@@ -18,6 +18,10 @@ public class ActionRequest implements Serializable {
     @Expose
     private String news_id;
 
+    @SerializedName("time")
+    @Expose
+    private String time;
+
     public ActionRequest() {
     }
 
@@ -26,11 +30,13 @@ public class ActionRequest implements Serializable {
         this.type = type;
         this.news_id = news_id;
     }
+
     @SerializedName("id")
     @Expose
     private String idLocation;
 
-    public ActionRequest(String idLocation) {
+    public ActionRequest(String idLocation, String time) {
         this.idLocation = idLocation;
+        this.time = time;
     }
 }

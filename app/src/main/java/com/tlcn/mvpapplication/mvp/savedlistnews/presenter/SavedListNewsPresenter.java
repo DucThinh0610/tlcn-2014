@@ -15,6 +15,7 @@ import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.ISavedListNewsView;
+import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.ArrayList;
@@ -56,24 +57,19 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
         saveQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Query query = mLocationReference.orderByChild("id").equalTo(data.child("location_id").getValue().toString());
                     query.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             getView().hideLoading();
-                            boolean isExist = false;
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 Locations item = child.getValue(Locations.class);
-                                for (int i = 0; i < list.size(); i++) {
-                                    if (list.get(i).getId().equals(item.getId())) {
-                                        list.set(i, item);
-                                        isExist = true;
-                                    }
-                                }
-                                if (!isExist)
+                                if (!list.contains(item)) {
                                     list.add(item);
+                                } else {
+                                    list.set(list.indexOf(item), item);
+                                }
                             }
                             getView().onGetSavedListLocationSuccess(list);
                         }
@@ -118,7 +114,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     @Override
     public void contributing(Locations location) {
         getView().showLoading();
-        ActionRequest request = new ActionRequest(location.getId());
+        ActionRequest request = new ActionRequest(location.getId(), DateUtils.getCurrentDate());
         if (location.getStatus()) {
             getManager().actionStop(request, new ApiCallback<BaseResponse>() {
                 @Override

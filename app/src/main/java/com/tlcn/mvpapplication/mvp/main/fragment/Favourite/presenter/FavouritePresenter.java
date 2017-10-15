@@ -6,6 +6,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.api.network.ApiCallback;
+import com.tlcn.mvpapplication.api.network.BaseResponse;
+import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
@@ -56,7 +60,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void getListNews() {
         getView().showLoading();
-        final int distanceToLoad = mLocationStorage.getDistanceFavourite()*20;
+        final int distanceToLoad = mLocationStorage.getDistanceFavourite() * 20;
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -65,9 +69,9 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                 for (DataSnapshot data : listData) {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
-                    LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " "+ start.toString());
-                    LogUtils.LOGE("item2",Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation())+"");
-                    if(item.getStatus()) {
+                    LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " " + start.toString());
+                    LogUtils.LOGE("item2", Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) + "");
+                    if (item.getStatus()) {
                         if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= distanceToLoad
                                 || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= distanceToLoad
                                 || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= distanceToLoad)
@@ -82,7 +86,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                         return date2.compareTo(date1);
                     }
                 });
-                LogUtils.LOGE("itemsize",list.size()+"");
+                LogUtils.LOGE("itemsize", list.size() + "");
                 getView().hideLoading();
                 getView().getListLocationSuccess(list);
             }
@@ -95,6 +99,23 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         });
     }
 
+    @Override
+    public void onChangeStopped(String id) {
+        getView().showLoading();
+        getManager().actionStop(new ActionRequest(id, DateUtils.getCurrentDate()), new ApiCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                getView().hideLoading();
+                getView().notifyChangeStopped();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+                getView().onFail(error.message);
+            }
+        });
+    }
 
     @Override
     public void setFavouriteDistance(int progress) {
