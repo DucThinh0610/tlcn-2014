@@ -72,37 +72,26 @@ public class ContributePresenter extends BasePresenter implements IContributePre
     @Override
     public void uploadImage() {
         getView().showLoading();
-//        Uri file = Uri.fromFile(fileUpload);
-//        Log.d("Request", "images/" + DateUtils.getCurrentDate() + file.getLastPathSegment());
-//        StorageReference imageRef = storageRef.child("images/" + Utilities.createFileName() + file.getLastPathSegment());
-//        uploadTask = imageRef.putFile(file);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d("Fail", e.getMessage());
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Log.d("Success", "OK");
-//            }
-//        });
-
-        if (mtlPart == null) {
+        if (fileUpload == null) {
             sendContribution();
         } else {
-            getManager().uploadFile(this.mtlPart, new ApiCallback<UploadFileResponse>() {
+            final Uri file = Uri.fromFile(fileUpload);
+            final String filename = DateUtils.getCurrentDate() + file.getLastPathSegment();
+            StorageReference imageRef = storageRef.child("images/" + filename);
+            uploadTask = imageRef.putFile(file);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void success(UploadFileResponse res) {
-                    mtlPart = null;
-                    contribution.setFile(res.getImageFile().getUrl());
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Fail", e.getMessage());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("Success", "OK");
+                    fileUpload = null;
+                    contribution.setFile(filename);
                     sendContribution();
                     getView().removeImageView();
-                }
-
-                @Override
-                public void failure(RestError error) {
-                    sendContribution();
                 }
             });
         }
