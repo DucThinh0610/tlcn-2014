@@ -57,4 +57,7 @@ public interface ApiServices {
 
     @PUT("on")
     Call<BaseResponse> actionOn(@Body ActionRequest action);
+
+    @POST("{user_id}")
+    Call<BaseResponse> push_notification(@Path("user_id") String user_id, @Query("token") String token);
 }
