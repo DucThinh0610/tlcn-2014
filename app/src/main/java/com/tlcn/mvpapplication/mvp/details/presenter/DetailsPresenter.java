@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
@@ -32,17 +33,18 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<Post> mListPost;
-    private Locations mLocation;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser user;
     private SaveRequest save;
+    private String idLocation;
+    private Locations locations;
 
-    public Locations getLocation() {
-        return mLocation;
+    public Locations getLocations() {
+        return locations;
     }
 
-    public void setLocation(Object o) {
-        this.mLocation = (Locations) o;
+    public void setIdLocation(String idLocation) {
+        this.idLocation = idLocation;
     }
 
     public List<Post> getListPost() {
@@ -76,7 +78,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                     Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
                     for (DataSnapshot data : dataSnapshots) {
                         Save item = data.getValue(Save.class);
-                        if (item.getLocation_id().equals(mLocation.getId()) && item.getUser_id().equals(user.getUid())){
+                        if (item.getLocation_id().equals(idLocation) && item.getUser_id().equals(user.getUid())) {
                             getView().getSaveStateSuccess(true);
                             return;
                         }
@@ -95,7 +97,7 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     @Override
     public void getListPostFromSV() {
         getView().showLoading();
-        mReference.child(KeyUtils.NEWS).child(mLocation.getId()).limitToLast(20).addValueEventListener(new ValueEventListener() {
+        mReference.child(KeyUtils.NEWS).child(idLocation).limitToLast(20).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
@@ -122,13 +124,13 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                 getView().onFail(databaseError.getMessage());
             }
         });
-        Log.d("asd", mReference.child(KeyUtils.NEWS).child(mLocation.getId()).toString());
+        Log.d("asd", mReference.child(KeyUtils.NEWS).child(idLocation).toString());
     }
 
     @Override
     public void saveLocations() {
         getView().showLoading();
-        save = new SaveRequest(mLocation.getId(), user.getUid());
+        save = new SaveRequest(idLocation, user.getUid());
         getManager().saveLocation(save, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
@@ -171,6 +173,28 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
             @Override
             public void failure(RestError error) {
                 getView().onFail(error.message);
+            }
+        });
+    }
+
+    @Override
+    public void getInfoLocation() {
+        Log.d("Locations", mReference.child(KeyUtils.LOCATIONS).equalTo(idLocation).toString());
+        mReference.child(KeyUtils.LOCATIONS).orderByKey().equalTo(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    locations = dataSnapshot.getValue(Locations.class);
+                    Log.d("Response", new Gson().toJson(locations));
+                    getListPostFromSV();
+                } else {
+                    getView().onFail("Error!!!");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getView().onFail(databaseError.getMessage());
             }
         });
     }

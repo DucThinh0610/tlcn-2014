@@ -260,6 +260,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
             if (requestCode == REQUEST_READ_LIBRARY) {
                 File file = FileUtils.convertUriToFile(getContext(), data.getData());
                 assert file != null;
+                mPresenter.setFileUpload(file);
                 mPresenter.setMtlPart(FileUtils.createMultipartBodyPart(getContext(),
                         FileUtils.convertUriToFile(getContext(), Uri.parse(file.getPath()))));
                 imvImage.setVisibility(View.VISIBLE);

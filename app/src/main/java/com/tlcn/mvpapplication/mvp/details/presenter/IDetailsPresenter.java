@@ -15,4 +15,6 @@ public interface IDetailsPresenter {
     void actionDislike(String idPost);
 
     void actionLike(String idPost);
+
+    void getInfoLocation();
 }
