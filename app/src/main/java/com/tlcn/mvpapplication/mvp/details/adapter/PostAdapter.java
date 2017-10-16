@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.utils.DateUtils;
@@ -62,7 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    ImageLoader.loadWithProgressBar(mContext, uri.toString(), holder.imvImage, holder.prBar);
+                    ImageLoader.loadWithProgressBar(App.getContext(), uri.toString(), holder.imvImage, holder.prBar);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

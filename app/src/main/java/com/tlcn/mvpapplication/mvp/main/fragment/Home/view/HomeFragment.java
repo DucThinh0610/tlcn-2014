@@ -446,8 +446,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void getDetailLocationSuccess(Locations res) {
         if (res != null) {
-            Intent intent = new Intent(getContext(), DetailsView.class);
-            intent.putExtra(KeyUtils.INTENT_KEY_ID, res.getId());
+            Intent intent = new Intent(getActivity(), DetailsView.class);
+            intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, res.getId());
             startActivity(intent);
         }
     }
@@ -704,8 +704,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-        if (mPresenter.mListenerDetail != null) {
+        if (mPresenter.mListenerDetail != null && mPresenter.mListenerInfo != null) {
             mPresenter.mReference.removeEventListener(mPresenter.mListenerDetail);
+            mPresenter.mReference.removeEventListener(mPresenter.mListenerInfo);
         }
         mPresenter.saveCurrentStateMap();
     }

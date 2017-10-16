@@ -48,7 +48,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     public DatabaseReference mReference;
     private CameraPosition mCameraPosition;
     private boolean continuousShowDialog = true;
-    public ValueEventListener mListenerDetail;
+    public ValueEventListener mListenerDetail, mListenerInfo;
     private boolean stateUI;
 
     public void setContinuousShowDialog(boolean continuousShowDialog) {
@@ -176,7 +176,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
     @Override
     public void getDetailLocation(final LatLng latLng) {
-        mReference.addValueEventListener(new ValueEventListener() {
+        mListenerInfo = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
@@ -200,7 +200,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 getView().hideLoading();
                 getView().onFail(databaseError.getMessage());
             }
-        });
+        };
+        mReference.addValueEventListener(mListenerInfo);
     }
 
     @Override
