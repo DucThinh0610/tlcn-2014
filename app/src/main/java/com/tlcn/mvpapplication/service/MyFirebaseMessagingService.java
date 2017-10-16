@@ -43,17 +43,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             if (remoteMessage.getData().size() > 0) {
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-                if (true) {
-                    // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                    scheduleJob();
-                } else {
-                    // Handle message within 10 seconds
-                    Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-                    sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData().get("location_id"));
-                }
-            }
-            else {
+//
+//                if (true) {
+//                    // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
+//                    scheduleJob();
+//                } else {
+                // Handle message within 10 seconds
+                Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+                sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData().get("location_id"));
+            } else {
                 Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
                 sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
             }
