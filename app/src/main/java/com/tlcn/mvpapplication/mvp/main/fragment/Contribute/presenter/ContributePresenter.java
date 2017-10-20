@@ -13,25 +13,15 @@ import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
-import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.IContributeView;
 import com.tlcn.mvpapplication.utils.DateUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.io.File;
 
-import okhttp3.MultipartBody;
-
 public class ContributePresenter extends BasePresenter implements IContributePresenter {
     public ContributionRequest contribution = new ContributionRequest();
-
-    private MultipartBody.Part mtlPart;
     private File fileUpload;
-
-    public void setMtlPart(MultipartBody.Part mtlPart) {
-        this.mtlPart = mtlPart;
-    }
 
     public void attachView(IContributeView view) {
         super.attachView(view);
@@ -43,7 +33,6 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
     private StorageReference storageRef;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    UploadTask uploadTask;
 
     @Override
     public void onCreate() {
@@ -78,7 +67,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
             final Uri file = Uri.fromFile(fileUpload);
             final String filename = DateUtils.getCurrentDate() + file.getLastPathSegment();
             StorageReference imageRef = storageRef.child("images/" + filename);
-            uploadTask = imageRef.putFile(file);
+            UploadTask uploadTask = imageRef.putFile(file);
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -99,5 +88,9 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
     public void setFileUpload(File fileUpload) {
         this.fileUpload = fileUpload;
+    }
+
+    public File getImageUpload() {
+        return fileUpload;
     }
 }
