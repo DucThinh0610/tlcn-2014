@@ -31,25 +31,6 @@
                 android:layout_alignParentTop="true"
                 tools:context="com.tlcn.mvpapplication.mvp.main.view.MainActivity" />
 
-            <RelativeLayout
-                android:id="@+id/rl_location"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/rlt_search"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/oval_imv_grey"
-                android:gravity="center"
-                android:padding="1dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imv_location"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_my_location" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +46,23 @@
                     app:fab_fabBackgroundColor="@color/color_main"
                     app:fab_fabDrawableTint="@color/white"
                     app:fab_menu="@menu/menu_fab"
-                    app:fab_miniFabTextColor="@color/color_main" />
+                    app:fab_miniFabTextColor="@color/color_main"
+                    android:visibility="gone"/>
+                <RelativeLayout
+                    android:id="@+id/rl_location"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/oval_imv_grey"
+                    android:gravity="center"
+                    android:padding="1dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imv_location"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_my_location" />
+                </RelativeLayout>
             </LinearLayout>
 
             <RelativeLayout

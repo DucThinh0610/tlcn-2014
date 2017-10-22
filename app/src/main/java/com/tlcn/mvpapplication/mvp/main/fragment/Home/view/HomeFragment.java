@@ -81,6 +81,7 @@ import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
+import com.tlcn.mvpapplication.mvp.main.fragment.Home.adapter.DirectionAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomePresenter;
 import com.tlcn.mvpapplication.mvp.setting.view.SettingView;
 import com.tlcn.mvpapplication.service.GPSTracker;
@@ -88,6 +89,8 @@ import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.LogUtils;
 import com.tlcn.mvpapplication.utils.MapUtils;
+
+import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,6 +150,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     TextView tvEndLocation;
     @Bind(R.id.tv_count)
     TextView tvCountLocation;
+    @Bind(R.id.rcv_route)
+    RecyclerView rcvDirection;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
@@ -370,6 +375,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void initData() {
+        rcvSearch.setVisibility(View.GONE);
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_header_navigation, null);
         final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
         final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);
@@ -403,9 +409,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         }
         nvDrawer.addHeaderView(v);
         gpsTracker = new GPSTracker(getContext());
+
+        //adapter search
         mAdapter = new PlaceSearchAdapter(getContext(), mPresenter.getGoogleApiClient(), MapUtils.HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvSearch.setAdapter(mAdapter);
+
         editSearch.setSingleLine(true);
         editSearch.setEllipsize(TextUtils.TruncateAt.END);
         mSlidingUpPanelLayout.setAnchorPoint(0.5f);
@@ -599,6 +608,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         tvStartLocation.setText(mPresenter.getRouteSelected().getStartLocation());
         rtbLevel.setRating(mPresenter.getRouteSelected().getCurrentLevel());
         tvCountLocation.setText(Html.fromHtml(mPresenter.getRouteSelected().getCountLocation()));
+        //adapter direction
+        rcvDirection.setLayoutManager(new StickyHeaderLayoutManager());
+        rcvDirection.setAdapter(new DirectionAdapter(getContext(), mPresenter.getRouteSelected(), new DirectionAdapter.OnClickItemListener() {
+            @Override
+            public void onClickStartDetail(String id) {
+                Intent intent = new Intent(getActivity(), DetailsView.class);
+                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, id);
+                startActivity(intent);
+            }
+        }));
     }
 
     @Override

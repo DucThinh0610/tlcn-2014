@@ -109,6 +109,12 @@ public class DateUtils {
         return formatDate(date, dateFormat);
     }
 
+    public static String formatHour(String dateStr) {
+        Date date = parseStringToDate(dateStr);
+        String dateFormat = "HH:mm";
+        return formatDate(date, dateFormat);
+    }
+
     private static String formatDate(Date date, String desFormat) {
         if (date == null) {
             return "";
