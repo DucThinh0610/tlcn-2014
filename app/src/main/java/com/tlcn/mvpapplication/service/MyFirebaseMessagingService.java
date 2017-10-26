@@ -16,8 +16,11 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.SplashActivity;
+import com.tlcn.mvpapplication.model.Notification;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+
+import java.util.Map;
 
 /**
  * Created by apple on 10/13/17.
@@ -40,21 +43,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
-        if (remoteMessage.getNotification() != null) {
-            if (remoteMessage.getData().size() > 0) {
-                Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-//
-//                if (true) {
-//                    // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-//                    scheduleJob();
-//                } else {
-                // Handle message within 10 seconds
-                Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-                sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData().get("location_id"));
-            } else {
-                Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-                sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
-            }
+        if (remoteMessage.getData() != null && remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            sendNotification(remoteMessage.getData());
+//            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData().get("location_id"));
         }
 
 
@@ -127,6 +119,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private void sendNotification(Map<String, String> data) {
+        Notification notification = new Notification();
+        notification.initData(data);
+        Intent intent = new Intent(getApplicationContext(), DetailsView.class);
+        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, notification.getLocation_id());
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+        notificationBuilder.setContentTitle(notification.getTitle())
+                .setContentText(notification.getMessageBody())
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setSmallIcon(R.drawable.ic_car)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
     }
 }
