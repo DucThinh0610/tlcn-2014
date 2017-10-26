@@ -31,4 +31,13 @@ public class KeyUtils {
 
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
+
+    public static final int REQUEST_PERMISSION_CAPTURE_IMAGE = 1;
+    public static final int REQUEST_PERMISSION_READ_LIBRARY = 2;
+    public static final int REQUEST_PERMISSION_WRITE_STORAGE = 3;
+    public static final int REQUEST_CAPTURE_IMAGE = 4;
+    public static final int REQUEST_READ_LIBRARY = 5;
+    public static final int REQUEST_TAKE_PHOTO = 6;
+    public static final double MIN_LEVEL = 3.0;
+    public static final double MEDIUM_LEVEL = 4.5;
 }

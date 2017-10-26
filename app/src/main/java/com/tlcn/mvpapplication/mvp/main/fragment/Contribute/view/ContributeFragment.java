@@ -1,15 +1,20 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,24 +40,20 @@ import com.tlcn.mvpapplication.utils.FileUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-
-/**
- * Created by tskil on 8/23/2017.
- */
+import static com.tlcn.mvpapplication.utils.FileUtils.getUriFromFile;
 
 public class ContributeFragment extends Fragment implements IContributeView, View.OnClickListener {
-    private static final int REQUEST_READ_LIBRARY = 0;
 
     public static ContributeFragment newInstance() {
         return new ContributeFragment();
     }
 
-    private static final int REQUEST_PERMISSION_READ_LIBRARY = 1;
     //Todo: Binding
     @Bind(R.id.rdg_location)
     RadioGroup rdgLocation;
@@ -105,7 +106,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             } else {
                 Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
-                DialogUtils.showSettingLocationDialog(this,102);
+                DialogUtils.showSettingLocationDialog(this, 102);
             }
         }
         rdgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -193,17 +194,23 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 startActivityForResult(intent, 101);
                 break;
             case R.id.imv_take_photo:
+                String[] s = {android.Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                if (checkPermissions(s)) {
+                    mPresenter.setFileUpload(startCameraScreen());
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), s, KeyUtils.REQUEST_PERMISSION_CAPTURE_IMAGE);
+                }
                 break;
             case R.id.imv_video:
                 break;
             case R.id.imv_gallery:
-                String s[] = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
-                if (checkPermissions(s)) {
+                String ss[] = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
+                if (checkPermissions(ss)) {
                     Intent iGallery = new Intent(Intent.ACTION_GET_CONTENT);
                     iGallery.setType("image/*");
-                    startActivityForResult(Intent.createChooser(iGallery, "Select a image"), REQUEST_READ_LIBRARY);
+                    startActivityForResult(Intent.createChooser(iGallery, "Select a image"), KeyUtils.REQUEST_READ_LIBRARY);
                 } else {
-                    requestPermissions(s, REQUEST_PERMISSION_READ_LIBRARY);
+                    requestPermissions(ss, KeyUtils.REQUEST_PERMISSION_READ_LIBRARY);
                 }
                 break;
         }
@@ -223,10 +230,13 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        if (requestCode == REQUEST_PERMISSION_READ_LIBRARY) {
+        if (requestCode == KeyUtils.REQUEST_PERMISSION_READ_LIBRARY) {
             Intent iGallery = new Intent(Intent.ACTION_GET_CONTENT);
             iGallery.setType("image/*");
-            startActivityForResult(Intent.createChooser(iGallery, "Select a image"), REQUEST_READ_LIBRARY);
+            startActivityForResult(Intent.createChooser(iGallery, "Select a image"), KeyUtils.REQUEST_READ_LIBRARY);
+        }
+        if (requestCode == KeyUtils.REQUEST_PERMISSION_CAPTURE_IMAGE) {
+            mPresenter.setFileUpload(startCameraScreen());
         }
     }
 
@@ -247,7 +257,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 }
             }
         }
-        if(requestCode == 102){
+        if (requestCode == 102) {
             gpsTracker = new GPSTracker(getContext());
             if (gpsTracker.canGetLocation()) {
                 rdbCurrent.setChecked(true);
@@ -257,15 +267,38 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
             }
         }
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_READ_LIBRARY) {
+            if (requestCode == KeyUtils.REQUEST_READ_LIBRARY) {
                 File file = FileUtils.convertUriToFile(getContext(), data.getData());
                 assert file != null;
                 mPresenter.setFileUpload(file);
-                mPresenter.setMtlPart(FileUtils.createMultipartBodyPart(getContext(),
-                        FileUtils.convertUriToFile(getContext(), Uri.parse(file.getPath()))));
                 imvImage.setVisibility(View.VISIBLE);
                 ImageLoader.loadImageFromPath(getContext(), file.getPath(), imvImage, 10);
             }
         }
+        if (requestCode==KeyUtils.REQUEST_TAKE_PHOTO){
+            imvImage.setVisibility(View.VISIBLE);
+            ImageLoader.loadImageFromPath(getContext(), mPresenter.getImageUpload().getPath(), imvImage, 10);
+        }
+    }
+    private File startCameraScreen() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File file;
+        try {
+            file = FileUtils.createTempFile(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    getActivity().getResources().getString(R.string.app_name),
+                    FileUtils.JPEG_FILE_PREFIX,
+                    FileUtils.JPEG_FILE_SUFFIX
+            );
+            if (file == null) {
+                return null;
+            }
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getUriFromFile(getActivity(), file));
+            startActivityForResult(takePictureIntent, KeyUtils.REQUEST_TAKE_PHOTO);
+        } catch (IOException e) {
+            e.printStackTrace();
+            file = null;
+        }
+        return file;
     }
 }

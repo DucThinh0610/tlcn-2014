@@ -37,6 +37,9 @@ public class Step implements Serializable {
     @SerializedName("html_instructions")
     @Expose
     private String description;
+    @SerializedName("maneuver")
+    @Expose
+    private String maneuver;
 
     private List<Locations> locations = new ArrayList<>();
 
@@ -123,5 +126,9 @@ public class Step implements Serializable {
             }
         }
         return result;
+    }
+
+    public String getManeuver() {
+        return maneuver;
     }
 }

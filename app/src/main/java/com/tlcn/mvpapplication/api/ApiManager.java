@@ -31,7 +31,7 @@ public class ApiManager {
     }
 
     public void getInfoPlace(GetInfoRequest request, final ApiCallback<GetInfoResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).getInfoPlace(request).enqueue(new RestCallback<GetInfoResponse>() {
+        AppManager.http_api_server().from(ApiServices.class).getInfoPlace(request).enqueue(new RestCallback<GetInfoResponse>() {
             @Override
             public void success(GetInfoResponse res) {
                 callback.success(res);

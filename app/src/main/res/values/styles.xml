@@ -28,6 +28,11 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/grey_divider</item>
     </style>
+    <style name="view_margin_vertical">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/grey_divider</item>
+    </style>
 
     <style name="dialog_fullscreen" parent="android:Theme.Dialog">
         <item name="android:colorAccent" tools:ignore="NewApi">#009df7</item>
