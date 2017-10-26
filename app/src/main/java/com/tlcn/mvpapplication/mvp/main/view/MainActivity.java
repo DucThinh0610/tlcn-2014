@@ -5,11 +5,13 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.ContributeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.FavouriteFragment;
@@ -28,11 +30,12 @@ import me.riddhimanadib.library.NavigationPage;
  */
 
 public class MainActivity extends BottomBarHolderActivity {
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // pass them to super method
+        Log.e("FIREBASE_TOKEN", FirebaseInstanceId.getInstance().getToken());
         super.setupBottomBarHolderActivity(getNavigationPage());
     }
 

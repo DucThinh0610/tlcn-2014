@@ -17,9 +17,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.SystemUtils;
 import com.tlcn.mvpapplication.utils.Utilities;
 
@@ -43,6 +45,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         gpsTracker = new GPSTracker(this);
+        if (getIntent().getExtras() != null) {
+            Intent intent = new Intent(this, DetailsView.class);
+            Toast.makeText(this, getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION), Toast.LENGTH_SHORT).show();
+            /*intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION));
+            startActivity(intent);
+            finish();*/
+        }
         // check android 6.0
         if (Build.VERSION.SDK_INT >= 23) {
             // Marshmallow+
@@ -58,13 +67,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
             gpsTracker = new GPSTracker(this);
-            if(gpsTracker.canGetLocation()){
+            if (gpsTracker.canGetLocation()) {
                 Intent intent = new Intent(SplashActivity.this, SplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 finish();
-            }
-            else SystemUtils.exitApplication(SplashActivity.this);
+            } else SystemUtils.exitApplication(SplashActivity.this);
         }
     }
 
@@ -76,7 +84,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    DialogUtils.showSettingLocationDialog(SplashActivity.this,101);
+                    DialogUtils.showSettingLocationDialog(SplashActivity.this, 101);
                 }
             } else {
                 Toast.makeText(getBaseContext(), "Please check your network connection!.", Toast.LENGTH_SHORT).show();

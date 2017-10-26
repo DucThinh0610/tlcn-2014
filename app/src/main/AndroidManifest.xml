@@ -74,6 +74,10 @@
             </intent-filter>
         </activity>
 
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1949719471961545"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
+        <!--End Facebook-->
         <!--TODO: Firebase Messaging-->
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>

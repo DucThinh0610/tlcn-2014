@@ -16,7 +16,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.SplashActivity;
-import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 /**
@@ -40,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
-        if (remoteMessage.getNotification() != null) {
+       /* if (remoteMessage.getNotification() != null) {
             if (remoteMessage.getData().size() > 0) {
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 //
@@ -55,8 +54,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
                 sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
             }
-        }
-
+        }*/
+        /*if (remoteMessage.getData().size() > 0) {
+            Log.e("DATA_DATA", remoteMessage.getData().get("header") + " " + remoteMessage.getData().get("location_id"));
+            sendNotification(remoteMessage.getData().get("header"), remoteMessage.getData().get("content"), remoteMessage.getData().get("location_id"));
+        }*/
 
         // Check if message contains a notification payload.
 
@@ -84,14 +86,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Short lived task is done.");
     }
 
+    @Override
+    public void handleIntent(Intent intent) {
+        super.handleIntent(intent);
+        sendNotification(intent.getStringExtra("header"), intent.getStringExtra("content"), intent.getStringExtra("location_id"));
+
+    }
+
     /**
      * Create and show a simple notification containing the received FCM message.
      *
      * @param messageBody FCM message body received.
      */
+
     private void sendNotification(String title, String messageBody, String locationID) {
-        Intent intent = new Intent(this, DetailsView.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, locationID);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 999 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
