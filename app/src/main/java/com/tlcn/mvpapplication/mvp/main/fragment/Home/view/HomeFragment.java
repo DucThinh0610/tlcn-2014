@@ -78,6 +78,7 @@ import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.ConfirmDialog;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.DirectionActivity;
@@ -447,6 +448,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             case R.id.ll_start_direction:
             case R.id.btn_start:
                 Intent intent = new Intent(getContext(), DirectionActivity.class);
+                intent.putExtra(KeyUtils.KEY_INTENT_DIRECTION, new ObjectSerializable(mPresenter.getRouteSelected()));
                 startActivity(intent);
         }
     }
