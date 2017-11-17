@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tlcn.mvpapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -76,10 +77,12 @@
 
         <provider android:authorities="com.facebook.app.FacebookContentProvider1949719471961545"
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
         <!--End Facebook-->
         <!--TODO: Firebase Messaging-->
-        <service android:name=".service.MyFirebaseMessagingService">
+        <service android:name=".service.MyFirebaseMessagingService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -91,7 +94,8 @@
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
-        <service android:name=".service.MyFirebaseInstanceIDService">
+        <service android:name=".service.MyFirebaseInstanceIDService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
