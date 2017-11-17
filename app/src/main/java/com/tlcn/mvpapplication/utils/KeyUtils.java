@@ -9,11 +9,12 @@ public class KeyUtils {
     public static final float MIN_MAP_ZOOM = 10f;
     public static final float MAX_MAP_ZOOM = 18f;
     public static final float DEFAULT_MAP_ZOOM = 15f;
+    public static final float DEFAULT_MAP_ZOOM_DIRECTION = 24f;
 
     //TODO: KEY FOR FIREBASE REFERENCE
     public static final String NEWS = "news";
     public static final String IMAGES = "images";
-    public static final String LOCATIONS="locations";
+    public static final String LOCATIONS = "locations";
     public static final String LIKE = "like";
     public static final String DISLIKE = "dislike";
     public static final String SAVE = "save";
@@ -28,6 +29,7 @@ public class KeyUtils {
     public static final String INTENT_KEY_LATITUDE = "latitude";
     public static final String INTENT_KEY_LONGITUDE = "longitude";
     public static final String KEY_INTENT_LOCATION = "KEY_INTENT_LOCATION";
+    public static final String KEY_INTENT_DIRECTION = "KEY_INTENT_DIRECTION";
 
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";

@@ -25,11 +25,16 @@ import java.util.List;
 import me.riddhimanadib.library.BottomBarHolderActivity;
 import me.riddhimanadib.library.NavigationPage;
 
-/**
- * Created by tskil on 8/22/2017.
- */
-
 public class MainActivity extends BottomBarHolderActivity {
+    protected OnBackPressedListener onBackPressedListener;
+
+    public interface OnBackPressedListener {
+        void doBack();
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +60,10 @@ public class MainActivity extends BottomBarHolderActivity {
 
     @Override
     public void onBackPressed() {
-        DialogUtils.showExitDialog(MainActivity.this);
+        if (onBackPressedListener != null)
+            onBackPressedListener.doBack();
+        else
+            DialogUtils.showExitDialog(MainActivity.this);
     }
 
     @Override
@@ -85,5 +93,11 @@ public class MainActivity extends BottomBarHolderActivity {
     @Override
     public void onClickedOnBottomNavigationMenu(int menuType) {
         super.onClickedOnBottomNavigationMenu(menuType);
+    }
+
+    @Override
+    protected void onDestroy() {
+        onBackPressedListener = null;
+        super.onDestroy();
     }
 }

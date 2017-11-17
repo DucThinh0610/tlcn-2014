@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -74,11 +75,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".mvp.direction_screen.view.DirectionActivity" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1949719471961545"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider" />
+            android:authorities="com.facebook.app.FacebookContentProvider1949719471961545"
+            android:exported="true" />
         <!--End Facebook-->
         <!--TODO: Firebase Messaging-->
         <service android:name=".service.MyFirebaseMessagingService"
@@ -100,6 +102,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

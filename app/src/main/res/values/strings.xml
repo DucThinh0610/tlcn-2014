@@ -96,5 +96,6 @@
     <string name="saved_list_news">Tin đã lưu</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="guide">Hướng dẫn</string>
+    <string name="start">Start</string>
 </resources>
 

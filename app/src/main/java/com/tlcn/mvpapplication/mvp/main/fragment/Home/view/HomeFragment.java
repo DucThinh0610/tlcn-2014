@@ -78,11 +78,14 @@ import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.ConfirmDialog;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
+import com.tlcn.mvpapplication.mvp.direction_screen.view.DirectionActivity;
 import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.adapter.DirectionAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter.HomePresenter;
+import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 import com.tlcn.mvpapplication.mvp.setting.view.SettingView;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -111,7 +114,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         PlaceSearchAdapter.OnItemClick,
         GoogleMap.OnCameraIdleListener,
-        IHomeView, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveListener, SlidingUpPanelLayout.PanelSlideListener {
+        IHomeView, GoogleMap.OnPolylineClickListener,
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnCameraMoveListener,
+        SlidingUpPanelLayout.PanelSlideListener, MainActivity.OnBackPressedListener {
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -152,6 +158,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     TextView tvCountLocation;
     @Bind(R.id.rcv_route)
     RecyclerView rcvDirection;
+    @Bind(R.id.ll_start_direction)
+    LinearLayout llStartDirection;
+    @Bind(R.id.btn_start)
+    Button btnStart;
 
     private DialogProgress mProgressDialog;
     private ConfirmDialog mConfirmDialog;
@@ -348,6 +358,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         imvMenu.setOnClickListener(this);
         fsdFloating.addOnMenuItemClickListener(this);
         rlLocation.setOnClickListener(this);
+        llStartDirection.setOnClickListener(this);
+        btnStart.setOnClickListener(this);
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -431,7 +443,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             case R.id.rl_location: {
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15f);
                 mGoogleMap.animateCamera(cameraUpdate);
+                break;
             }
+            case R.id.ll_start_direction:
+            case R.id.btn_start:
+                Intent intent = new Intent(getContext(), DirectionActivity.class);
+                intent.putExtra(KeyUtils.KEY_INTENT_DIRECTION, new ObjectSerializable(mPresenter.getRouteSelected()));
+                startActivity(intent);
         }
     }
 
@@ -730,6 +748,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             mPresenter.mReference.removeEventListener(mPresenter.mListenerInfo);
         }
         mPresenter.saveCurrentStateMap();
+        ((MainActivity) getActivity()).setOnBackPressedListener(null);
     }
 
     @Override
@@ -780,5 +799,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
         }
         mPresenter.setStateUI(isShow);
+    }
+
+    @Override
+    public void doBack() {
+        if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
+            mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            mPresenter.getRoutes().clear();
+            onStartFindDirection();
+        } else {
+            DialogUtils.showExitDialog(getActivity());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setOnBackPressedListener(this);
     }
 }

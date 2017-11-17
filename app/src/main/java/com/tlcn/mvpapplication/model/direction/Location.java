@@ -18,26 +18,7 @@ public class Location implements Serializable {
     @Expose
     private Double lng;
 
-    private LatLng latLng;
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    public Double getLng() {
-        return lng;
-    }
-
-    public void setLng(Double lng) {
-        this.lng = lng;
-    }
-
     public LatLng getLatLag() {
-        latLng = new LatLng(lat, lng);
-        return latLng;
+        return new LatLng(lat, lng);
     }
 }

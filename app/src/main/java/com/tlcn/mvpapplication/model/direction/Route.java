@@ -24,40 +24,14 @@ public class Route implements Serializable {
     @Expose
     private String summary;
 
-    private List<LatLng> points;
-
     private boolean isSelected = false;
 
     public Bound getBound() {
         return bound;
     }
 
-    public void setBound(Bound bound) {
-        this.bound = bound;
-    }
-
-    public Polyline getPolyline() {
-        return polyline;
-    }
-
-    public void setPolyline(Polyline polyline) {
-        this.polyline = polyline;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public List<Leg> getLeg() {
         return leg;
-    }
-
-    public void setLeg(List<Leg> leg) {
-        this.leg = leg;
     }
 
     public List<LatLng> getPoints() {
