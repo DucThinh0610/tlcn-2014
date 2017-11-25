@@ -90,4 +90,19 @@ public class Route implements Serializable {
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+
+    public void createMarkPlace() {
+        for (Step step : getSteps()) {
+            step.createMarkPlace();
+        }
+    }
+
+    public List<Step> getStepNonePass() {
+        List<Step> tmp = new ArrayList<>();
+        for (Step step : getSteps()) {
+            if (step.getCountLocationPassed() < step.getCustomLatLng().size())
+                tmp.add(step);
+        }
+        return tmp;
+    }
 }

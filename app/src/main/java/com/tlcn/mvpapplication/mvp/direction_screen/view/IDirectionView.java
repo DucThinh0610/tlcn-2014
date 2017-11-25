@@ -4,4 +4,6 @@ import com.tlcn.mvpapplication.base.IView;
 
 public interface IDirectionView extends IView {
     void onFail(String s);
+
+    void notifyNewLocation();
 }

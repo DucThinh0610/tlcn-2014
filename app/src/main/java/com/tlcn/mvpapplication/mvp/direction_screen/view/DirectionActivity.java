@@ -1,9 +1,13 @@
 package com.tlcn.mvpapplication.mvp.direction_screen.view;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,11 +18,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.mvp.direction_screen.presenter.DirectionPresenter;
@@ -35,6 +41,11 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         OnMapReadyCallback,
         View.OnClickListener,
         IDirectionView {
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 100;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
+
+    private LocationManager mLocationManager;
+
     private GoogleMap mGoogleMap;
     @Bind(R.id.imv_quick_upload)
     CircleImageView imvUpload;
@@ -67,10 +78,12 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     private void initDirection() {
         mGoogleMap.addMarker(new MarkerOptions()
                 .title(mPresenter.getRoutes().getLeg().get(0).getStartAddress())
-                .position(mPresenter.getRoutes().getLeg().get(0).getStartLocation().getLatLag()));
+                .position(mPresenter.getRoutes().getLeg().get(0).getStartLocation().getLatLag()))
+                .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_location));
         mGoogleMap.addMarker(new MarkerOptions()
                 .title(mPresenter.getRoutes().getLeg().get(0).getEndAddress())
-                .position(mPresenter.getRoutes().getLeg().get(0).getEndLocation().getLatLag()));
+                .position(mPresenter.getRoutes().getLeg().get(0).getEndLocation().getLatLag()))
+                .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_location));
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).
                 color(ContextCompat.getColor(DirectionActivity.this, R.color.color_polyline_chose)).
@@ -84,14 +97,13 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                 new CameraPosition.Builder()
                         .target(mPresenter.getRoutes().getLeg().get(0).getStartLocation().getLatLag())
                         .zoom(KeyUtils.DEFAULT_MAP_ZOOM_DIRECTION)
-                        .tilt(60)
                         .build());
         mGoogleMap.animateCamera(factory);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        Toast.makeText(this, new Gson().toJson(location), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -112,6 +124,23 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mGoogleMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mGoogleMap.setMyLocationEnabled(true);
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                MIN_TIME_BW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        mLocationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MIN_TIME_BW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         initDirection();
     }
 
@@ -139,5 +168,10 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     public void onFail(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void notifyNewLocation() {
+        Toast.makeText(this, "SomeThing", Toast.LENGTH_SHORT).show();
     }
 }

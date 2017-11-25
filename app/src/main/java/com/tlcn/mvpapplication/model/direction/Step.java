@@ -3,12 +3,14 @@ package com.tlcn.mvpapplication.model.direction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tlcn.mvpapplication.model.CustomLatLng;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.utils.DecodePolyLine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by ducthinh on 17/09/2017.
@@ -41,6 +43,8 @@ public class Step implements Serializable {
     @Expose
     private String maneuver;
 
+    private List<CustomLatLng> customLatLng;
+
     private List<Locations> locations = new ArrayList<>();
 
     public List<Locations> getLocations() {
@@ -54,6 +58,22 @@ public class Step implements Serializable {
     public void addLocation(Locations locations) {
         if (locations != null)
             this.locations.add(locations);
+    }
+
+    public boolean checkAddLocation(Locations item) {
+        if (locations != null) {
+            if (locations.size() == 0) {
+                locations.add(item);
+                return true;
+            } else {
+                for (Locations lct : locations) {
+                    if (Objects.equals(lct.getId(), item.getId()))
+                        return false;
+                }
+                locations.add(item);
+                return true;
+            }
+        } else return false;
     }
 
     public Distance getDistance() {
@@ -128,7 +148,32 @@ public class Step implements Serializable {
         return result;
     }
 
-    public String getManeuver() {
-        return maneuver;
+    public void createMarkPlace() {
+        customLatLng = new ArrayList<>();
+        for (LatLng latLng : DecodePolyLine.decodePolyLine(polyline.getPoints())) {
+            customLatLng.add(new CustomLatLng(latLng));
+        }
+    }
+
+    public List<CustomLatLng> getCustomLatLng() {
+        return customLatLng;
+    }
+
+    public int getCountLocationPassed() {
+        int count = 0;
+        for (CustomLatLng customLatLng : customLatLng) {
+            if (customLatLng.getState() == 1)
+                count++;
+        }
+        return count;
+    }
+
+    public List<LatLng> getLocationNonePass() {
+        List<LatLng> temp = new ArrayList<>();
+        for (CustomLatLng customLatLng : customLatLng) {
+            if (customLatLng.getState() == 0)
+                temp.add(customLatLng.getLatLng());
+        }
+        return temp;
     }
 }

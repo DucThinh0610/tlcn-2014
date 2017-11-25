@@ -39,8 +39,6 @@ public class MainActivity extends BottomBarHolderActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // pass them to super method
-        Log.e("FIREBASE_TOKEN", FirebaseInstanceId.getInstance().getToken());
         super.setupBottomBarHolderActivity(getNavigationPage());
     }
 
