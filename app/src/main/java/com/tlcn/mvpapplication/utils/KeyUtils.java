@@ -42,4 +42,5 @@ public class KeyUtils {
     public static final int REQUEST_TAKE_PHOTO = 6;
     public static final double MIN_LEVEL = 3.0;
     public static final double MEDIUM_LEVEL = 4.5;
+    public static final double DEFAULT_DISTANCE_TO_POLYLINE = 50.0;
 }

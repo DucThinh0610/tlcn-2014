@@ -18,14 +18,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.ObjectSerializable;
 import com.tlcn.mvpapplication.mvp.direction_screen.presenter.DirectionPresenter;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -51,6 +54,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     CircleImageView imvUpload;
     DirectionPresenter mPresenter;
     private List<Polyline> polylinePaths = new ArrayList<>();
+
+    private List<Marker> placeMarker = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,11 +84,11 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         mGoogleMap.addMarker(new MarkerOptions()
                 .title(mPresenter.getRoutes().getLeg().get(0).getStartAddress())
                 .position(mPresenter.getRoutes().getLeg().get(0).getStartLocation().getLatLag()))
-                .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_location));
+                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         mGoogleMap.addMarker(new MarkerOptions()
                 .title(mPresenter.getRoutes().getLeg().get(0).getEndAddress())
                 .position(mPresenter.getRoutes().getLeg().get(0).getEndLocation().getLatLag()))
-                .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_location));
+                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).
                 color(ContextCompat.getColor(DirectionActivity.this, R.color.color_polyline_chose)).
@@ -99,6 +104,10 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                         .zoom(KeyUtils.DEFAULT_MAP_ZOOM_DIRECTION)
                         .build());
         mGoogleMap.animateCamera(factory);
+
+        for (Locations location : mPresenter.getRoutes().getListLocations()) {
+            drawANewLocation(location);
+        }
     }
 
     @Override
@@ -173,5 +182,20 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     public void notifyNewLocation() {
         Toast.makeText(this, "SomeThing", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void drawANewLocation(Locations locations) {
+        BitmapDescriptor bitmapDescriptor;
+        if (locations.getLevel() <= 3.75) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
+        } else if (locations.getLevel() > 3.75 && locations.getLevel() <= 4.5) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
+        } else {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
+        }
+        placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
+                .icon(bitmapDescriptor)
+                .position(new LatLng(locations.getLat(), locations.getLng()))));
     }
 }

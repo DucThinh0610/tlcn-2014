@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
+import com.tlcn.mvpapplication.model.direction.Location;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.IDirectionView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -82,8 +83,6 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         if (routeFromObj != null) {
             this.mRoute = (Route) routeFromObj;
             mRoute.createMarkPlace();
-            Log.d(TAG, mRoute.getCountLocation());
-            LogUtils.d(TAG, new Gson().toJson(mRoute));
         } else
             getView().onFail("Lỗi không xác định! Thử lại sau.");
     }
@@ -119,6 +118,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     public void notifyHaveANewLocation() {
         for (Locations locations : listNewLocationAdded) {
             getView().notifyNewLocation();
+            getView().drawANewLocation(locations);
         }
         listNewLocationAdded.clear();
     }

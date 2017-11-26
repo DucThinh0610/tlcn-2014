@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.model.direction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.utils.DecodePolyLine;
 
 import java.io.Serializable;
@@ -104,5 +105,13 @@ public class Route implements Serializable {
                 tmp.add(step);
         }
         return tmp;
+    }
+
+    public List<Locations> getListLocations() {
+        List<Locations> temp = new ArrayList<>();
+        for (Step step : this.getLeg().get(0).getStep()) {
+            temp.addAll(step.getLocations());
+        }
+        return temp;
     }
 }

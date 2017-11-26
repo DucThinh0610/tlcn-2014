@@ -571,9 +571,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         for (Locations item : mPresenter.getListPlace()) {
 //            IconGenerator iconGenerator = new IconGenerator(getContext());
             BitmapDescriptor bitmapDescriptor;
-            if (item.getLevel() < 50) {
+            if (item.getLevel() <= 3.75) {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
-            } else if (item.getLevel() >= 50 && item.getLevel() <= 80) {
+            } else if (item.getLevel() > 3.75 && item.getLevel() <= 4.5) {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
             } else {
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
