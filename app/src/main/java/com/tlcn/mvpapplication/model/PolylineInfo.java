@@ -49,8 +49,20 @@ public class PolylineInfo implements Serializable {
             for (int l = 0; l < locations.size(); l++) {
                 LatLng point = new LatLng(locations.get(l).getLat(), locations.get(l).getLng());
                 if (PolyUtil.isLocationOnPath(point, step.getLocationNonePass(), true, KeyUtils.DEFAULT_DISTANCE_TO_POLYLINE)) {
-                    if (step.checkAddLocation(locations.get(l)))
-                        callback.onHaveANewLocation(locations.get(l));
+                    switch (step.checkAddLocation(locations.get(l))){
+                        case 0:
+                            //nothing
+                            break;
+                        case 1:
+                            callback.onHaveANewLocation(locations.get(l));
+                            break;
+                        case 2:
+                            callback.onLevelLocationIsIncrease(locations.get(l));
+                            break;
+                        case 3:
+                            callback.onLevelLocationIsReduction(locations.get(l));
+                            break;
+                    }
                 }
             }
         }
@@ -68,6 +80,9 @@ public class PolylineInfo implements Serializable {
 
         void onHaveANewLocation(Locations lct);
 
+        void onLevelLocationIsIncrease(Locations lct);
+
+        void onLevelLocationIsReduction(Locations locations);
     }
 
     public void setOnNewLocationListener(NewLocationListener callback) {

@@ -40,7 +40,23 @@ public class KeyUtils {
     public static final int REQUEST_CAPTURE_IMAGE = 4;
     public static final int REQUEST_READ_LIBRARY = 5;
     public static final int REQUEST_TAKE_PHOTO = 6;
+
+    //TODO: Define a value for curren_level of location
     public static final double MIN_LEVEL = 3.0;
     public static final double MEDIUM_LEVEL = 4.5;
+    public static final double MAX_LEVEL = 5.0;
     public static final double DEFAULT_DISTANCE_TO_POLYLINE = 50.0;
+
+    /**
+     * @return 1: min level
+     * 2: medium level
+     * 3: max level
+     */
+    public static int checkLevel(double currentLevel) {
+        if (currentLevel <= MIN_LEVEL && currentLevel >= 0.0) {
+            return 1;
+        } else if (currentLevel > MIN_LEVEL && currentLevel <= MEDIUM_LEVEL) {
+            return 2;
+        } else return 3;
+    }
 }

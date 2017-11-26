@@ -12,11 +12,9 @@ import com.google.gson.Gson;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
-import com.tlcn.mvpapplication.model.direction.Location;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.IDirectionView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +93,16 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     public void onHaveANewLocation(Locations lct) {
         Log.d(TAG, new Gson().toJson(lct));
         listNewLocationAdded.add(lct);
+    }
+
+    @Override
+    public void onLevelLocationIsIncrease(Locations lct) {
+        Log.d(TAG, new Gson().toJson(lct));
+    }
+
+    @Override
+    public void onLevelLocationIsReduction(Locations locations) {
+        Log.d(TAG, new Gson().toJson(locations));
     }
 
     private class addNewLocationTask extends AsyncTask<Void, Void, Void> {

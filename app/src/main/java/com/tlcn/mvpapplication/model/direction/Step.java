@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
+
 /**
  * Created by ducthinh on 17/09/2017.
  */
@@ -60,77 +62,45 @@ public class Step implements Serializable {
             this.locations.add(locations);
     }
 
-    public boolean checkAddLocation(Locations item) {
+    /**
+     * @param newLocation is a location want to check
+     * @return 0: list location not change
+     * 1: add a new location to list
+     * 2: set location to list with current level is increase
+     * 3: set location to list with current level is reduction
+     */
+    public int checkAddLocation(Locations newLocation) {
         if (locations != null) {
             if (locations.size() == 0) {
-                locations.add(item);
-                return true;
+                locations.add(newLocation);
+                return 1;
             } else {
-                for (Locations lct : locations) {
-                    if (Objects.equals(lct.getId(), item.getId()))
-                        return false;
+                for (int i = 0; i < locations.size(); i++) {
+                    Locations current = locations.get(i);
+                    if (Objects.equals(current.getId(), newLocation.getId())) {
+                        if (checkLevel(newLocation.getCurrent_level()) > checkLevel(current.getCurrent_level())) {
+                            locations.set(i, newLocation);
+                            return 2;
+                        } else if (checkLevel(newLocation.getCurrent_level()) < checkLevel(current.getCurrent_level())) {
+                            locations.set(i, newLocation);
+                            return 3;
+                        } else return 0;
+                    }
                 }
-                locations.add(item);
-                return true;
+                locations.add(newLocation);
+                return 1;
             }
-        } else return false;
+        } else return 0;
     }
 
     public Distance getDistance() {
         return distance;
     }
 
-    public void setDistance(Distance distance) {
-        this.distance = distance;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
-    }
-
-    public Location getEndLocation() {
-        return endLocation;
-    }
-
-    public void setEndLocation(Location endLocation) {
-        this.endLocation = endLocation;
-    }
-
-    public Location getStartLocation() {
-        return startLocation;
-    }
-
-    public void setStartLocation(Location startLocation) {
-        this.startLocation = startLocation;
-    }
-
-    public Polyline getPolyline() {
-        return polyline;
-    }
-
-    public void setPolyline(Polyline polyline) {
-        this.polyline = polyline;
-    }
-
-    public String getTravelMode() {
-        return travelMode;
-    }
-
-    public void setTravelMode(String travelMode) {
-        this.travelMode = travelMode;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public List<LatLng> getPoints() {
         if (this.polyline == null)
