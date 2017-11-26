@@ -83,6 +83,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     }
 
     public GoogleApiClient getGoogleApiClient() {
+        if (mGoogleApiClient == null)
+            mGoogleApiClient = App.getGoogleApiHelper().getGoogleApiClient();
         return mGoogleApiClient;
     }
 

@@ -9,4 +9,10 @@ public interface IDirectionView extends IView {
     void notifyNewLocation();
 
     void drawANewLocation(Locations locations);
+
+    void registerSensor();
+
+    void unRegisterSensor();
+
+    void moveCameraToMyLocation();
 }

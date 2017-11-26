@@ -14,6 +14,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by tskil on 8/9/2017.
  */
@@ -116,6 +118,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         return location;
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -141,6 +144,7 @@ public class GPSTracker extends Service implements LocationListener {
     public void onProviderDisabled(String s) {
 
     }
+
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
@@ -151,6 +155,10 @@ public class GPSTracker extends Service implements LocationListener {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(latitude, longitude);
     }
 
 }

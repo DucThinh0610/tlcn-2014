@@ -29,6 +29,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     private List<Locations> listNewLocationAdded;
 
     private PolylineInfo polylineInfo;
+    private boolean isFirst = true;
 
     @Override
     public void onCreate() {
@@ -116,9 +117,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (isViewAttached() && listNewLocationAdded.size() != 0) {
+            if (isViewAttached() && listNewLocationAdded.size() != 0 && !isFirst) {
                 notifyHaveANewLocation();
             }
+            isFirst = false;
         }
     }
 
