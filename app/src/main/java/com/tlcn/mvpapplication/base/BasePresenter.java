@@ -35,7 +35,7 @@ public abstract class BasePresenter {
 
 
     public void onDestroy() {
-
+        mView = null;
     }
 
     public ApiManager getManager() {
