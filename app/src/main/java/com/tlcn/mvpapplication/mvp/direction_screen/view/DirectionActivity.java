@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -76,6 +77,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     CircleImageView imvUpload;
     DirectionPresenter mPresenter;
     private List<Polyline> polylinePaths = new ArrayList<>();
+    private List<Polyline> polylineLocationPassed = new ArrayList<>();
 
     private List<Marker> placeMarker = new ArrayList<>();
 
@@ -98,6 +100,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     protected void onResume() {
         super.onResume();
+        if (stateImvPosition == STATE_COMPASS)
+            registerSensor();
     }
 
     @Override
@@ -119,8 +123,9 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     }
 
     private void initData() {
+        GPSTracker gpsTracker = new GPSTracker(this);
         ObjectSerializable objectSerialized = (ObjectSerializable) getIntent().getSerializableExtra(KeyUtils.KEY_INTENT_DIRECTION);
-        mPresenter.setRouteFromObj(objectSerialized.getObject());
+        mPresenter.setRouteFromObj(objectSerialized.getObject(), gpsTracker.getLatLng());
     }
 
     private void initDirection() {
@@ -135,7 +140,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).
                 color(ContextCompat.getColor(DirectionActivity.this, R.color.color_polyline_chose)).
-                width(25).clickable(false);
+                width(25).clickable(false).zIndex(0.0f);
 
         for (LatLng latLng : mPresenter.getRoutes().getPoints()) {
             polylineOptions.add(latLng);
@@ -377,5 +382,24 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                         .bearing(0).tilt(0)
                         .build());
         mGoogleMap.animateCamera(factory);
+    }
+
+    @Override
+    public void drawAPolyline(final LatLng latLngStart, final LatLng latLngEnd) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Polyline polyline : polylinePaths) {
+                    polyline.remove();
+                }
+                PolylineOptions polylineOptions = new PolylineOptions().
+                        geodesic(true).
+                        color(ContextCompat.getColor(DirectionActivity.this, R.color.color_polyline)).
+                        width(25).clickable(false).zIndex(1.0f);
+                polylineOptions.add(latLngStart);
+                polylineOptions.add(latLngEnd);
+                polylineLocationPassed.add(mGoogleMap.addPolyline(polylineOptions));
+            }
+        });
     }
 }

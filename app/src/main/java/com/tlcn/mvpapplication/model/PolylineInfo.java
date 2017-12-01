@@ -48,7 +48,7 @@ public class PolylineInfo implements Serializable {
         for (Step step : route.getStepNonePass()) {
             for (int l = 0; l < locations.size(); l++) {
                 LatLng point = new LatLng(locations.get(l).getLat(), locations.get(l).getLng());
-                if (PolyUtil.isLocationOnPath(point, step.getLocationNonePass(), true, KeyUtils.DEFAULT_DISTANCE_TO_POLYLINE)) {
+                if (PolyUtil.isLocationOnPath(point, step.getLatLngNonePass(), true, KeyUtils.DEFAULT_DISTANCE_TO_POLYLINE)) {
                     switch (step.checkAddLocation(locations.get(l))){
                         case 0:
                             //nothing

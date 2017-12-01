@@ -86,11 +86,6 @@ public class Locations implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return !super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
+        return this.getId() == ((Locations) obj).getId();
     }
 }
