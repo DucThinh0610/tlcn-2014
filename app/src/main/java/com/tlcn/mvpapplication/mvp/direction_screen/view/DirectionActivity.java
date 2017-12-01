@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -58,8 +60,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
     private static final int STATE_NORMAL = 0, STATE_COMPASS = 1, STATE_POSITION = 2;
     private int stateImvPosition = 2;
-    private static int orientation;
-
+    private static float oldBearing = 0;
     boolean isConfigMapDone = false;
     private LocationManager mLocationManager;
     private SensorManager mSensorManager;
@@ -81,6 +82,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_direction);
         ButterKnife.bind(this);
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_map);
@@ -101,6 +103,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     protected void onPause() {
         super.onPause();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        unRegisterSensor();
     }
 
     private void initSensor() {
@@ -152,7 +156,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
 
     @Override
     public void onLocationChanged(Location location) {
-
+        mPresenter.onChangeLocation(location);
     }
 
     @Override
@@ -228,6 +232,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
 
     @Override
     protected void onDestroy() {
+        mPresenter.detachView();
         mPresenter.onDestroy();
         super.onDestroy();
     }
@@ -263,7 +268,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float bearing = 0;
+        float bearing;
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GRAVITY)
             mGravity = sensorEvent.values.clone();
         if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
@@ -307,16 +312,18 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                 if (bearing < 0) {
                     bearing += 360;
                 }
-
-                if (mGoogleMap != null && isConfigMapDone) {
-                    CameraUpdate factory = CameraUpdateFactory.newCameraPosition(
-                            new CameraPosition.Builder()
-                                    .target(new LatLng(mGoogleMap.getCameraPosition().target.latitude,
-                                            mGoogleMap.getCameraPosition().target.longitude))
-                                    .zoom(KeyUtils.DEFAULT_MAP_ZOOM_DIRECTION)
-                                    .bearing(bearing).tilt(65.5f)
-                                    .build());
-                    mGoogleMap.moveCamera(factory);
+                if (Math.abs(Math.abs(bearing) - Math.abs(oldBearing)) > 2) {
+                    oldBearing = bearing;
+                    if (mGoogleMap != null && isConfigMapDone) {
+                        CameraUpdate factory = CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(new LatLng(mGoogleMap.getCameraPosition().target.latitude,
+                                                mGoogleMap.getCameraPosition().target.longitude))
+                                        .zoom(KeyUtils.DEFAULT_MAP_ZOOM_DIRECTION)
+                                        .bearing(oldBearing).tilt(65.5f)
+                                        .build());
+                        mGoogleMap.animateCamera(factory);
+                    }
                 }
             }
         }
@@ -341,6 +348,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
 
     @Override
     public void registerSensor() {
+        oldBearing = 0;
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
@@ -369,11 +377,5 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                         .bearing(0).tilt(0)
                         .build());
         mGoogleMap.animateCamera(factory);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        orientation = newConfig.orientation;
     }
 }

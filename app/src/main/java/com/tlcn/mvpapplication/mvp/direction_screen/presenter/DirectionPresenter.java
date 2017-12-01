@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.direction_screen.presenter;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -27,7 +28,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     private DatabaseReference mReference;
     private List<Locations> allLocation;
     private List<Locations> listNewLocationAdded;
-
+    private addNewLocationTask asyncTask;
     private PolylineInfo polylineInfo;
     private boolean isFirst = true;
 
@@ -53,8 +54,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
                     Locations item = data.getValue(Locations.class);
                     allLocation.add(item);
                 }
-                if (allLocation.size() != 0)
-                    new addNewLocationTask().execute();
+                if (allLocation.size() != 0) {
+                    asyncTask = new addNewLocationTask();
+                    asyncTask.execute();
+                }
             }
 
             @Override
@@ -67,6 +70,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     @Override
     public void onDestroy() {
+        asyncTask.cancel(true);
         mReference.removeEventListener(mListenerLocation);
     }
 
@@ -92,18 +96,28 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     @Override
     public void onHaveANewLocation(Locations lct) {
-        Log.d(TAG, new Gson().toJson(lct));
-        listNewLocationAdded.add(lct);
+        if (!isFirst) {
+            Log.d(TAG, new Gson().toJson(lct));
+            listNewLocationAdded.add(lct);
+        }
     }
 
     @Override
     public void onLevelLocationIsIncrease(Locations lct) {
-        Log.d(TAG, new Gson().toJson(lct));
+        if (!isFirst) {
+            Log.d(TAG, new Gson().toJson(lct));
+        }
     }
 
     @Override
     public void onLevelLocationIsReduction(Locations locations) {
-        Log.d(TAG, new Gson().toJson(locations));
+        if (!isFirst) {
+            Log.d(TAG, new Gson().toJson(locations));
+        }
+    }
+
+    public void onChangeLocation(Location location) {
+        Log.d("Location", "Lat:" + location.getLatitude() + " Lng:" + location.getLongitude());
     }
 
     private class addNewLocationTask extends AsyncTask<Void, Void, Void> {
@@ -112,6 +126,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
             polylineInfo.setLocations(allLocation);
             polylineInfo.setRoute(mRoute);
             polylineInfo.addLocationToDirection();
+            if (isCancelled()) {
+                Log.d("Cancel", TAG);
+                return null;
+            }
             return null;
         }
 
