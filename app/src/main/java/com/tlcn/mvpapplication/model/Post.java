@@ -9,6 +9,7 @@ public class Post {
     private String url_image;
     private String user_id;
     private String user_name;
+    private double level;
 
     public int getCount_dislike() {
         return count_dislike;
@@ -72,5 +73,13 @@ public class Post {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public double getLevel() {
+        return level;
+    }
+
+    public void setLevel(double level) {
+        this.level = level;
     }
 }

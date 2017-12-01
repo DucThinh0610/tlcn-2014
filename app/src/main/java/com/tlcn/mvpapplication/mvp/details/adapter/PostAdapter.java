@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,9 +54,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         holder.tvCountDislike.setText(String.valueOf(item.getCount_dislike()));
         holder.tvCountLike.setText(String.valueOf(item.getCount_like()));
+        holder.rtbLevel.setRating((float) item.getLevel());
         if (TextUtils.isEmpty(item.getUser_id())) {
             holder.tvUserName.setText(R.string.anonymous);
-        }else {
+        } else {
             holder.tvUserName.setText(item.getUser_name());
         }
         if (!TextUtils.isEmpty(item.getDescription())) {
@@ -110,6 +112,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         ImageView imvImage;
         @Bind(R.id.tv_description)
         TextView tvDes;
+        @Bind(R.id.rtb_level)
+        RatingBar rtbLevel;
         @Bind(R.id.rl_dislike)
         RelativeLayout rlDislike;
         @Bind(R.id.tv_num_dislike)

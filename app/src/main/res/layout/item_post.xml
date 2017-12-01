@@ -45,13 +45,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ProgressBar
                     android:id="@+id/pr_bar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
                     android:background="@color/color_transparent"
-                    android:indeterminateDrawable="@drawable/bg_loading_spinner"/>
+                    android:indeterminateDrawable="@drawable/bg_loading_spinner" />
+
                 <ImageView
                     android:id="@+id/imv_image"
                     android:layout_width="match_parent"
@@ -66,6 +68,15 @@
                 android:padding="10dp"
                 android:textColor="@color/black" />
 
+            <RatingBar
+                android:id="@+id/rtb_level"
+                android:progressBackgroundTint="@color/color_main"
+                android:progressTint="@color/color_main"
+                android:secondaryProgressTint="@color/color_main"
+                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -79,11 +90,11 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
-                        android:layout_marginRight="5dp"
                         android:id="@+id/rl_dislike"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
                         android:background="@drawable/custom_background_view_like"
                         android:orientation="horizontal">
 
@@ -106,12 +117,12 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginLeft="5dp"
                         android:id="@+id/rl_like"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginLeft="5dp"
                         android:background="@drawable/custom_background_view_like"
                         android:orientation="horizontal">
 

@@ -39,6 +39,16 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         final Locations item = mList.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.rtbLevel.setRating((float) item.getCurrent_level());
+        if (item.getCurrent_level() <= 2) {
+            holder.tvLevel.setText(R.string.low);
+            holder.tvLevel.setTextColor(mContext.getResources().getColor(R.color.green));
+        } else if (item.getCurrent_level() < 4) {
+            holder.tvLevel.setText(R.string.normal);
+            holder.tvLevel.setTextColor(mContext.getResources().getColor(R.color.yellow));
+        } else {
+            holder.tvLevel.setText(R.string.high);
+            holder.tvLevel.setTextColor(mContext.getResources().getColor(R.color.red));
+        }
         holder.tvTime.setText(DateUtils.getTimeAgo(mContext, DateUtils.parseStringToDate(item.getLast_modify())));
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +81,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         TextView tvTitle;
         @Bind(R.id.rtb_level)
         AppCompatRatingBar rtbLevel;
+        @Bind(R.id.tv_level)
+        TextView tvLevel;
         @Bind(R.id.tv_time)
         TextView tvTime;
         @Bind(R.id.tv_stopped)
