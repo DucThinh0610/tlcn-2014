@@ -32,11 +32,13 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data android:scheme="tlcn"
-                    android:host="tlcn://" />
+                <data
+                    android:host="tlcn://"
+                    android:scheme="tlcn" />
             </intent-filter>
         </activity>
 
@@ -54,8 +56,7 @@
 
         <activity
             android:name=".mvp.details.view.DetailsView"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".mvp.setting.view.SettingView"
@@ -93,7 +94,8 @@
             android:exported="true" />
         <!--End Facebook-->
         <!--TODO: Firebase Messaging-->
-        <service android:name=".service.MyFirebaseMessagingService"
+        <service
+            android:name=".service.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -106,7 +108,8 @@
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
-        <service android:name=".service.MyFirebaseInstanceIDService"
+        <service
+            android:name=".service.MyFirebaseInstanceIDService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

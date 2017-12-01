@@ -22,6 +22,10 @@ public class ActionRequest implements Serializable {
     @Expose
     private String time;
 
+    @SerializedName("id")
+    @Expose
+    private String idLocation;
+
     public ActionRequest() {
     }
 
@@ -31,12 +35,35 @@ public class ActionRequest implements Serializable {
         this.news_id = news_id;
     }
 
-    @SerializedName("id")
-    @Expose
-    private String idLocation;
 
     public ActionRequest(String idLocation, String time) {
         this.idLocation = idLocation;
         this.time = time;
+    }
+
+    public ActionRequest(String idLocation, String time, String user_id) {
+        this.idLocation = idLocation;
+        this.time = time;
+        this.user_id = user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public void setNews_id(String news_id) {
+        this.news_id = news_id;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setIdLocation(String idLocation) {
+        this.idLocation = idLocation;
     }
 }

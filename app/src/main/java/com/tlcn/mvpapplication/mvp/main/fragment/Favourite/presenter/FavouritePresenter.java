@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -102,7 +103,11 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     @Override
     public void onChangeStopped(String id) {
         getView().showLoading();
-        getManager().actionStop(new ActionRequest(id, DateUtils.getCurrentDate()), new ApiCallback<BaseResponse>() {
+        ActionRequest request = new ActionRequest(id, DateUtils.getCurrentDate());
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
+        getManager().actionStop(request, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 getView().hideLoading();

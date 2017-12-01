@@ -135,6 +135,9 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                 }
             });
         } else {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            }
             getManager().actionOn(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {

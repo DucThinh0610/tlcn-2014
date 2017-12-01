@@ -50,9 +50,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(final PostViewHolder holder, int position) {
         final Post item = mList.get(position);
         holder.tvTime.setText(DateUtils.formatFullDate(item.getCreated_at()));
-        holder.tvUserName.setText(item.getUser_name());
+
         holder.tvCountDislike.setText(String.valueOf(item.getCount_dislike()));
         holder.tvCountLike.setText(String.valueOf(item.getCount_like()));
+        if (TextUtils.isEmpty(item.getUser_id())) {
+            holder.tvUserName.setText(R.string.anonymous);
+        }else {
+            holder.tvUserName.setText(item.getUser_name());
+        }
         if (!TextUtils.isEmpty(item.getDescription())) {
             holder.tvDes.setText(item.getDescription());
             holder.tvDes.setVisibility(View.VISIBLE);

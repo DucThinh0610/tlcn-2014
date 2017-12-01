@@ -119,7 +119,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                     mPresenter.saveLocations();
                     mPresenter.getSaveState();
                 } else {
-                    Toast.makeText(this, "Vui lòng đăng nhập để thực hiện chức năng!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -172,11 +172,19 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void onClickDislike(String id) {
-        mPresenter.actionDislike(id);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPresenter.actionDislike(id);
+        } else {
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onClickLike(String id) {
-        mPresenter.actionLike(id);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPresenter.actionLike(id);
+        } else {
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
+        }
     }
 }
