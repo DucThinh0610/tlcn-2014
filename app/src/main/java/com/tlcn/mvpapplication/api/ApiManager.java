@@ -32,7 +32,7 @@ public class ApiManager {
     }
 
     public void getInfoPlace(GetInfoRequest request, final ApiCallback<GetInfoResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).getInfoPlace(request).enqueue(new RestCallback<GetInfoResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).getInfoPlace(request).enqueue(new RestCallback<GetInfoResponse>() {
             @Override
             public void success(GetInfoResponse res) {
                 callback.success(res);
@@ -46,7 +46,7 @@ public class ApiManager {
     }
 
     public void uploadFile(final MultipartBody.Part file, final ApiCallback<UploadFileResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
                 callback.success(res);
@@ -60,7 +60,7 @@ public class ApiManager {
     }
 
     public void action(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).action(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).action(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -74,7 +74,7 @@ public class ApiManager {
     }
 
     public void actionStop(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).actionStop(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).actionStop(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -88,7 +88,7 @@ public class ApiManager {
     }
 
     public void actionOn(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).actionOn(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).actionOn(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -102,7 +102,7 @@ public class ApiManager {
     }
 
     public void saveLocation(SaveRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).saveLocation(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).saveLocation(request).enqueue(new RestCallback<BaseResponse>() {
 
             @Override
             public void success(BaseResponse res) {
@@ -117,7 +117,7 @@ public class ApiManager {
     }
 
     public void pushNotificationToken(String user_id, String token, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).push_notification(user_id, token).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).push_notification(user_id, token).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -131,7 +131,7 @@ public class ApiManager {
     }
 
     public void getShareLink(String location_id, final ApiCallback<ShareResponse> callback) {
-        AppManager.http_api_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
+        AppManager.http_firebase_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
                 callback.success(res);
