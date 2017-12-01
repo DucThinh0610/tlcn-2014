@@ -43,7 +43,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             holder.tvLevel.setText(R.string.low);
             holder.tvLevel.setTextColor(mContext.getResources().getColor(R.color.green));
         } else if (item.getCurrent_level() < 4) {
-            holder.tvLevel.setText(R.string.normal);
+            holder.tvLevel.setText(R.string.medium);
             holder.tvLevel.setTextColor(mContext.getResources().getColor(R.color.yellow));
         } else {
             holder.tvLevel.setText(R.string.high);

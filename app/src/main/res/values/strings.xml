@@ -99,8 +99,6 @@
     <string name="start">Start</string>
     <string name="anonymous">Ẩn danh</string>
     <string name="please_login">Vui lòng đăng nhập để sử dụng chức năng này!</string>
-    <string name="low">Thấp</string>
-    <string name="normal">Trung bình</string>
-    <string name="high">Cao</string>
+
 </resources>
 
