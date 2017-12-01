@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,12 +17,20 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.model.LatLng;
+import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -71,6 +80,8 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     private DialogProgress mProgressDialog;
     FavouritePresenter mPresenter = new FavouritePresenter();
     LocationAdapter newsAdapter;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,12 +124,15 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
                 lnlOther.setVisibility(View.GONE);
                 tvAdd.setVisibility(View.VISIBLE);
             }
+        } else {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        callbackManager = CallbackManager.Factory.create();
         View v = inflater.inflate(R.layout.fragment_favourite, container, false);
         ButterKnife.bind(this, v);
         initData(v);
@@ -152,7 +166,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             tvLocationOther.setText(getString(R.string.have_set));
         }
 
-        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
+        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite() * KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
     }
 
 
@@ -231,13 +245,13 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
                 final SeekBar sbDistance = (SeekBar) dialog.findViewById(R.id.sb_distance);
                 final TextView tvDistanceDialog = (TextView) dialog.findViewById(R.id.tv_distance);
 
-                tvDistanceDialog.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                tvDistanceDialog.setText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite() * KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
                 sbDistance.setProgress(App.getLocationStorage().getDistanceFavourite());
 
                 sbDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        tvDistanceDialog.setText(Utilities.getDistanceString(i*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
+                        tvDistanceDialog.setText(Utilities.getDistanceString(i * KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE));
                     }
 
                     @Override
@@ -262,7 +276,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
                     @Override
                     public void onClick(View view) {
                         mPresenter.setFavouriteDistance(sbDistance.getProgress());
-                        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite()*KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
+                        tvDistance.setText(Utilities.underlineText(Utilities.getDistanceString(App.getLocationStorage().getDistanceFavourite() * KeyUtils.DEFAULT_NUMBER_MULTIPLY_DISTANCE)));
                         dialog.dismiss();
                     }
                 });
@@ -308,12 +322,35 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void OnClickShare(Locations item) {
+        shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                Toast.makeText(getContext(), "Cảm ơn bạn đã chia sẻ !", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(BuildConfig.SERVER_URL_API +"share/"+ item.getId()))
+                .build();
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }
 
     @Override
     public void OnClickDetail(Locations item) {
-
+        Intent intent = new Intent(getActivity(), DetailsView.class);
+        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, item.getId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

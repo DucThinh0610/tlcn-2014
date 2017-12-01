@@ -29,6 +29,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data android:scheme="tlcn"
+                    android:host="tlcn://" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -45,7 +53,8 @@
 
         <activity
             android:name=".mvp.details.view.DetailsView"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
 
         <activity
             android:name=".mvp.setting.view.SettingView"

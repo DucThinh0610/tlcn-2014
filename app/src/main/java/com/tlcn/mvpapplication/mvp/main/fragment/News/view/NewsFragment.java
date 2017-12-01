@@ -21,6 +21,7 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
@@ -173,7 +174,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
             }
         });
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .setContentUrl(Uri.parse(BuildConfig.SERVER_URL_API +"share/"+ item.getId()))
                 .build();
         shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }

@@ -63,12 +63,17 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             getView().hideLoading();
+                            boolean isChild = false;
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 Locations item = child.getValue(Locations.class);
-                                if (!list.contains(item)) {
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getId() == item.getId()) {
+                                        list.set(i, item);
+                                        isChild = true;
+                                    }
+                                }
+                                if (!isChild) {
                                     list.add(item);
-                                } else {
-                                    list.set(list.indexOf(item), item);
                                 }
                             }
                             getView().onGetSavedListLocationSuccess(list);
