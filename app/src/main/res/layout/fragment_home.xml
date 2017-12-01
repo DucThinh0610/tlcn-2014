@@ -11,12 +11,12 @@
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:gravity="bottom"
         sothree:umanoDragView="@+id/dragView"
         sothree:umanoPanelHeight="100dp"
-        sothree:umanoScrollableView="@+id/rcv_route"
-        android:focusableInTouchMode="true"
-        android:focusable="true">
+        sothree:umanoScrollableView="@+id/rcv_route">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -307,6 +307,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@color/color_main"
         app:menu="@menu/menu_navigation">
 
     </android.support.design.widget.NavigationView>
