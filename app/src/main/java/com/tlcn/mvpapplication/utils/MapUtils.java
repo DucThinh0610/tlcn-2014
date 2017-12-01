@@ -19,11 +19,14 @@ public class MapUtils {
     }
 
     public static float distanceBetweenTwoPoint(LatLng firstPoint, LatLng secondPoint) {
-        float[] distance = new float[2];
-        Location.distanceBetween(firstPoint.latitude,
-                firstPoint.longitude,
-                secondPoint.latitude, secondPoint.longitude, distance);
-        return distance[0];
+        Location location1 = new Location("Point A");
+        location1.setLatitude(firstPoint.latitude);
+        location1.setLongitude(firstPoint.longitude);
+
+        Location location2 = new Location("Point B");
+        location2.setLatitude(secondPoint.latitude);
+        location2.setLongitude(secondPoint.longitude);
+        return location1.distanceTo(location2);
     }
 
     public static float distanceFromPointToPolyline(LatLng startLocation, LatLng endLocation, LatLng point) {

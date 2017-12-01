@@ -24,6 +24,12 @@ public class CustomLatLng {
         state = 0;
     }
 
+    public CustomLatLng(int state, LatLng latLng) {
+        this.state = state;
+        this.latitude = latLng.latitude;
+        this.longitude = latLng.longitude;
+    }
+
     public int getState() {
         return state;
     }

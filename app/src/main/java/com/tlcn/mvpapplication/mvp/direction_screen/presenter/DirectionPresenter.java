@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +16,14 @@ import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.IDirectionView;
+import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectionPresenter extends BasePresenter implements IDirectionPresenter, PolylineInfo.NewLocationListener {
+public class DirectionPresenter extends BasePresenter implements IDirectionPresenter, PolylineInfo.NewLocationListener, Route.OnChangeLocationListener {
     private static final String TAG = DirectionPresenter.class.getSimpleName();
 
     private Route mRoute;
@@ -29,6 +32,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     private List<Locations> allLocation;
     private List<Locations> listNewLocationAdded;
     private addNewLocationTask asyncTask;
+    private calculateLocation taskChangeLocation;
     private PolylineInfo polylineInfo;
     private boolean isFirst = true;
 
@@ -70,6 +74,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     @Override
     public void onDestroy() {
+        taskChangeLocation.cancel(true);
         asyncTask.cancel(true);
         mReference.removeEventListener(mListenerLocation);
     }
@@ -82,10 +87,14 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         return (IDirectionView) getIView();
     }
 
-    public void setRouteFromObj(Object routeFromObj) {
+    @Override
+    public void setRouteFromObj(Object routeFromObj,LatLng latLng) {
         if (routeFromObj != null) {
             this.mRoute = (Route) routeFromObj;
             mRoute.createMarkPlace();
+            mRoute.addCurrentLocation(latLng);
+            LogUtils.d(TAG, new Gson().toJson(mRoute));
+            mRoute.addOnChangeLocation(this);
         } else
             getView().onFail("Lỗi không xác định! Thử lại sau.");
     }
@@ -118,6 +127,14 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     public void onChangeLocation(Location location) {
         Log.d("Location", "Lat:" + location.getLatitude() + " Lng:" + location.getLongitude());
+        taskChangeLocation = new calculateLocation();
+        taskChangeLocation.execute(location);
+    }
+
+    @Override
+    public void drawPolyline(LatLng latLngStart, LatLng latLngEnd) {
+        if (isViewAttached())
+            getView().drawAPolyline(latLngStart, latLngEnd);
     }
 
     private class addNewLocationTask extends AsyncTask<Void, Void, Void> {
@@ -127,7 +144,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
             polylineInfo.setRoute(mRoute);
             polylineInfo.addLocationToDirection();
             if (isCancelled()) {
-                Log.d("Cancel", TAG);
+                Log.d("CancelPresenter", TAG);
                 return null;
             }
             return null;
@@ -150,4 +167,24 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         }
         listNewLocationAdded.clear();
     }
+
+    private class calculateLocation extends AsyncTask<Location, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Location... locations) {
+            Location location = locations[0];
+            mRoute.onChangeLocation(location);
+            if (isCancelled()) {
+                Log.d("CancelPresenter", TAG);
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
 }

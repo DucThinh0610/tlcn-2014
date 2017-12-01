@@ -62,7 +62,7 @@ public class ContributePresenter extends BasePresenter implements IContributePre
     public void uploadImage() {
         getView().showLoading();
         if (fileUpload == null) {
-            sendContribution();
+            getView().onFail("Bạn cần đăng kèm hình ảnh!");
         } else {
             final Uri file = Uri.fromFile(fileUpload);
             final String filename = DateUtils.getCurrentDate() + file.getLastPathSegment();

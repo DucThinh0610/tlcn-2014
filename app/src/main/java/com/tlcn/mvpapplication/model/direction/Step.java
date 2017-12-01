@@ -138,11 +138,21 @@ public class Step implements Serializable {
         return count;
     }
 
-    public List<LatLng> getLocationNonePass() {
+    public List<LatLng> getLatLngNonePass() {
         List<LatLng> temp = new ArrayList<>();
         for (CustomLatLng customLatLng : customLatLng) {
             if (customLatLng.getState() == 0)
                 temp.add(customLatLng.getLatLng());
+        }
+        return temp;
+    }
+
+    public List<CustomLatLng> getLocationNonePass() {
+        List<CustomLatLng> temp = new ArrayList<>();
+        for (CustomLatLng customLatLng : customLatLng) {
+            if (customLatLng.getState() == 0) {
+                temp.add(customLatLng);
+            }
         }
         return temp;
     }
