@@ -45,12 +45,14 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         gpsTracker = new GPSTracker(this);
-        if (getIntent().getExtras() != null) {
-            Intent intent = new Intent(this, DetailsView.class);
-            Toast.makeText(this, getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION), Toast.LENGTH_SHORT).show();
-            /*intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION));
-            startActivity(intent);
-            finish();*/
+        if (getIntent().getData() != null && getIntent().getData().getPathSegments() != null) {
+            if (getIntent().getData().getPathSegments().size() == 2) {
+                Intent intent = new Intent(this, DetailsView.class);
+                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getData().getPathSegments().get(1));
+                startActivity(intent);
+                finish();
+                return;
+            }
         }
         // check android 6.0
         if (Build.VERSION.SDK_INT >= 23) {
