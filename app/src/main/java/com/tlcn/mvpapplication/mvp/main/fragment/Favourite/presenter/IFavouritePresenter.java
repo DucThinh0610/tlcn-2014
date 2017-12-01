@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 public interface IFavouritePresenter {
     void getListNews();
 
+    void getShareLink(String location_id);
+
     void onChangeStopped(String id);
 
     void setFavouriteDistance(int progress);

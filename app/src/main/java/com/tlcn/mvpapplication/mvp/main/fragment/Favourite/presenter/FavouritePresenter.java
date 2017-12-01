@@ -11,6 +11,7 @@ import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
@@ -96,6 +97,24 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
             public void onCancelled(DatabaseError databaseError) {
                 getView().hideLoading();
                 getView().onFail(databaseError.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getShareLink(String location_id) {
+        getView().showLoading();
+        getManager().getShareLink(location_id, new ApiCallback<ShareResponse>() {
+            @Override
+            public void success(ShareResponse res) {
+                getView().hideLoading();
+                getView().getShareLinkSuccess(res.getShareLink());
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().hideLoading();
+                getView().onFail(error.message);
             }
         });
     }

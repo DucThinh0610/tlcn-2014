@@ -46,9 +46,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         gpsTracker = new GPSTracker(this);
         if (getIntent().getData() != null && getIntent().getData().getPathSegments() != null) {
-            if (getIntent().getData().getPathSegments().size() == 2) {
+            if (getIntent().getData().getPathSegments().size() > 0) {
                 Intent intent = new Intent(this, DetailsView.class);
-                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getData().getPathSegments().get(1));
+                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getData().getPathSegments().get(0));
                 startActivity(intent);
                 finish();
                 return;

@@ -9,6 +9,7 @@ import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
+import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.app.AppManager;
@@ -119,6 +120,20 @@ public class ApiManager {
         AppManager.http_api_server().from(ApiServices.class).push_notification(user_id, token).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getShareLink(String location_id, final ApiCallback<ShareResponse> callback) {
+        AppManager.http_api_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
+            @Override
+            public void success(ShareResponse res) {
                 callback.success(res);
             }
 

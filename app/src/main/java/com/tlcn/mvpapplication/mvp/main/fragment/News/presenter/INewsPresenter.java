@@ -7,5 +7,7 @@ package com.tlcn.mvpapplication.mvp.main.fragment.News.presenter;
 public interface INewsPresenter {
     void getListNews();
 
+    void getShareLink(String location_id);
+
     void onChangeStopped(String id);
 }

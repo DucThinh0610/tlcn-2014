@@ -5,6 +5,7 @@ import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.model.Result;
@@ -61,4 +62,7 @@ public interface ApiServices {
 
     @POST("{user_id}")
     Call<BaseResponse> push_notification(@Path("user_id") String user_id, @Query("token") String token);
+
+    @GET("share/{location_id}")
+    Call<ShareResponse> shareLink(@Path("location_id") String location_id);
 }

@@ -30,6 +30,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="tlcn-2014.herokuapp.com"
+                    android:path="/share" />
+            </intent-filter>
         </activity>
 
         <activity

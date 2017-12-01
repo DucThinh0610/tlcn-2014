@@ -24,11 +24,11 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.model.LatLng;
-import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.ShareLink;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
@@ -185,6 +185,31 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     }
 
     @Override
+    public void getShareLinkSuccess(ShareLink result) {
+        shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                Toast.makeText(getContext(), "Cảm ơn bạn đã chia sẻ !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(result.getShare_link()))
+                .build();
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+    }
+
+    @Override
     public void changeLocationSuccess() {
         mPresenter.getListNews();
     }
@@ -322,27 +347,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void OnClickShare(Locations item) {
-        shareDialog = new ShareDialog(this);
-        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-            @Override
-            public void onSuccess(Sharer.Result result) {
-                Toast.makeText(getContext(), "Cảm ơn bạn đã chia sẻ !", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(BuildConfig.SERVER_URL_API +"share/"+ item.getId()))
-                .build();
-        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+        mPresenter.getShareLink(item.getId());
     }
 
     @Override
