@@ -34,5 +34,10 @@ public class AppManager {
         if (httpApi == null) httpApi = new HttpHelper(URL_LOCAL);
         return httpApi;
     }
+
+    synchronized static public HttpHelper http_firebase_server() {
+        if (httpServer == null) httpServer = new HttpHelper(BuildConfig.SERVER_FIREBASE_API);
+        return httpServer;
+    }
     public final static String URL_LOCAL = "http://192.168.43.24:1234/";
 }
