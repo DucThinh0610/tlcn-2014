@@ -221,7 +221,7 @@
 
                         <Button
                             android:id="@+id/btn_start"
-                            android:layout_width="50dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
                             android:background="@color/transparent"
                             android:text="@string/start"
@@ -234,7 +234,9 @@
                         android:id="@+id/tv_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
                         android:layout_marginTop="10dp"
+                        android:layout_toStartOf="@+id/ll_start_direction"
                         android:maxLines="1" />
 
                     <LinearLayout
@@ -299,6 +301,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
         </LinearLayout>
+
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
