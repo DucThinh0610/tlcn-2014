@@ -156,4 +156,12 @@ public class Step implements Serializable {
         }
         return temp;
     }
+
+    public CustomLatLng getStartLocation() {
+        return getLocationNonePass().size() > 0 ? getLocationNonePass().get(0) : null;
+    }
+
+    public CustomLatLng getEndLocation() {
+        return getLocationNonePass().size() > 1 ? getLocationNonePass().get(1) : null;
+    }
 }

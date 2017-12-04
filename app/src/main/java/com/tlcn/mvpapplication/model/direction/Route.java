@@ -5,6 +5,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.PolyUtil;
@@ -17,8 +18,6 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 public class Route implements Serializable {
     @SerializedName("bounds")
@@ -116,7 +115,7 @@ public class Route implements Serializable {
     public List<Step> getStepNonePass() {
         List<Step> tmp = new ArrayList<>();
         for (Step step : getSteps()) {
-            if (step.getCountLocationPassed() < step.getCustomLatLng().size())
+            if (step.getLocationNonePass().size() != 0)
                 tmp.add(step);
         }
         return tmp;
@@ -130,63 +129,61 @@ public class Route implements Serializable {
         return temp;
     }
 
+    private List<LatLng> getLocationNonePass() {
+        List<LatLng> latLngs = new ArrayList<>();
+        for (Step step : getStepNonePass()) {
+            latLngs.addAll(step.getLatLngNonePass());
+        }
+        return latLngs;
+    }
+
     public void onChangeLocation(Location currentLocation) {
         boolean isBreak = false;
         LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        for (int j = 0; j < getStepNonePass().size(); j++) {
-            Step step = getStepNonePass().get(j);
-//            if (step.getLocationNonePass().size() == 2) {
-//                CustomLatLng startLocation = step.getLocationNonePass().get(0);
-//                CustomLatLng endLocation = step.getLocationNonePass().get(1);
-//                if (MapUtils.distanceBetweenTwoPoint(startLocation.getLatLng(), endLocation.getLatLng()) < 10) {
-//                    startLocation.setState(1);
-//                    endLocation.setState(1);
-//                    callback.drawPolyline(startLocation.getLatLng(), endLocation.getLatLng());
-//                }
-//            } else {
-//                for (int i = 1; i < step.getLocationNonePass().size(); i++) {
-//                    CustomLatLng endLocation = step.getLocationNonePass().get(i);
-//                    CustomLatLng startLocation = step.getLocationNonePass().get(i - 1);
-//                    List<LatLng> polyline = new ArrayList<>();
-//                    polyline.add(startLocation.getLatLng());
-//                    polyline.add(endLocation.getLatLng());
-//                    if (!PolyUtil.isLocationOnEdge(currentLatLng, polyline, true, 10.0D)) {
-//                        if (MapUtils.distanceBetweenTwoPoint(currentLatLng, startLocation.getLatLng()) >
-//                                MapUtils.distanceBetweenTwoPoint(currentLatLng, endLocation.getLatLng())) {
-//                            startLocation.setState(1);
-//                            callback.drawPolyline(startLocation.getLatLng(), endLocation.getLatLng());
-//                        }
-//                        else {
-//                            isBreak=true;
-//                            break;
-//                        }
-//                    } else {
-//                        startLocation.setState(1);
-//                        step.getCustomLatLng().add(0, new CustomLatLng(0, currentLatLng));
-//                        callback.drawPolyline(startLocation.getLatLng(), currentLatLng);
-//                        isBreak = true;
-//                        break;
-//                    }
-//                }
-//                if (isBreak)
-//                    break;
-//            }
-            if (PolyUtil.isLocationOnEdge(currentLatLng, step.getLatLngNonePass(), true, 5.0D)) {
-                Log.d("Route", "True");
-                for (int i = 0; i < step.getLocationNonePass().size(); i++) {
-                    CustomLatLng startLocation = step.getLocationNonePass().get(i);
-                    CustomLatLng endLocation;
-                    if (i + 1 < step.getLocationNonePass().size())
-                        endLocation = step.getLocationNonePass().get(i + 1);
+        while (getStepNonePass().size() != 0) {
+            Step step = getStepNonePass().get(0);
+            while (step.getLocationNonePass().size() != 0) {
+                if (step.getEndLocation() != null) {
+                    CustomLatLng startLocation = step.getStartLocation();
+                    CustomLatLng endLocation = step.getEndLocation();
+                    List<LatLng> polyline = new ArrayList<>();
+                    polyline.add(startLocation.getLatLng());
+                    polyline.add(endLocation.getLatLng());
+                    float distanceToStart = MapUtils.distanceBetweenTwoPoint(currentLatLng, startLocation.getLatLng());
+                    float distanceToEnd = MapUtils.distanceBetweenTwoPoint(currentLatLng, endLocation.getLatLng());
+                    if (PolyUtil.isLocationOnEdge(currentLatLng, getLocationNonePass(), true, 5.0D)) {
+                        if (PolyUtil.isLocationOnEdge(currentLatLng, step.getLatLngNonePass(), true, 5.0D)) {
+                            if (PolyUtil.isLocationOnEdge(currentLatLng, polyline, true, 5.0D)) {
+                                callback.drawPolyline(currentLatLng, startLocation.getLatLng());
+                                startLocation.setState(1);
+                                step.getCustomLatLng().add(0, new CustomLatLng(currentLatLng));
+                                Log.d("Route", "Be Long to polyline");
+                                isBreak = true;
+                                break;
+                            } else {
+                                callback.drawPolyline(startLocation.getLatLng(), endLocation.getLatLng());
+                                startLocation.setState(1);
+                                Log.d("Route", "Start>End");
+                            }
+                        } else {
+                            callback.drawPolyline(startLocation.getLatLng(), endLocation.getLatLng());
+                            startLocation.setState(1);
+                        }
+                    } else {
+                        Log.d("Route", "out of route");
+                        isBreak = true;
+                        break;
+                    }
+                } else if (step.getStartLocation() != null) {
+                    step.getStartLocation().setState(1);
+                } else {
+                    Log.d("TAG", "Done");
                 }
-            } else
-                Log.d("Route", "False");
-        }
-    }
+            }
+            if (isBreak)
+                break;
 
-    public void addCurrentLocation(LatLng latLng) {
-        Step step = getSteps().get(0);
-        step.getCustomLatLng().add(0, new CustomLatLng(latLng));
+        }
     }
 
     public interface OnChangeLocationListener {

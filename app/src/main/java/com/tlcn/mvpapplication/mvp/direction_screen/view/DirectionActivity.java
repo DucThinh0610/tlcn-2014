@@ -57,8 +57,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         IDirectionView,
         SensorEventListener,
         GoogleMap.OnCameraMoveStartedListener {
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 50;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;
+    private static final long MIN_TIME_BW_UPDATES = 1000;
     private static final int STATE_NORMAL = 0, STATE_COMPASS = 1, STATE_POSITION = 2;
     private int stateImvPosition = 2;
     private static float oldBearing = 0;
@@ -389,9 +389,6 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for (Polyline polyline : polylinePaths) {
-                    polyline.remove();
-                }
                 PolylineOptions polylineOptions = new PolylineOptions().
                         geodesic(true).
                         color(ContextCompat.getColor(DirectionActivity.this, R.color.color_polyline)).

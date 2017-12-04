@@ -92,8 +92,6 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         if (routeFromObj != null) {
             this.mRoute = (Route) routeFromObj;
             mRoute.createMarkPlace();
-            mRoute.addCurrentLocation(latLng);
-            LogUtils.d(TAG, new Gson().toJson(mRoute));
             mRoute.addOnChangeLocation(this);
         } else
             getView().onFail("Lỗi không xác định! Thử lại sau.");
