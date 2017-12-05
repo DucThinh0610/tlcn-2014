@@ -1,7 +1,6 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -275,11 +273,12 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                 ImageLoader.loadImageFromPath(getContext(), file.getPath(), imvImage, 10);
             }
         }
-        if (requestCode==KeyUtils.REQUEST_TAKE_PHOTO){
+        if (requestCode == KeyUtils.REQUEST_TAKE_PHOTO) {
             imvImage.setVisibility(View.VISIBLE);
             ImageLoader.loadImageFromPath(getContext(), mPresenter.getImageUpload().getPath(), imvImage, 10);
         }
     }
+
     private File startCameraScreen() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file;

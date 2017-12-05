@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.api.network;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
+import com.tlcn.mvpapplication.api.request.login.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
@@ -62,6 +63,9 @@ public interface ApiServices {
 
     @POST("{user_id}")
     Call<BaseResponse> push_notification(@Path("user_id") String user_id, @Query("token") String token);
+
+    @POST("user/login")
+    Call<BaseResponse> login(@Body LoginRequest request);
 
     @GET("share/{location_id}")
     Call<ShareResponse> shareLink(@Path("location_id") String location_id);
