@@ -185,7 +185,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 for (DataSnapshot data : listData) {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
-                    if (item.getStatus()) {
+                    if (item.isStatus()) {
                         if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
                             getView().getDetailLocationSuccess(item);
                             getView().hideLoading();
@@ -218,7 +218,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                     Locations item = data.getValue(Locations.class);
                     LatLng start = new LatLng(item.getLat(), item.getLng());
                     allLocation.add(item);
-                    if (item.getStatus()) {
+                    if (item.isStatus()) {
                         if (MapUtils.distanceBetweenTwoPoint(start, latLng) <= boundRadiusLoad) {
                             listPlace.add(item);
                         }

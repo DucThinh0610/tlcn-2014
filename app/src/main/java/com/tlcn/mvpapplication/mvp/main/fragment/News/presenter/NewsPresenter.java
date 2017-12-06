@@ -59,7 +59,7 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
                 Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
                 for (DataSnapshot data : listData) {
                     Locations item = data.getValue(Locations.class);
-                    if (item.getStatus()) {
+                    if (item.isStatus()) {
                         list.add(item);
                     }
                 }

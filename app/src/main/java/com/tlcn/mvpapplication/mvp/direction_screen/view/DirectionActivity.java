@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.direction_screen.view;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
@@ -38,8 +39,10 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.dialog.NotifyDialog;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.ObjectSerializable;
+import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.direction_screen.presenter.DirectionPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -80,6 +83,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     private List<Polyline> polylineLocationPassed = new ArrayList<>();
 
     private List<Marker> placeMarker = new ArrayList<>();
+
+    private NotifyDialog mNotifyDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -248,8 +253,18 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     }
 
     @Override
-    public void notifyNewLocation() {
-        Toast.makeText(this, "SomeThing", Toast.LENGTH_SHORT).show();
+    public void notifyNewLocation(final Locations locations) {
+        if (mNotifyDialog == null || !mNotifyDialog.isShowing()) {
+            mNotifyDialog = new NotifyDialog(DirectionActivity.this, locations, new NotifyDialog.NotifyDialogListener() {
+                @Override
+                public void OnButtonRightClick() {
+                    Intent intent = new Intent(DirectionActivity.this, DetailsView.class);
+                    intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, locations.getId());
+                    startActivity(intent);
+                }
+            }, 15);
+            mNotifyDialog.show();
+        }
     }
 
     @Override

@@ -62,7 +62,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                 mListener.OnClickShare(item);
             }
         });
-        holder.tvStopped.setVisibility(item.getStatus() ? View.VISIBLE : View.GONE);
+        holder.tvStopped.setVisibility(item.isStatus() ? View.VISIBLE : View.GONE);
         holder.tvStopped.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
