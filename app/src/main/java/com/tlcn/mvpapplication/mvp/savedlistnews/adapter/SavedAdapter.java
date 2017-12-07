@@ -36,8 +36,8 @@ public class SavedAdapter extends RecyclerView.Adapter<SavedAdapter.LocationView
     public void onBindViewHolder(final LocationViewHolder holder, int position) {
         final Locations item = mList.get(position);
         holder.tvTitle.setText(item.getTitle());
-        holder.rtbLevel.setRating((float) item.getLevel());
-        if(item.getStatus()){
+        holder.rtbLevel.setRating((float) item.getCurrent_level());
+        if(item.isStatus()){
             holder.tvContributeNow.setText(mContext.getString(R.string.stopped));
             holder.tvContributeNow.setTextColor(mContext.getResources().getColor(R.color.color_yes));
             holder.tvContributeNow.setBackgroundResource(R.drawable.custom_background_textview_stopped);

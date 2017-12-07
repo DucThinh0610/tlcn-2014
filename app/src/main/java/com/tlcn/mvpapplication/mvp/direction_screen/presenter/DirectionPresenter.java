@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.direction_screen.presenter;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,9 +17,7 @@ import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.IDirectionView;
-import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +87,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     }
 
     @Override
-    public void setRouteFromObj(Object routeFromObj,LatLng latLng) {
+    public void setRouteFromObj(Object routeFromObj, LatLng latLng) {
         if (routeFromObj != null) {
             this.mRoute = (Route) routeFromObj;
             mRoute.createMarkPlace();
-            mRoute.addCurrentLocation(latLng);
-            LogUtils.d(TAG, new Gson().toJson(mRoute));
             mRoute.addOnChangeLocation(this);
         } else
             getView().onFail("Lỗi không xác định! Thử lại sau.");
@@ -106,7 +103,6 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     @Override
     public void onHaveANewLocation(Locations lct) {
         if (!isFirst) {
-            Log.d(TAG, new Gson().toJson(lct));
             listNewLocationAdded.add(lct);
         }
     }
@@ -126,7 +122,6 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     }
 
     public void onChangeLocation(Location location) {
-        Log.d("Location", "Lat:" + location.getLatitude() + " Lng:" + location.getLongitude());
         taskChangeLocation = new calculateLocation();
         taskChangeLocation.execute(location);
     }
@@ -137,6 +132,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
             getView().drawAPolyline(latLngStart, latLngEnd);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class addNewLocationTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -162,12 +158,13 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     @Override
     public void notifyHaveANewLocation() {
         for (Locations locations : listNewLocationAdded) {
-            getView().notifyNewLocation();
+            getView().notifyNewLocation(locations);
             getView().drawANewLocation(locations);
         }
         listNewLocationAdded.clear();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class calculateLocation extends AsyncTask<Location, Void, Void> {
 
         @Override

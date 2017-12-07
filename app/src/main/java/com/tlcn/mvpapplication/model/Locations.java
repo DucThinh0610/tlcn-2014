@@ -11,6 +11,7 @@ public class Locations implements Serializable {
     private String last_modify;
     private String title;
     private int rate;
+    private String latest_image_url;
 
     public String getId() {
         return id;
@@ -36,28 +37,12 @@ public class Locations implements Serializable {
         this.lng = lng;
     }
 
-    public boolean getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public double getLevel() {
-        return current_level;
-    }
-
-    public void setLevel(double level) {
-        this.current_level = level;
-    }
-
-    public String getLast_modify() {
-        return last_modify;
-    }
-
-    public void setLast_modify(String last_modify) {
-        this.last_modify = last_modify;
     }
 
     public double getCurrent_level() {
@@ -66,6 +51,14 @@ public class Locations implements Serializable {
 
     public void setCurrent_level(double current_level) {
         this.current_level = current_level;
+    }
+
+    public String getLast_modify() {
+        return last_modify;
+    }
+
+    public void setLast_modify(String last_modify) {
+        this.last_modify = last_modify;
     }
 
     public String getTitle() {
@@ -82,6 +75,14 @@ public class Locations implements Serializable {
 
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    public String getLatest_image_url() {
+        return latest_image_url;
+    }
+
+    public void setLatest_image_url(String latest_image_url) {
+        this.latest_image_url = latest_image_url;
     }
 
     @Override

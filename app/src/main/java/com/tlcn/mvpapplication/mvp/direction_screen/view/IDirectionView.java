@@ -7,7 +7,7 @@ import com.tlcn.mvpapplication.model.Locations;
 public interface IDirectionView extends IView {
     void onFail(String s);
 
-    void notifyNewLocation();
+    void notifyNewLocation(Locations locations);
 
     void drawANewLocation(Locations locations);
 

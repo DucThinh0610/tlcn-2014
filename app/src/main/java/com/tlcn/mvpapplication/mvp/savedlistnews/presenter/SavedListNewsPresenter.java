@@ -120,7 +120,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     public void contributing(Locations location) {
         getView().showLoading();
         ActionRequest request = new ActionRequest(location.getId(), DateUtils.getCurrentDate());
-        if (location.getStatus()) {
+        if (location.isStatus()) {
             getManager().actionStop(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {

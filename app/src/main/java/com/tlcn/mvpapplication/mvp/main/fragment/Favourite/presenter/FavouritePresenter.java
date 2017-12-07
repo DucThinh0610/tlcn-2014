@@ -73,7 +73,7 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
                     LatLng start = new LatLng(item.getLat(), item.getLng());
                     LogUtils.LOGE("item", mLocationStorage.getOtherLocation().toString() + " " + start.toString());
                     LogUtils.LOGE("item2", Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) + "");
-                    if (item.getStatus()) {
+                    if (item.isStatus()) {
                         if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= distanceToLoad
                                 || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= distanceToLoad
                                 || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= distanceToLoad)

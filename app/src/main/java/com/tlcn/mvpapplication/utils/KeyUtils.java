@@ -59,4 +59,9 @@ public class KeyUtils {
             return 2;
         } else return 3;
     }
+
+    //todo: key of value current_level change
+    public static int INCREASE_LEVEL = 2;
+    public static int REDUCTION_LEVEL = 3;
+    public static int NEW_LOCATION = 1;
 }
