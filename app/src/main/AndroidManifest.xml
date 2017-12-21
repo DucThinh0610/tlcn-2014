@@ -32,10 +32,14 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="tlcn-2014.herokuapp.com"
-                    android:path="/share" />
+
+                <data
+                    android:host="tlcn-2014.herokuapp.com"
+                    android:path="/share"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -62,6 +66,8 @@
         <activity
             android:name=".mvp.savedlistnews.view.SavedListNewsView"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".mvp.chart.ChartActivity" />
         <!--Todo: Facebook SDK-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

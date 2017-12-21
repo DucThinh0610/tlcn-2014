@@ -32,6 +32,7 @@ import com.tlcn.mvpapplication.model.ShareLink;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
+import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.adapter.FavouriteAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -46,7 +47,7 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/24/2017.
  */
 
-public class FavouriteFragment extends Fragment implements IFavouriteView, View.OnClickListener, LocationAdapter.OnItemClick {
+public class FavouriteFragment extends Fragment implements IFavouriteView, View.OnClickListener, FavouriteAdapter.OnClickListener {
     public static FavouriteFragment newInstance() {
         return new FavouriteFragment();
     }
@@ -79,7 +80,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     //Todo: Declaring
     private DialogProgress mProgressDialog;
     FavouritePresenter mPresenter = new FavouritePresenter();
-    LocationAdapter newsAdapter;
+    FavouriteAdapter newsAdapter;
     CallbackManager callbackManager;
     ShareDialog shareDialog;
 
@@ -135,15 +136,15 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         callbackManager = CallbackManager.Factory.create();
         View v = inflater.inflate(R.layout.fragment_favourite, container, false);
         ButterKnife.bind(this, v);
-        initData(v);
-        initListener(v);
+        initData();
+        initListener();
         mPresenter.attachView(this);
         mPresenter.onCreate();
         mPresenter.getListNews();
         return v;
     }
 
-    private void initListener(View v) {
+    private void initListener() {
         //các sự kiện click view được khai báo ở đây
         lnlHouse.setOnClickListener(this);
         lnlWork.setOnClickListener(this);
@@ -152,7 +153,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         tvDistance.setOnClickListener(this);
     }
 
-    private void initData(View v) {
+    private void initData() {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         if (App.getLocationStorage().getHouseLocation().latitude != 0) {
             tvLocationHouse.setText(getString(R.string.have_set));
@@ -178,7 +179,7 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
     @Override
     public void getListLocationSuccess(List<Locations> result) {
         if (result != null) {
-            newsAdapter = new LocationAdapter(result, getContext(), this);
+            newsAdapter = new FavouriteAdapter(result, getContext(), this);
             rcvFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvFavourite.setAdapter(newsAdapter);
         }
@@ -345,21 +346,26 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
         }
     }
 
+//    @Override
+//    public void onClickStopped(String id) {
+//        mPresenter.onChangeStopped(id);
+//    }
+
     @Override
-    public void OnClickShare(Locations item) {
-        mPresenter.getShareLink(item.getId());
+    public void onClickShare(String id) {
+        mPresenter.getShareLink(id);
     }
 
     @Override
-    public void OnClickDetail(Locations item) {
+    public void onClickDetail(String id) {
         Intent intent = new Intent(getActivity(), DetailsView.class);
-        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, item.getId());
+        intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, id);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     @Override
-    public void onClickStopped(String id) {
-        mPresenter.onChangeStopped(id);
+    public void onClickChart(String id) {
+
     }
 }

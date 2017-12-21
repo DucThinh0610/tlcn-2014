@@ -68,7 +68,7 @@ public class DateUtils {
         if (date == null || date.equals("")) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
         try {
             return sdf.parse(date);
         } catch (ParseException e) {
@@ -83,7 +83,7 @@ public class DateUtils {
         if (sDate == null || sDate.equals("")) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
         try {
             Date date = sdf.parse(sDate);
             SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm:ss, dd-MM-yyyy", Locale.US);
@@ -95,7 +95,7 @@ public class DateUtils {
     }
 
     public static String getCurrentDate() {
-        DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
         serverDateFormat.setTimeZone(TimeZone.getDefault());
         serverDateFormat.setCalendar(new GregorianCalendar(TimeZone.getDefault()));
         Calendar cal = Calendar.getInstance();
@@ -123,4 +123,45 @@ public class DateUtils {
         dateResultFormat.setTimeZone(TimeZone.getDefault());
         return dateResultFormat.format(date);
     }
+
+    public static Date getTodayEnd() {
+        Date date = getDay();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.set(Calendar.AM_PM, Calendar.AM);
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+
+        return cal.getTime();
+    }
+
+    public static Date getDay() {
+        Calendar cal = Calendar.getInstance();
+        return cal.getTime();
+    }
+
+    public static Date getFirstDateOfWeek(Date date) {
+        int startDayOfWeek = Calendar.MONDAY;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.AM_PM, Calendar.AM);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        while (cal.get(Calendar.DAY_OF_WEEK) != startDayOfWeek) {
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        return cal.getTime();
+    }
+
+    public static String getDateFormat(Date date) {
+        DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        serverDateFormat.setTimeZone(TimeZone.getDefault());
+        serverDateFormat.setCalendar(new GregorianCalendar(TimeZone.getDefault()));
+        return serverDateFormat.format(date);
+    }
+
+
 }
