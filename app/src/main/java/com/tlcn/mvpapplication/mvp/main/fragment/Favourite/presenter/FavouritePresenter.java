@@ -119,27 +119,27 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         });
     }
 
-    @Override
-    public void onChangeStopped(String id) {
-        getView().showLoading();
-        ActionRequest request = new ActionRequest(id, DateUtils.getCurrentDate());
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        }
-        getManager().actionStop(request, new ApiCallback<BaseResponse>() {
-            @Override
-            public void success(BaseResponse res) {
-                getView().hideLoading();
-                getView().notifyChangeStopped();
-            }
-
-            @Override
-            public void failure(RestError error) {
-                getView().hideLoading();
-                getView().onFail(error.message);
-            }
-        });
-    }
+//    @Override
+//    public void onChangeStopped(String id) {
+//        getView().showLoading();
+//        ActionRequest request = new ActionRequest(id, DateUtils.getCurrentDate());
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        }
+//        getManager().actionStop(request, new ApiCallback<BaseResponse>() {
+//            @Override
+//            public void success(BaseResponse res) {
+//                getView().hideLoading();
+//                getView().notifyChangeStopped();
+//            }
+//
+//            @Override
+//            public void failure(RestError error) {
+//                getView().hideLoading();
+//                getView().onFail(error.message);
+//            }
+//        });
+//    }
 
     @Override
     public void setFavouriteDistance(int progress) {

@@ -11,7 +11,7 @@ public interface IFavouritePresenter {
 
     void getShareLink(String location_id);
 
-    void onChangeStopped(String id);
+//    void onChangeStopped(String id);
 
     void setFavouriteDistance(int progress);
 

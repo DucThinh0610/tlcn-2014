@@ -69,6 +69,7 @@
 
         <activity android:name=".mvp.direction_screen.view.DirectionActivity" />
 
+        <activity android:name=".mvp.chart.ChartActivity" />
         <!--Todo: Facebook SDK-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
