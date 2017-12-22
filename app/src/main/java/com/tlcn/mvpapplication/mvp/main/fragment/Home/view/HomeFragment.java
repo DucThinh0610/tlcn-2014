@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -73,6 +74,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.request.login.LoginRequest;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.ConfirmDialog;
@@ -285,7 +287,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                            mPresenter.pushNotificationToken(user.getUid(), FirebaseInstanceId.getInstance().getToken());
+                            mPresenter.login(new LoginRequest(user.getUid(), FirebaseInstanceId.getInstance().getToken(), Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID)));
                             View v = nvDrawer.getHeaderView(0);
                             final Button btnLogin = (Button) v.findViewById(R.id.btn_login);
                             final LinearLayout lnlLoginSuccess = (LinearLayout) v.findViewById(R.id.lnl_login_success);

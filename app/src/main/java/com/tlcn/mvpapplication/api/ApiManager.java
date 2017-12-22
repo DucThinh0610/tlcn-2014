@@ -8,6 +8,7 @@ import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
+import com.tlcn.mvpapplication.api.request.login.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
@@ -118,6 +119,20 @@ public class ApiManager {
 
     public void pushNotificationToken(String user_id, String token, final ApiCallback<BaseResponse> callback) {
         AppManager.http_firebase_server().from(ApiServices.class).push_notification(user_id, token).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void login(LoginRequest request, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_firebase_server().from(ApiServices.class).login(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);

@@ -67,6 +67,8 @@
             android:name=".mvp.savedlistnews.view.SavedListNewsView"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".mvp.direction_screen.view.DirectionActivity" />
+
         <activity android:name=".mvp.chart.ChartActivity" />
         <!--Todo: Facebook SDK-->
         <meta-data
@@ -89,7 +91,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.direction_screen.view.DirectionActivity" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
@@ -135,6 +136,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
     </application>
 
 </manifest>
