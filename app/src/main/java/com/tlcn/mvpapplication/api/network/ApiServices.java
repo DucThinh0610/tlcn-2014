@@ -1,12 +1,14 @@
 package com.tlcn.mvpapplication.api.network;
 
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.request.chart.ChartRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.request.login.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
+import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.model.Result;
@@ -69,4 +71,7 @@ public interface ApiServices {
 
     @GET("share/{location_id}")
     Call<ShareResponse> shareLink(@Path("location_id") String location_id);
+
+    @POST("chart/{id_location}")
+    Call<ChartResponse> getChartInfo(@Path("id_location") String id_location, @Body ChartRequest chartRequest);
 }

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
@@ -46,7 +49,8 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static com.tlcn.mvpapplication.utils.FileUtils.getUriFromFile;
 
-public class ContributeFragment extends Fragment implements IContributeView, View.OnClickListener {
+public class ContributeFragment extends Fragment implements IContributeView, View.OnClickListener
+        , OnMapReadyCallback {
 
     public static ContributeFragment newInstance() {
         return new ContributeFragment();
@@ -78,6 +82,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     private DialogProgress mProgressDialog;
     LatLng postLocation;
     GPSTracker gpsTracker;
+    GoogleMap map;
 
     @Nullable
     @Override
@@ -299,5 +304,10 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
             file = null;
         }
         return file;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d("REady map", "ASdsad");
     }
 }

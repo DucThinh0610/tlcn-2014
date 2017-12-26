@@ -30,6 +30,7 @@ public class KeyUtils {
     public static final String INTENT_KEY_LONGITUDE = "longitude";
     public static final String KEY_INTENT_LOCATION = "KEY_INTENT_LOCATION";
     public static final String KEY_INTENT_DIRECTION = "KEY_INTENT_DIRECTION";
+    public static final String KEY_INTENT_ID_LOCATION = "KEY_INTENT_ID_LOCATION";
 
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
@@ -46,6 +47,7 @@ public class KeyUtils {
     public static final double MEDIUM_LEVEL = 4.5;
     public static final double MAX_LEVEL = 5.0;
     public static final double DEFAULT_DISTANCE_TO_POLYLINE = 50.0;
+
 
     /**
      * @return 1: min level

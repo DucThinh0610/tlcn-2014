@@ -24,6 +24,9 @@ public class ChartData implements Serializable {
     @SerializedName("hour")
     @Expose
     private int hour;
+    @SerializedName("date")
+    @Expose
+    private int date;
 
     public String getNewId() {
         return newId;
@@ -47,5 +50,9 @@ public class ChartData implements Serializable {
 
     public int getHour() {
         return hour;
+    }
+
+    public int getDate() {
+        return date;
     }
 }
