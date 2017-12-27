@@ -11,6 +11,6 @@ public interface ChartContact {
 
     interface IPresenter{
 
-        void getInfoChart(String idLocation);
+        void getInfoChart();
     }
 }

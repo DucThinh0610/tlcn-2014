@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.mvp.chart.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -15,9 +16,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -41,7 +48,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int TYPE_INFO = 0, TYPE_HOUR = 1, TYPE_PIE = 2, ERROR = -1;
+    private static final int TYPE_INFO = 0, TYPE_HOUR = 1, TYPE_PIE = 2, ERROR = -1, TYPE_LINE = 3;
     private List<IChartDto> mList;
     private Context mContext;
     private OnItemClickListener mCallback;
@@ -61,6 +68,8 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return TYPE_HOUR;
         else if (item instanceof PieChart)
             return TYPE_PIE;
+        else if (item instanceof com.tlcn.mvpapplication.mvp.chart.dto.LineChart)
+            return TYPE_LINE;
         else
             return ERROR;
     }
@@ -73,6 +82,8 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return new BarHolder(LayoutInflater.from(mContext).inflate(R.layout.item_hour_chart, parent, false));
         else if (viewType == TYPE_PIE)
             return new PieHolder(LayoutInflater.from(mContext).inflate(R.layout.item_date_chart, parent, false));
+        else if (viewType == TYPE_LINE)
+            return new LineHolder(LayoutInflater.from(mContext).inflate(R.layout.item_line_chart, parent, false));
         return null;
     }
 
@@ -89,12 +100,23 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 PieChart pieChart = (PieChart) item;
                 dateHolder.setData(pieChart.getType() == 0 ? pieChart.getDataHour() : pieChart.getDataDay());
                 break;
+            case TYPE_LINE:
+                LineHolder lineHolder = (LineHolder) holder;
+                com.tlcn.mvpapplication.mvp.chart.dto.LineChart lineChart = (com.tlcn.mvpapplication.mvp.chart.dto.LineChart) item;
+                lineHolder.setData(lineChart.getType() == 0 ? lineChart.getHourData() : lineChart.getDayData());
+                break;
         }
     }
 
     public class LocationInfoHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         @Bind(R.id.map_view)
         MapView mapView;
+        @Bind(R.id.rtb_level)
+        AppCompatRatingBar rtb;
+        @Bind(R.id.tv_count)
+        TextView tvCount;
+        @Bind(R.id.tv_time_max)
+        TextView tvTime;
         GoogleMap mGoogleMap;
         private LocationInfo mLocationInfo;
 
@@ -122,6 +144,9 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (mGoogleMap != null) {
                 updateMap();
             }
+            rtb.setRating((float) locationInfo.getRatingOverview());
+            tvCount.setText(locationInfo.getCountNew());
+            tvTime.setText(locationInfo.getTimeTrafficJamMax());
         }
 
         private void updateMap() {
@@ -149,7 +174,7 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Bind(R.id.btn_popup)
         Button btnPopup;
 
-        public PieHolder(View itemView) {
+        PieHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mChart.getDescription().setEnabled(false);
@@ -209,16 +234,118 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.hour:
-                                mCallback.OnClickViewByHour();
+                                mCallback.PieOnClickViewByHour();
                                 break;
                             case R.id.day_of_week:
-                                mCallback.OnClickViewByDayOfWeek();
+                                mCallback.PieOnClickViewByDayOfWeek();
                                 break;
                         }
                         return true;
                     }
                 });
                 popupMenu.show();
+            }
+        }
+    }
+
+    class LineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @Bind(R.id.line_chart)
+        LineChart lineChart;
+        @Bind(R.id.btn_popup)
+        Button btnPopup;
+        @Bind(R.id.btn_zoom)
+        Button btnZoom;
+
+        LineHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            btnPopup.setOnClickListener(this);
+            btnZoom.setOnClickListener(this);
+            lineChart.setDrawGridBackground(false);
+            lineChart.getDescription().setEnabled(false);
+            lineChart.setTouchEnabled(true);
+            lineChart.setDragEnabled(true);
+            lineChart.setScaleEnabled(true);
+            lineChart.setPinchZoom(true);
+
+            // x-axis limit line
+//            LimitLine llXAxis = new LimitLine(1f, "Index 10");
+//            llXAxis.setLineWidth(4f);
+//            llXAxis.enableDashedLine(10f, 10f, 0f);
+//            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//            llXAxis.setTextSize(6f);
+
+            XAxis xAxis = lineChart.getXAxis();
+            xAxis.enableGridDashedLine(5f, 10f, 0f);
+            LimitLine ll1 = new LimitLine(4.5f, "Cao");
+            ll1.setLineWidth(4f);
+            ll1.enableDashedLine(5f, 10f, 0f);
+            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll1.setTextSize(5f);
+
+            LimitLine ll2 = new LimitLine(3.5f, "Thấp");
+            ll2.setLineWidth(4f);
+            ll2.enableDashedLine(5f, 10f, 0f);
+            ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+            ll2.setTextSize(5f);
+
+            LimitLine ll3 = new LimitLine(3.5f, "Trung bình");
+            ll3.setLineWidth(4f);
+            ll3.enableDashedLine(5f, 10f, 0f);
+            ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll3.setTextSize(5f);
+
+            YAxis leftAxis = lineChart.getAxisLeft();
+            leftAxis.removeAllLimitLines();
+            leftAxis.addLimitLine(ll1);
+            leftAxis.addLimitLine(ll2);
+            leftAxis.setAxisMaximum(6f);
+            leftAxis.setAxisMinimum(0f);
+            leftAxis.enableGridDashedLine(5f, 10f, 0f);
+            leftAxis.setDrawZeroLine(false);
+            leftAxis.setDrawLimitLinesBehindData(true);
+
+            lineChart.getAxisRight().setEnabled(false);
+
+            lineChart.animateX(2500);
+            Legend l = lineChart.getLegend();
+            l.setForm(Legend.LegendForm.LINE);
+
+        }
+
+        public void setData(LineData lineData) {
+            lineChart.setData(lineData);
+
+            lineChart.highlightValues(null);
+
+            lineChart.invalidate();
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_popup:
+                    PopupMenu popupMenu = new PopupMenu(mContext, btnPopup, Gravity.END);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_pie_chart, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.hour:
+                                    mCallback.LineOnClickViewByHour();
+                                    break;
+                                case R.id.day_of_week:
+                                    mCallback.LineOnClickViewByDayOfWeek();
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
+                    break;
+                case R.id.btn_zoom:
+                    mCallback.OnClickZoomLineChart();
+                    break;
             }
         }
     }
@@ -230,8 +357,14 @@ public class ChartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public interface OnItemClickListener {
 
-        void OnClickViewByHour();
+        void PieOnClickViewByHour();
 
-        void OnClickViewByDayOfWeek();
+        void PieOnClickViewByDayOfWeek();
+
+        void LineOnClickViewByHour();
+
+        void LineOnClickViewByDayOfWeek();
+
+        void OnClickZoomLineChart();
     }
 }

@@ -41,4 +41,5 @@
     <color name="yellow">#ffee00</color>
     <color name="soft_grey">#F2F2F2</color>
     <color name="orange">#ff993f</color>
+    <color name="tran_grey">#80000000</color>
 </resources>

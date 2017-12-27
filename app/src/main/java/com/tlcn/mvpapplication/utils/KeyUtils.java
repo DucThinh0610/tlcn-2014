@@ -66,4 +66,19 @@ public class KeyUtils {
     public static int INCREASE_LEVEL = 2;
     public static int REDUCTION_LEVEL = 3;
     public static int NEW_LOCATION = 1;
+
+    //data of chart
+    public static String[] mPartiesHour = new String[]{
+            "0", "1", "2", "3", "4", "5", "6", "7",
+            "8", "9", "10", "11", "12", "13", "14", "15",
+            "16", "17", "18", "19", "20", "21", "22", "23"
+    };
+
+    public static String[] mPartiesDay = new String[]{
+            "Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"
+    };
+
+    public static String[] mShortPartiesDay = new String[]{
+            "CN", "T2", "T3", "T4", "T5", "T6", "T7"
+    };
 }

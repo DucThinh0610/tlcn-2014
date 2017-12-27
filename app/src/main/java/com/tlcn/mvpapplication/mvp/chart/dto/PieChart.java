@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.tlcn.mvpapplication.utils.KeyUtils.mPartiesDay;
+import static com.tlcn.mvpapplication.utils.KeyUtils.mPartiesHour;
+
 public class PieChart implements IChartDto {
 
     private PieData dataByHour, dataByDay;
@@ -35,15 +38,9 @@ public class PieChart implements IChartDto {
 
     public PieChart(List<ChartData> mList) {
         this.mList = mList;
-        String[] mPartiesHour = new String[]{
-                "0", "1", "2", "3", "4", "5", "6", "7",
-                "8", "9", "10", "11", "12", "13", "14", "15",
-                "16", "17", "18", "19", "20", "21", "22", "23"
-        };
+
         dataByHour = createData(mPartiesHour, 0);
-        String[] mPartiesDay = new String[]{
-                "Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"
-        };
+
         dataByDay = createData(mPartiesDay, 1);
     }
 
