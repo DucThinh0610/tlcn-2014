@@ -29,6 +29,7 @@ import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.ShareLink;
+import com.tlcn.mvpapplication.mvp.chart.ChartActivity;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
@@ -42,6 +43,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.tlcn.mvpapplication.utils.KeyUtils.KEY_INTENT_ID_LOCATION;
 
 /**
  * Created by tskil on 8/24/2017.
@@ -366,6 +369,8 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     @Override
     public void onClickChart(String id) {
-
+        Intent intent = new Intent(getActivity(), ChartActivity.class);
+        intent.putExtra(KEY_INTENT_ID_LOCATION, id);
+        startActivity(intent);
     }
 }

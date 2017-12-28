@@ -30,6 +30,7 @@ public class KeyUtils {
     public static final String INTENT_KEY_LONGITUDE = "longitude";
     public static final String KEY_INTENT_LOCATION = "KEY_INTENT_LOCATION";
     public static final String KEY_INTENT_DIRECTION = "KEY_INTENT_DIRECTION";
+    public static final String KEY_INTENT_ID_LOCATION = "KEY_INTENT_ID_LOCATION";
 
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
@@ -46,6 +47,7 @@ public class KeyUtils {
     public static final double MEDIUM_LEVEL = 4.5;
     public static final double MAX_LEVEL = 5.0;
     public static final double DEFAULT_DISTANCE_TO_POLYLINE = 50.0;
+
 
     /**
      * @return 1: min level
@@ -64,4 +66,19 @@ public class KeyUtils {
     public static int INCREASE_LEVEL = 2;
     public static int REDUCTION_LEVEL = 3;
     public static int NEW_LOCATION = 1;
+
+    //data of chart
+    public static String[] mPartiesHour = new String[]{
+            "0", "1", "2", "3", "4", "5", "6", "7",
+            "8", "9", "10", "11", "12", "13", "14", "15",
+            "16", "17", "18", "19", "20", "21", "22", "23"
+    };
+
+    public static String[] mPartiesDay = new String[]{
+            "Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"
+    };
+
+    public static String[] mShortPartiesDay = new String[]{
+            "CN", "T2", "T3", "T4", "T5", "T6", "T7"
+    };
 }

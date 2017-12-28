@@ -6,11 +6,13 @@ import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.request.chart.ChartRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
 import com.tlcn.mvpapplication.api.request.login.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
+import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.app.AppManager;
@@ -149,6 +151,20 @@ public class ApiManager {
         AppManager.http_firebase_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getInfoChart(String id_location, ChartRequest chartRequest, final ApiCallback<ChartResponse> callback) {
+        AppManager.http_firebase_server().from(ApiServices.class).getChartInfo(id_location, chartRequest).enqueue(new RestCallback<ChartResponse>() {
+            @Override
+            public void success(ChartResponse res) {
                 callback.success(res);
             }
 

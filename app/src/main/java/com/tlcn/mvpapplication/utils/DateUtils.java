@@ -14,11 +14,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by ducthinh on 19/09/2017.
- */
-
 public class DateUtils {
+
     public static String getTimeAgo(Context context, Date startDate) {
         Date endDate = Calendar.getInstance().getTime();
         String result = "";
@@ -164,4 +161,112 @@ public class DateUtils {
     }
 
 
+    public static int getCurrentDayInMonth() {
+        Date date = getDay();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getCurrentMonth() {
+        Date date = getDay();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.MONTH);
+    }
+
+    public static int getCurrentYear() {
+        Date date = getDay();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR);
+    }
+
+    public static int getDayOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getMonthOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.MONTH);
+    }
+
+    public static int getYearOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR);
+    }
+
+    public static Date createDateFromDMY(int day, int month, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.AM_PM, Calendar.AM);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.YEAR, year);
+
+        return cal.getTime();
+    }
+
+    public static String getMonth(int month) {
+        String[] arrMonth = new String[]{
+                "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+        };
+        return arrMonth[month];
+    }
+
+    public static boolean isValidDate(int day, int month, int year) {
+        if (day < 1 || day > 31) {
+            return false;
+        }
+        if (month < 0 || month > 11) {
+            return false;
+        }
+        if (year < 0) {
+            return false;
+        }
+        if (day < 29) {
+            return true;
+        }
+        switch (month) {
+            case 1:
+                return day == 29 && isLeapYear(year);
+            case 3:
+            case 5:
+            case 8:
+            case 10:
+                return day != 31;
+            default:
+                return true;
+        }
+    }
+
+    private static boolean isLeapYear(int year) {
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+    }
+
+    public static Date getEndDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
+        return calendar.getTime();
+    }
+
+    public static String parseDateToString(Date dateEnd, Date dateStart) {
+        if (dateEnd == null || dateStart == null) {
+            return null;
+        }
+        SimpleDateFormat sdfResult = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        return sdfResult.format(dateStart) + " - " + sdfResult.format(dateEnd);
+    }
 }

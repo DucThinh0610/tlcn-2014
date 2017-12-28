@@ -39,5 +39,5 @@ public class AppManager {
         if (httpServer == null) httpServer = new HttpHelper(BuildConfig.SERVER_FIREBASE_API);
         return httpServer;
     }
-    public final static String URL_LOCAL = "http://192.168.0.107:2345/";
+    public final static String URL_LOCAL = "http://192.168.0.111:2345/";
 }
