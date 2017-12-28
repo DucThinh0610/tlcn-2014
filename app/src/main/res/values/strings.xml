@@ -51,7 +51,7 @@
     <string name="high">Cao</string>
     <string name="detailed_description">Mô tả chi tiết</string>
     <string name="enter_content_if_available">Nhập nội dung (nếu có)</string>
-    <string name="attached_information">Thông tin đính kèm</string>
+    <string name="attached_information">Thông tin đính kèm*</string>
     <string name="take_photo">Chụp ảnh</string>
     <string name="video">Quay phim</string>
     <string name="gallery">Thư viện</string>
