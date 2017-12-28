@@ -46,6 +46,7 @@ import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.direction_screen.presenter.DirectionPresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,22 +99,22 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         mPresenter.attachView(this);
         mPresenter.onCreate();
         initData();
-        initSensor();
+//        initSensor();
         initListener();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (stateImvPosition == STATE_COMPASS)
-            registerSensor();
+//        if (stateImvPosition == STATE_COMPASS)
+//            registerSensor();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        unRegisterSensor();
+//        unRegisterSensor();
     }
 
     private void initSensor() {
@@ -217,11 +218,13 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                     moveCameraToMyLocation();
                 } else if (stateImvPosition == STATE_POSITION) {
                     stateImvPosition = STATE_COMPASS;
-                    registerSensor();
+                    setBearingMap(mPresenter.getBearing(), new LatLng(mGoogleMap.getCameraPosition().target.latitude,
+                            mGoogleMap.getCameraPosition().target.longitude));
+//                    registerSensor();
                 } else {
                     stateImvPosition = STATE_POSITION;
                     moveCameraToMyLocation();
-                    unRegisterSensor();
+//                    unRegisterSensor();
                 }
                 setUIImvPosition(stateImvPosition);
                 break;
@@ -269,20 +272,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
 
     @Override
     public void drawANewLocation(Locations locations) {
-        BitmapDescriptor bitmapDescriptor = null;
-        switch (KeyUtils.checkLevel(locations.getCurrent_level())) {
-            case 1:
-                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
-                break;
-            case 2:
-                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
-                break;
-            case 3:
-                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
-                break;
-        }
         placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
-                .icon(bitmapDescriptor)
+                .icon(createBitmap(locations))
                 .position(new LatLng(locations.getLat(), locations.getLng()))));
     }
 
@@ -334,18 +325,21 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                 }
                 if (Math.abs(Math.abs(bearing) - Math.abs(oldBearing)) > 2) {
                     oldBearing = bearing;
-                    if (mGoogleMap != null && isConfigMapDone) {
-                        CameraUpdate factory = CameraUpdateFactory.newCameraPosition(
-                                new CameraPosition.Builder()
-                                        .target(new LatLng(mGoogleMap.getCameraPosition().target.latitude,
-                                                mGoogleMap.getCameraPosition().target.longitude))
-                                        .zoom(KeyUtils.DEFAULT_MAP_ZOOM_DIRECTION)
-                                        .bearing(oldBearing).tilt(65.5f)
-                                        .build());
-                        mGoogleMap.animateCamera(factory);
-                    }
                 }
             }
+        }
+    }
+
+    @Override
+    public void setBearingMap(float bearing, LatLng latLng) {
+        if (mGoogleMap != null && isConfigMapDone && stateImvPosition == STATE_COMPASS) {
+            CameraUpdate factory = CameraUpdateFactory.newCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(latLng)
+                            .zoom(KeyUtils.DEFAULT_MAP_ZOOM_BEARING)
+                            .bearing(bearing).tilt(65.5f)
+                            .build());
+            mGoogleMap.animateCamera(factory);
         }
     }
 
@@ -381,7 +375,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     @Override
     public void onCameraMoveStarted(int reason) {
         if (reason == REASON_GESTURE) {
-            unRegisterSensor();
+//            unRegisterSensor();
             stateImvPosition = STATE_NORMAL;
             setUIImvPosition(stateImvPosition);
         }
@@ -413,5 +407,41 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                 polylineLocationPassed.add(mGoogleMap.addPolyline(polylineOptions));
             }
         });
+    }
+
+    @Override
+    public void notifyIncreaseLocation(Locations locations) {
+
+    }
+
+    @Override
+    public void updateLocation(Locations locations) {
+        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                .icon(createBitmap(locations))
+                .position(new LatLng(locations.getLat(), locations.getLng())));
+        if (placeMarker.contains(marker)) {
+            Log.d("Contains", "Contains");
+        }
+    }
+
+    @Override
+    public void notifyReduceLocation(Locations locations) {
+
+    }
+
+    private static BitmapDescriptor createBitmap(Locations locations) {
+        BitmapDescriptor bitmapDescriptor = null;
+        switch (KeyUtils.checkLevel(locations.getCurrent_level())) {
+            case 1:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_green);
+                break;
+            case 2:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_yellow);
+                break;
+            case 3:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_red);
+                break;
+        }
+        return bitmapDescriptor;
     }
 }

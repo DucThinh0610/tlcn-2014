@@ -11,6 +11,8 @@ public interface IDirectionView extends IView {
 
     void drawANewLocation(Locations locations);
 
+    void setBearingMap(float bearing, LatLng latLng);
+
     void registerSensor();
 
     void unRegisterSensor();
@@ -18,4 +20,10 @@ public interface IDirectionView extends IView {
     void moveCameraToMyLocation();
 
     void drawAPolyline(LatLng latLngStart, LatLng latLngStart1);
+
+    void notifyIncreaseLocation(Locations locations);
+
+    void updateLocation(Locations locations);
+
+    void notifyReduceLocation(Locations locations);
 }

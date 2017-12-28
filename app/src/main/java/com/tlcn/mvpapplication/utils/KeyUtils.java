@@ -10,7 +10,7 @@ public class KeyUtils {
     public static final float MAX_MAP_ZOOM = 18f;
     public static final float DEFAULT_MAP_ZOOM = 15f;
     public static final float DEFAULT_MAP_ZOOM_DIRECTION = 18f;
-
+    public static final float DEFAULT_MAP_ZOOM_BEARING = 25f;
     //TODO: KEY FOR FIREBASE REFERENCE
     public static final String NEWS = "news";
     public static final String IMAGES = "images";
