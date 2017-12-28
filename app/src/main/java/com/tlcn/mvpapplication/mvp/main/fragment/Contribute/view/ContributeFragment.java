@@ -159,6 +159,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
 
     @Override
     public void onSuccess() {
+        edtDescription.setText("");
         Toast.makeText(getContext(), getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
     }
 
