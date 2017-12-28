@@ -93,6 +93,7 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
 
     @Override
     public void notifyDataSetChanged() {
+        mPresenter.setChange(true);
         mPresenter.getSavedListLocation();
     }
 

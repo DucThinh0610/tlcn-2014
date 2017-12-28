@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/contribution"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

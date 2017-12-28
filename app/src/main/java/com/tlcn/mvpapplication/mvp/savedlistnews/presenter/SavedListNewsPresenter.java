@@ -1,6 +1,7 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,8 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     private DatabaseReference mLocationReference;
     private DatabaseReference mSaveReference;
 
+    private boolean isChange = false;
+
     public void attachView(ISavedListNewsView view) {
         super.attachView(view);
     }
@@ -49,11 +52,45 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
         mSaveReference = mDatabase.getReference().child(KeyUtils.SAVE);
     }
 
+    public void setChange(boolean change) {
+        isChange = change;
+    }
 
     @Override
     public void getSavedListLocation() {
         getView().showLoading();
         Query saveQuery = mSaveReference.orderByChild("user_id").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        saveQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getId().equals(dataSnapshot.child("location_id").getValue())) {
+                        list.remove(i);
+                    }
+                }
+                getView().onGetSavedListLocationSuccess(list);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         saveQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,7 +104,7 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 Locations item = child.getValue(Locations.class);
                                 for (int i = 0; i < list.size(); i++) {
-                                    if (list.get(i).getId() == item.getId()) {
+                                    if (list.get(i).getId().equals(item.getId())) {
                                         list.set(i, item);
                                         isChild = true;
                                     }
