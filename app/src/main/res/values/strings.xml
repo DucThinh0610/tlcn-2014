@@ -102,6 +102,8 @@
     <string name="string_day_of_week">Theo thứ</string>
     <string name="hour_of_day">Theo giờ</string>
     <string name="ok">OK</string>
+    <string name="detail">Chi Tiết</string>
+    <string name="close_time">Đóng (%d)</string>
 
 </resources>
 

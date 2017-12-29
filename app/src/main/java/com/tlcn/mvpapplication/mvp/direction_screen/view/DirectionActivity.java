@@ -256,21 +256,6 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     }
 
     @Override
-    public void notifyNewLocation(final Locations locations) {
-        if (mNotifyDialog == null || !mNotifyDialog.isShowing()) {
-            mNotifyDialog = new NotifyDialog(DirectionActivity.this, locations, new NotifyDialog.NotifyDialogListener() {
-                @Override
-                public void OnButtonRightClick() {
-                    Intent intent = new Intent(DirectionActivity.this, DetailsView.class);
-                    intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, locations.getId());
-                    startActivity(intent);
-                }
-            }, 15);
-            mNotifyDialog.show();
-        }
-    }
-
-    @Override
     public void drawANewLocation(Locations locations) {
         placeMarker.add(mGoogleMap.addMarker(new MarkerOptions()
                 .icon(createBitmap(locations))
@@ -410,11 +395,6 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
     }
 
     @Override
-    public void notifyIncreaseLocation(Locations locations) {
-
-    }
-
-    @Override
     public void updateLocation(Locations locations) {
         Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .icon(createBitmap(locations))
@@ -422,11 +402,6 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
         if (placeMarker.contains(marker)) {
             Log.d("Contains", "Contains");
         }
-    }
-
-    @Override
-    public void notifyReduceLocation(Locations locations) {
-
     }
 
     private static BitmapDescriptor createBitmap(Locations locations) {
@@ -443,5 +418,20 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
                 break;
         }
         return bitmapDescriptor;
+    }
+
+    @Override
+    public void notifyLocationAdded(final Locations locations, int type) {
+        if (mNotifyDialog == null || !mNotifyDialog.isShowing()) {
+            mNotifyDialog = new NotifyDialog(DirectionActivity.this, locations, new NotifyDialog.NotifyDialogListener() {
+                @Override
+                public void OnButtonRightClick() {
+                    Intent intent = new Intent(DirectionActivity.this, DetailsView.class);
+                    intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, locations.getId());
+                    startActivity(intent);
+                }
+            }, 15, type);
+            mNotifyDialog.show();
+        }
     }
 }

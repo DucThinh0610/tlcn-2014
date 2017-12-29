@@ -812,6 +812,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
             mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             mPresenter.getRoutes().clear();
+            editSearch.getText().clear();
             onStartFindDirection();
         } else {
             DialogUtils.showExitDialog(getActivity());

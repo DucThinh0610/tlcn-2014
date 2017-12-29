@@ -179,7 +179,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         if (listNewLocationAdded.size() == 0)
             return;
         for (Locations locations : listNewLocationAdded) {
-            getView().notifyNewLocation(locations);
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_NEW);
             getView().drawANewLocation(locations);
         }
         listNewLocationAdded.clear();
@@ -190,7 +190,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         if (listIncreaseLocation.size() == 0)
             return;
         for (Locations locations : listIncreaseLocation) {
-            getView().notifyIncreaseLocation(locations);
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_INCREASE);
             getView().updateLocation(locations);
         }
         listIncreaseLocation.clear();
@@ -201,7 +201,7 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         if (listReduceLocation.size() == 0)
             return;
         for (Locations locations : listReduceLocation) {
-            getView().notifyReduceLocation(locations);
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_REDUCE);
             getView().updateLocation(locations);
         }
         listReduceLocation.clear();
