@@ -49,4 +49,8 @@ public class MapUtils {
     }
 
     public static final LatLngBounds HCM = new LatLngBounds(new LatLng(10.748822, 106.594357), new LatLng(10.902364, 106.839401));
+
+    public static float getBearing(Location startingPoint, Location desPoint) {
+        return startingPoint.bearingTo(desPoint);
+    }
 }

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
@@ -16,10 +17,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
+import com.tlcn.mvpapplication.caches.image.ImageLoaderListener;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.utils.DateUtils;
+import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -30,6 +35,7 @@ public class NotifyDialog extends Dialog {
     private ImageView imvNew;
     private Button btnLeft, btnRight;
     private ProgressBar prBar;
+    private ConstraintLayout parentLayout;
 
     private NotifyDialogListener mCallback;
     private CountDownTimer mHandler;
@@ -38,11 +44,14 @@ public class NotifyDialog extends Dialog {
 
     private long timeCounter;
 
-    public NotifyDialog(@NonNull Context context, Locations locations, NotifyDialogListener listener, long timeCounter) {
+    private int type;
+
+    public NotifyDialog(@NonNull Context context, Locations locations, NotifyDialogListener listener, long timeCounter, int type) {
         super(context, R.style.dialog_fullscreen);
         this.mLocation = locations;
         mCallback = listener;
         this.timeCounter = timeCounter;
+        this.type = type;
     }
 
     @Override
@@ -66,6 +75,8 @@ public class NotifyDialog extends Dialog {
         btnLeft = (Button) findViewById(R.id.btn_left);
         btnRight = (Button) findViewById(R.id.btn_right);
         prBar = (ProgressBar) findViewById(R.id.pr_bar);
+        parentLayout = (ConstraintLayout) findViewById(R.id.parent_layout);
+
         initData();
         initListener();
     }
@@ -89,12 +100,34 @@ public class NotifyDialog extends Dialog {
 
     private void initData() {
         tvHeader.setText(mLocation.getTitle());
-        tvDistance.setText("Khoảng cách: ");
+        tvDistance.setText(DateUtils.getHourFromStringDate(mLocation.getLast_modify()));
         ratingBar.setRating((float) mLocation.getCurrent_level());
         ImageLoader.loadImageFirebaseStorage(imvNew, prBar, mLocation.getLatest_image_url());
-        btnRight.setText("Chi Tiết");
+        btnRight.setText(R.string.detail);
         btnRight.setTextColor(getContext().getResources().getColor(R.color.blue));
-        btnLeft.setText("Đóng (10)");
+        btnLeft.setText(getContext().getString(R.string.close_time, 10));
+        switch (KeyUtils.checkLevel(mLocation.getCurrent_level())) {
+            case 1:
+                parentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.custom_bg_corners_2dp_green));
+                break;
+            case 2:
+                parentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.custom_bg_corners_2dp_yellow));
+                break;
+            case 3:
+                parentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.custom_bg_corners_2dp_red));
+                break;
+        }
+        switch (type) {
+            case KeyUtils.TYPE_NEW:
+                imvHeader.setImageResource(R.drawable.ic_fiber_new_black_24dp);
+                break;
+            case KeyUtils.TYPE_REDUCE:
+                imvHeader.setImageResource(R.drawable.ic_trending_down_black_24dp);
+                break;
+            case KeyUtils.TYPE_INCREASE:
+                imvHeader.setImageResource(R.drawable.ic_trending_up_black_24dp);
+                break;
+        }
     }
 
     public interface NotifyDialogListener {
@@ -115,7 +148,7 @@ public class NotifyDialog extends Dialog {
 
             @Override
             public void onTick(long l) {
-                btnLeft.setText("Đóng (" + l / 1000 + ")");
+                btnLeft.setText(getContext().getString(R.string.close_time, l / 1000));
             }
 
             @Override

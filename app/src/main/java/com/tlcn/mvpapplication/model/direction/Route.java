@@ -149,12 +149,17 @@ public class Route implements Serializable {
                     List<LatLng> polyline = new ArrayList<>();
                     polyline.add(startLocation.getLatLng());
                     polyline.add(endLocation.getLatLng());
-                    float distanceToStart = MapUtils.distanceBetweenTwoPoint(currentLatLng, startLocation.getLatLng());
-                    float distanceToEnd = MapUtils.distanceBetweenTwoPoint(currentLatLng, endLocation.getLatLng());
                     if (PolyUtil.isLocationOnEdge(currentLatLng, getLocationNonePass(), true, 5.0D)) {
                         if (PolyUtil.isLocationOnEdge(currentLatLng, step.getLatLngNonePass(), true, 5.0D)) {
                             if (PolyUtil.isLocationOnEdge(currentLatLng, polyline, true, 5.0D)) {
                                 callback.drawPolyline(currentLatLng, startLocation.getLatLng());
+                                Location des = new Location("");
+                                des.setLongitude(endLocation.getLatLng().longitude);
+                                des.setLatitude(endLocation.getLatLng().latitude);
+                                Location start = new Location("");
+                                start.setLongitude(startLocation.getLatLng().longitude);
+                                start.setLatitude(startLocation.getLatLng().latitude);
+                                callback.changeBearing(MapUtils.getBearing(start, des));
                                 startLocation.setState(1);
                                 step.getCustomLatLng().add(0, new CustomLatLng(currentLatLng));
                                 Log.d("Route", "Be Long to polyline");
@@ -189,5 +194,7 @@ public class Route implements Serializable {
     public interface OnChangeLocationListener {
 
         void drawPolyline(LatLng latLngStart, LatLng latLngEnd);
+
+        void changeBearing(float bearing);
     }
 }

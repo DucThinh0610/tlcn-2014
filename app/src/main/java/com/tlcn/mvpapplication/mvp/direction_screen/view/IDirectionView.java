@@ -7,9 +7,9 @@ import com.tlcn.mvpapplication.model.Locations;
 public interface IDirectionView extends IView {
     void onFail(String s);
 
-    void notifyNewLocation(Locations locations);
-
     void drawANewLocation(Locations locations);
+
+    void setBearingMap(float bearing, LatLng latLng);
 
     void registerSensor();
 
@@ -18,4 +18,8 @@ public interface IDirectionView extends IView {
     void moveCameraToMyLocation();
 
     void drawAPolyline(LatLng latLngStart, LatLng latLngStart1);
+
+    void updateLocation(Locations locations);
+
+    void notifyLocationAdded(Locations locations, int type);
 }

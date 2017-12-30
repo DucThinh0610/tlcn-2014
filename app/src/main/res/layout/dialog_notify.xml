@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
+    android:id="@+id/parent_layout"
     android:background="@drawable/custom_bg_corners_2dp_green">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -33,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_name_location"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/rating_bar"
-        app:layout_constraintLeft_toRightOf="@+id/rating_bar"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rating_bar" />
 
     <android.support.v7.widget.AppCompatRatingBar
@@ -54,6 +55,8 @@
     <View
         android:id="@+id/view_margin"
         style="@style/view_margin"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_marginTop="4dp"
         android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/imv_notify" />
@@ -84,6 +87,8 @@
     <View
         android:id="@+id/view_margin2"
         style="@style/view_margin"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/imv_new" />
 

@@ -11,25 +11,26 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.direction_screen.view.IDirectionView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DirectionPresenter extends BasePresenter implements IDirectionPresenter, PolylineInfo.NewLocationListener, Route.OnChangeLocationListener {
     private static final String TAG = DirectionPresenter.class.getSimpleName();
-
+    private static float bearingMap;
     private Route mRoute;
+    private Location currentLocation;
     private ValueEventListener mListenerLocation;
     private DatabaseReference mReference;
     private List<Locations> allLocation;
-    private List<Locations> listNewLocationAdded;
+    private List<Locations> listNewLocationAdded, listReduceLocation, listIncreaseLocation;
     private addNewLocationTask asyncTask;
     private calculateLocation taskChangeLocation;
     private PolylineInfo polylineInfo;
@@ -40,7 +41,9 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
         super.onCreate();
         allLocation = new ArrayList<>();
         polylineInfo = new PolylineInfo();
+        listReduceLocation = new ArrayList<>();
         listNewLocationAdded = new ArrayList<>();
+        listIncreaseLocation = new ArrayList<>();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         initListener();
@@ -92,6 +95,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
             this.mRoute = (Route) routeFromObj;
             mRoute.createMarkPlace();
             mRoute.addOnChangeLocation(this);
+            bearingMap = MapUtils.getBearing(
+                    mRoute.getLeg().get(0).getStep().get(0).getCustomLatLng().get(0).getLocation(),
+                    mRoute.getLeg().get(0).getStep().get(0).getCustomLatLng().get(1).getLocation()
+            );
         } else
             getView().onFail("Lỗi không xác định! Thử lại sau.");
     }
@@ -110,19 +117,20 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     @Override
     public void onLevelLocationIsIncrease(Locations lct) {
         if (!isFirst) {
-            Log.d(TAG, new Gson().toJson(lct));
+            listIncreaseLocation.add(lct);
         }
     }
 
     @Override
     public void onLevelLocationIsReduction(Locations locations) {
         if (!isFirst) {
-            Log.d(TAG, new Gson().toJson(locations));
+            listReduceLocation.add(locations);
         }
     }
 
     public void onChangeLocation(Location location) {
         taskChangeLocation = new calculateLocation();
+        currentLocation = location;
         taskChangeLocation.execute(location);
     }
 
@@ -130,6 +138,15 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
     public void drawPolyline(LatLng latLngStart, LatLng latLngEnd) {
         if (isViewAttached())
             getView().drawAPolyline(latLngStart, latLngEnd);
+    }
+
+    @Override
+    public void changeBearing(float bearing) {
+        bearingMap = bearing;
+    }
+
+    public float getBearing() {
+        return bearingMap;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -148,8 +165,10 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (isViewAttached() && listNewLocationAdded.size() != 0 && !isFirst) {
+            if (isViewAttached() && !isFirst) {
                 notifyHaveANewLocation();
+                notifyIncreaseLocation();
+                notifyReduceLocation();
             }
             isFirst = false;
         }
@@ -157,11 +176,35 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     @Override
     public void notifyHaveANewLocation() {
+        if (listNewLocationAdded.size() == 0)
+            return;
         for (Locations locations : listNewLocationAdded) {
-            getView().notifyNewLocation(locations);
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_NEW);
             getView().drawANewLocation(locations);
         }
         listNewLocationAdded.clear();
+    }
+
+    @Override
+    public void notifyIncreaseLocation() {
+        if (listIncreaseLocation.size() == 0)
+            return;
+        for (Locations locations : listIncreaseLocation) {
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_INCREASE);
+            getView().updateLocation(locations);
+        }
+        listIncreaseLocation.clear();
+    }
+
+    @Override
+    public void notifyReduceLocation() {
+        if (listReduceLocation.size() == 0)
+            return;
+        for (Locations locations : listReduceLocation) {
+            getView().notifyLocationAdded(locations, KeyUtils.TYPE_REDUCE);
+            getView().updateLocation(locations);
+        }
+        listReduceLocation.clear();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -180,7 +223,8 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+            if (isViewAttached())
+                getView().setBearingMap(bearingMap, new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
         }
     }
 

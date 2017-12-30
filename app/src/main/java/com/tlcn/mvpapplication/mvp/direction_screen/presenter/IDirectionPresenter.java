@@ -6,4 +6,8 @@ public interface IDirectionPresenter {
     void setRouteFromObj(Object routeFromObj, LatLng latLng);
 
     void notifyHaveANewLocation();
+
+    void notifyIncreaseLocation();
+
+    void notifyReduceLocation();
 }

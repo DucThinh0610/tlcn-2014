@@ -1,5 +1,7 @@
 package com.tlcn.mvpapplication.model;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class CustomLatLng {
@@ -40,5 +42,12 @@ public class CustomLatLng {
 
     public LatLng getLatLng() {
         return new LatLng(latitude, longitude);
+    }
+
+    public Location getLocation() {
+        Location location = new Location("");
+        location.setLatitude(this.latitude);
+        location.setLongitude(this.longitude);
+        return location;
     }
 }

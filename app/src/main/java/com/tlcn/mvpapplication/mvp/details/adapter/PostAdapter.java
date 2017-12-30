@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
+import com.tlcn.mvpapplication.caches.image.ImageLoaderListener;
 import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.utils.DateUtils;
 
@@ -66,19 +67,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else
             holder.tvDes.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.getUrl_image())) {
-            StorageReference imageRef = storageRef.child("images/" + item.getUrl_image());
-            imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    ImageLoader.loadWithProgressBar(App.getContext(), uri.toString(), holder.imvImage, holder.prBar);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    holder.prBar.setVisibility(View.GONE);
-                    holder.imvImage.setImageResource(R.drawable.ic_error);
-                }
-            });
+            ImageLoader.loadImageFirebaseStorage(holder.imvImage, holder.prBar, item.getUrl_image());
 
         } else {
             holder.imvImage.setVisibility(View.GONE);

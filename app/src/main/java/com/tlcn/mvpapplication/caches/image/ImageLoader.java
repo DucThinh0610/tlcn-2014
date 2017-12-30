@@ -54,7 +54,6 @@ public class ImageLoader {
     }
 
     public static void loadWithProgressBar(Context context, String url, final ImageView imageView, final ProgressBar progressBar) {
-
         if (url == null || url.isEmpty()) {
             imageView.setImageResource(R.drawable.ic_error);
             return;

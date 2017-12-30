@@ -269,4 +269,10 @@ public class DateUtils {
         SimpleDateFormat sdfResult = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         return sdfResult.format(dateStart) + " - " + sdfResult.format(dateEnd);
     }
+
+    public static String getHourFromStringDate(String dateStr) {
+        Date date = parseStringToDate(dateStr);
+        String dateFormat = "HH:mm";
+        return formatDate(date, dateFormat);
+    }
 }
