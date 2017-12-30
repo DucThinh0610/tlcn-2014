@@ -102,14 +102,11 @@
     <string name="string_day_of_week">Theo thứ</string>
     <string name="hour_of_day">Theo giờ</string>
     <string name="ok">OK</string>
-<<<<<<< HEAD
     <string name="latest_image">Hình ảnh mới nhất</string>
     <string name="you_need_upload_with_image">Bạn cần đăng kèm hình ảnh!</string>
     <string name="haven_error_please_check">Đã có lỗi xảy ra, vui lòng kiểm tra lại!</string>
-=======
     <string name="detail">Chi Tiết</string>
     <string name="close_time">Đóng (%d)</string>
->>>>>>> 14f7b88eec0e0243c90f79a572166c8880dfe30e
 
 </resources>
 
