@@ -82,6 +82,7 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.4+'
     compile 'com.sothree.slidinguppanel:library:3.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.zxy.android:tiny:0.1.0'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,4 +1,4 @@
-package com.tlcn.mvpapplication.api.request.login;
+package com.tlcn.mvpapplication.api.request.user;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

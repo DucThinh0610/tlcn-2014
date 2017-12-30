@@ -102,6 +102,9 @@
     <string name="string_day_of_week">Theo thứ</string>
     <string name="hour_of_day">Theo giờ</string>
     <string name="ok">OK</string>
+    <string name="latest_image">Hình ảnh mới nhất</string>
+    <string name="you_need_upload_with_image">Bạn cần đăng kèm hình ảnh!</string>
+    <string name="haven_error_please_check">Đã có lỗi xảy ra, vui lòng kiểm tra lại!</string>
 
 </resources>
 

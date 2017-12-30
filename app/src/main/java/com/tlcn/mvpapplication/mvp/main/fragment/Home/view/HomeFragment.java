@@ -74,7 +74,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.api.request.login.LoginRequest;
+import com.tlcn.mvpapplication.api.request.user.LoginRequest;
+import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.custom_view.EditTextCustom;
 import com.tlcn.mvpapplication.dialog.ConfirmDialog;
@@ -413,6 +414,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 public void onClick(View view) {
                     btnLogin.setVisibility(View.VISIBLE);
                     lnlLoginSuccess.setVisibility(View.GONE);
+                    mPresenter.logout(new LogoutRequest(mFirebaseAuth.getCurrentUser().getUid()));
                     LoginManager.getInstance().logOut();
                     mFirebaseAuth.signOut();
                 }

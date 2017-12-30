@@ -8,16 +8,12 @@ import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.chart.ChartRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
-import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
-import com.tlcn.mvpapplication.api.request.login.LoginRequest;
+import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
+import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
-import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
-import com.tlcn.mvpapplication.api.response.home.GetInfoResponse;
 import com.tlcn.mvpapplication.app.AppManager;
-
-import okhttp3.MultipartBody;
 
 public class ApiManager {
     public void addContribution(ContributionRequest request, final ApiCallback<BaseResponse> callback) {
@@ -135,6 +131,20 @@ public class ApiManager {
 
     public void login(LoginRequest request, final ApiCallback<BaseResponse> callback) {
         AppManager.http_firebase_server().from(ApiServices.class).login(request).enqueue(new RestCallback<BaseResponse>() {
+            @Override
+            public void success(BaseResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void logout(LogoutRequest request, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_firebase_server().from(ApiServices.class).logout(request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);

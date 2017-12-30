@@ -69,6 +69,7 @@
                 android:textColor="@color/black" />
 
             <RatingBar
+                android:layout_marginLeft="10dp"
                 android:id="@+id/rtb_level"
                 android:progressBackgroundTint="@color/color_main"
                 android:progressTint="@color/color_main"

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import com.facebook.FacebookSdk;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 import com.tlcn.mvpapplication.caches.storage.NotificationStorage;
+import com.zxy.tiny.Tiny;
 
 public class App extends Application {
     private GoogleApiHelper googleApiHelper;
@@ -27,6 +28,7 @@ public class App extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         mContext = getApplicationContext();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Tiny.getInstance().init(this);
     }
 
     public static synchronized App getInstance() {

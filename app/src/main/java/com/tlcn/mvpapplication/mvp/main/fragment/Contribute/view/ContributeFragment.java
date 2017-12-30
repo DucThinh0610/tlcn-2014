@@ -132,7 +132,6 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
 
     private void initData(View v) {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
-
     }
 
     @Override
