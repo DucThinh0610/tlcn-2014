@@ -27,14 +27,15 @@ public class PolylineInfo implements Serializable {
     }
 
     private void calculated() {
+        List<Locations> temp = new ArrayList<>();
         for (Step step : route.getLeg().get(0).getStep()) {
-            List<Locations> temp = new ArrayList<>();
-            temp.addAll(locations);
-            for (int i = 0; i < temp.size(); i++) {
-                LatLng point = new LatLng(temp.get(i).getLat(), temp.get(i).getLng());
+            for (int i = 0; i < locations.size(); i++) {
+                LatLng point = new LatLng(locations.get(i).getLat(), locations.get(i).getLng());
                 if (PolyUtil.isLocationOnPath(point, step.getPoints(), true, KeyUtils.DEFAULT_DISTANCE_TO_POLYLINE)) {
-                    step.addLocation(temp.get(i));
-                    temp.remove(i);
+                    if (!temp.contains(locations.get(i))) {
+                        step.addLocation(locations.get(i));
+                        temp.add(locations.get(i));
+                    }
                 }
             }
         }
@@ -49,7 +50,7 @@ public class PolylineInfo implements Serializable {
             for (int l = 0; l < locations.size(); l++) {
                 LatLng point = new LatLng(locations.get(l).getLat(), locations.get(l).getLng());
                 if (PolyUtil.isLocationOnPath(point, step.getLatLngNonePass(), true, KeyUtils.DEFAULT_DISTANCE_TO_POLYLINE)) {
-                    switch (step.checkAddLocation(locations.get(l))){
+                    switch (step.checkAddLocation(locations.get(l))) {
                         case 0:
                             //nothing
                             break;
