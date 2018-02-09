@@ -3,11 +3,18 @@ package com.tlcn.mvpapplication.base;
 import com.tlcn.mvpapplication.api.ApiManager;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.caches.storage.LocalStorage;
+import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
+import com.tlcn.mvpapplication.interactor.event_bus.type.Empty;
+import com.tlcn.mvpapplication.interactor.socketIO.SocketManager;
+
+import org.greenrobot.eventbus.Subscribe;
 
 public abstract class BasePresenter {
     private ApiManager manager = new ApiManager();
     private IView mView;
     private LocalStorage mStorage;
+    private SocketManager socketManager;
+    private EventManager eventManager;
 
     public void attachView(IView view) {
         mView = view;
@@ -31,6 +38,8 @@ public abstract class BasePresenter {
 
     public void onCreate() {
         mStorage = new LocalStorage(App.getSharedPreferences());
+        socketManager = App.getSocketManager();
+        eventManager = App.getEventManager();
     }
 
 
@@ -44,5 +53,18 @@ public abstract class BasePresenter {
 
     public LocalStorage getStorage() {
         return mStorage;
+    }
+
+    public SocketManager getSocketManager() {
+        return socketManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    @Subscribe
+    public void onEvent(Empty empty) {
+
     }
 }

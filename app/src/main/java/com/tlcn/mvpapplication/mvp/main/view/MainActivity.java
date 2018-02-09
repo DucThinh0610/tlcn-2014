@@ -13,10 +13,12 @@ import android.widget.EditText;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.base.IView;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.view.ContributeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.FavouriteFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.HomeFragment;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.NewsFragment;
+import com.tlcn.mvpapplication.mvp.main.presenter.MainPresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 
 import java.util.ArrayList;
@@ -25,8 +27,19 @@ import java.util.List;
 import me.riddhimanadib.library.BottomBarHolderActivity;
 import me.riddhimanadib.library.NavigationPage;
 
-public class MainActivity extends BottomBarHolderActivity {
+public class MainActivity extends BottomBarHolderActivity implements IView {
     protected OnBackPressedListener onBackPressedListener;
+    private MainPresenter mainPresenter = new MainPresenter();
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
 
     public interface OnBackPressedListener {
         void doBack();
@@ -40,6 +53,8 @@ public class MainActivity extends BottomBarHolderActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setupBottomBarHolderActivity(getNavigationPage());
+        mainPresenter.attachView(this);
+        mainPresenter.onCreate();
     }
 
     private List<NavigationPage> getNavigationPage() {

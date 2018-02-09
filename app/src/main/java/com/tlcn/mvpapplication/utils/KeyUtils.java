@@ -32,6 +32,8 @@ public class KeyUtils {
     public static final String KEY_INTENT_DIRECTION = "KEY_INTENT_DIRECTION";
     public static final String KEY_INTENT_ID_LOCATION = "KEY_INTENT_ID_LOCATION";
 
+    //todo: key socket
+    public static final String KEY_SOCKET_LOCATIONS = "location";
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
 

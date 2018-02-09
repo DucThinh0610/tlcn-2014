@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import com.facebook.FacebookSdk;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 import com.tlcn.mvpapplication.caches.storage.NotificationStorage;
+import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
+import com.tlcn.mvpapplication.interactor.socketIO.SocketManager;
 import com.zxy.tiny.Tiny;
 
 public class App extends Application {
@@ -17,6 +19,8 @@ public class App extends Application {
     private NotificationStorage mNotificationStorage;
     private static Context mContext;
     private static SharedPreferences mSharedPreferences;
+    private static EventManager eventManager;
+    private static SocketManager socketManager;
 
     @Override
 
@@ -27,6 +31,8 @@ public class App extends Application {
         googleApiHelper = new GoogleApiHelper(mInstance);
         FacebookSdk.sdkInitialize(getApplicationContext());
         mContext = getApplicationContext();
+        eventManager = new EventManager();
+        socketManager = new SocketManager(eventManager);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Tiny.getInstance().init(this);
     }
@@ -74,4 +80,11 @@ public class App extends Application {
         return mSharedPreferences;
     }
 
+    public static EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public static SocketManager getSocketManager() {
+        return socketManager;
+    }
 }
