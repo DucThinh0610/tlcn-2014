@@ -76,8 +76,6 @@ public class DirectionPresenter extends BasePresenter implements IDirectionPrese
 
     @Override
     public void onDestroy() {
-        taskChangeLocation.cancel(true);
-        asyncTask.cancel(true);
         mReference.removeEventListener(mListenerLocation);
     }
 

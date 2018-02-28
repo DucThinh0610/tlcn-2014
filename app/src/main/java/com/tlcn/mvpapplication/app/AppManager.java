@@ -46,5 +46,5 @@ public class AppManager {
         return httpServerV1;
     }
 
-    public final static String URL_LOCAL = "http://192.168.0.111:2345/";
+    public final static String URL_LOCAL = "http://192.168.1.5:3000/";
 }

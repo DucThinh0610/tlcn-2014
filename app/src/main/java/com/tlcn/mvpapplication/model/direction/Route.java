@@ -83,7 +83,7 @@ public class Route implements Serializable {
                 count += step.getLocations().size();
             }
         }
-        return "Số điểm kẹt hiện tại: " + String.valueOf(count);
+        return "Số điểm kẹt: " + String.valueOf(count);
     }
 
     public String getStartLocation() {

@@ -24,13 +24,16 @@ android {
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
             buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
             buildConfigField("String","SERVER_API_V1",'"https://ketxe24h.info/api"')
+            buildConfigField("String","SOCKET_URL",'"https://ketxe24h.info/api"')
+
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
             buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
-            buildConfigField("String","SERVER_API_V1",'"https://api.ketxe24h.info"')
+            buildConfigField("String","SERVER_API_V1",'"https://ketxe24h.info/api"')
+            buildConfigField("String","SOCKET_URL",'"https://ketxe24h.info/api"')
         }
     }
     buildTypes {
@@ -86,5 +89,9 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.zxy.android:tiny:0.1.0'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.0'
+    compile('io.socket:socket.io-client:0.8.3') {
+        exclude group: 'org.json', module: 'json'
+    }
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

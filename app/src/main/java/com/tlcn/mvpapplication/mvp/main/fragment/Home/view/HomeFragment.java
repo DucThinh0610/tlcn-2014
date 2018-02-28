@@ -271,6 +271,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         if (mPresenter.getRoutes().size() != 0) {
             showDirection();
         }
+        else {
+
+        }
         mGoogleMap.setOnPolylineClickListener(this);
         mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMapLongClickListener(this);
@@ -494,7 +497,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
         currentMarker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(places.get(0).getLatLng())
                 .title(places.get(0).getName().toString()));
-        currentMarker.showInfoWindow();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(places.get(0).getLatLng(), mGoogleMap.getCameraPosition().zoom);
         mPresenter.setLngEnd(places.get(0).getLatLng());
         mGoogleMap.animateCamera(cameraUpdate);
