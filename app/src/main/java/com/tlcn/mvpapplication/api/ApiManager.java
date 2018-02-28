@@ -11,6 +11,7 @@ import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
 import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
+import com.tlcn.mvpapplication.api.response.LoginResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
 import com.tlcn.mvpapplication.app.AppManager;
@@ -129,10 +130,10 @@ public class ApiManager {
         });
     }
 
-    public void login(LoginRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_firebase_server().from(ApiServices.class).login(request).enqueue(new RestCallback<BaseResponse>() {
+    public void login(LoginRequest request, final ApiCallback<LoginResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).login(request).enqueue(new RestCallback<LoginResponse>() {
             @Override
-            public void success(BaseResponse res) {
+            public void success(LoginResponse res) {
                 callback.success(res);
             }
 

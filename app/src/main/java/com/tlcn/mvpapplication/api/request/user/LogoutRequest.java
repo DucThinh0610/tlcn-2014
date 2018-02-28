@@ -10,19 +10,15 @@ import java.io.Serializable;
  */
 
 public class LogoutRequest implements Serializable {
-    @SerializedName("user_id")
+    @SerializedName("token")
     @Expose
-    private String user_id;
+    private String token;
 
-    public String getUser_id() {
-        return user_id;
+    public String getToken() {
+        return token;
     }
 
-    public LogoutRequest(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

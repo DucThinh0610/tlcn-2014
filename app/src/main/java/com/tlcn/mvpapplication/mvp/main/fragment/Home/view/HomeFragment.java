@@ -72,6 +72,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.request.user.LoginRequest;
@@ -414,7 +415,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
                 public void onClick(View view) {
                     btnLogin.setVisibility(View.VISIBLE);
                     lnlLoginSuccess.setVisibility(View.GONE);
-                    mPresenter.logout(new LogoutRequest(mFirebaseAuth.getCurrentUser().getUid()));
+                    //TODO:
+                    mPresenter.logout(new LogoutRequest());
                     LoginManager.getInstance().logOut();
                     mFirebaseAuth.signOut();
                 }
@@ -452,6 +454,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
             case R.id.ll_start_direction:
             case R.id.btn_start:
                 Intent intent = new Intent(getContext(), DirectionActivity.class);
+                Log.e("Direction",new Gson().toJson(mPresenter.getRouteSelected()));
                 intent.putExtra(KeyUtils.KEY_INTENT_DIRECTION, new ObjectSerializable(mPresenter.getRouteSelected()));
                 startActivity(intent);
         }

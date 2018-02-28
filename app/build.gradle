@@ -23,12 +23,14 @@ android {
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
             buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
+            buildConfigField("String","SERVER_API_V1",'"https://ketxe24h.info/api"')
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
             buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
+            buildConfigField("String","SERVER_API_V1",'"https://api.ketxe24h.info"')
         }
     }
     buildTypes {

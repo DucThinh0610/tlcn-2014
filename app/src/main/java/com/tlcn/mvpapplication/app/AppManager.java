@@ -11,6 +11,7 @@ public class AppManager {
     private static HttpHelper httpApi = null;
     private static HttpHelper httpDirection = null;
     private static HttpHelper httpServer = null;
+    private static HttpHelper httpServerV1 = null;
 
     public static void load(Context context) {
         AppManager.context = context;
@@ -39,5 +40,11 @@ public class AppManager {
         if (httpServer == null) httpServer = new HttpHelper(BuildConfig.SERVER_FIREBASE_API);
         return httpServer;
     }
+
+    synchronized static public HttpHelper http_api_v1_server() {
+        if (httpServerV1 == null) httpServerV1 = new HttpHelper(BuildConfig.SERVER_API_V1);
+        return httpServerV1;
+    }
+
     public final static String URL_LOCAL = "http://192.168.0.111:2345/";
 }

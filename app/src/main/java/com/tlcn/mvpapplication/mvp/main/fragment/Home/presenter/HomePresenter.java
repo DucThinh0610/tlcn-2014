@@ -24,6 +24,7 @@ import com.tlcn.mvpapplication.api.network.RestError;
 import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.api.response.LoginResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
@@ -274,9 +275,10 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     @Override
     public void login(LoginRequest request) {
         getView().showLoading();
-        getManager().login(request, new ApiCallback<BaseResponse>() {
+        getManager().login(request, new ApiCallback<LoginResponse>() {
             @Override
-            public void success(BaseResponse res) {
+            public void success(LoginResponse res) {
+
                 getView().hideLoading();
             }
 

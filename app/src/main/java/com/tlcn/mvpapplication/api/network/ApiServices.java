@@ -4,10 +4,11 @@ import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.chart.ChartRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
 import com.tlcn.mvpapplication.api.request.home.GetInfoRequest;
-import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
+import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.api.response.LoginResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
@@ -68,14 +69,14 @@ public interface ApiServices {
     Call<BaseResponse> push_notification(@Path("user_id") String user_id, @Query("token") String token);
 
     @POST("user/login")
-    Call<BaseResponse> login(@Body LoginRequest request);
+    Call<LoginResponse> login(@Body LoginRequest request);
 
     @POST("user/logout")
     Call<BaseResponse> logout(@Body LogoutRequest request);
 
-    @GET("share/{location_id}")
+    @GET("locations/:location_id/share")
     Call<ShareResponse> shareLink(@Path("location_id") String location_id);
 
-    @POST("chart/{id_location}")
-    Call<ChartResponse> getChartInfo(@Path("id_location") String id_location, @Body ChartRequest chartRequest);
+    @POST("chart/{location_id}")
+    Call<ChartResponse> getChartInfo(@Path("location_id") String id_location, @Body ChartRequest chartRequest);
 }

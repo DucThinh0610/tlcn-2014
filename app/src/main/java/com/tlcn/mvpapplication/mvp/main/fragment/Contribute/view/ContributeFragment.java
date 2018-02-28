@@ -84,6 +84,14 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     GPSTracker gpsTracker;
     GoogleMap map;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mPresenter != null) {
+            mPresenter.setFileUpload(null);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
