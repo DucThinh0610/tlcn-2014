@@ -32,7 +32,6 @@ import com.tlcn.mvpapplication.model.ShareLink;
 import com.tlcn.mvpapplication.mvp.chart.ChartActivity;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
-import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.adapter.FavouriteAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter.FavouritePresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
@@ -158,13 +157,13 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
 
     private void initData() {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
-        if (App.getLocationStorage().getHouseLocation().latitude != 0) {
+        if (App.getLocationStorage().getHouseLocation() != null) {
             tvLocationHouse.setText(getString(R.string.have_set));
         }
-        if (App.getLocationStorage().getWorkLocation().latitude != 0) {
+        if (App.getLocationStorage().getWorkLocation() != null) {
             tvLocationWork.setText(getString(R.string.have_set));
         }
-        if (App.getLocationStorage().getOtherLocation().latitude != 0) {
+        if (App.getLocationStorage().getOtherLocation() != null) {
             lnlOther.setVisibility(View.VISIBLE);
             tvAdd.setVisibility(View.GONE);
             tvLocationOther.setText(getString(R.string.have_set));
@@ -244,21 +243,21 @@ public class FavouriteFragment extends Fragment implements IFavouriteView, View.
             case R.id.lnl_house:
                 Intent intent = new Intent(getContext(), ChooseLocationView.class);
                 intent.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.house));
-                if (App.getLocationStorage().getHouseLocation().latitude == 0) {
+                if (App.getLocationStorage().getHouseLocation() == null) {
                     startActivityForResult(intent, HOUSE_RESQUEST_CODE);
                 } else showDialog(intent, HOUSE_RESQUEST_CODE);
                 break;
             case R.id.lnl_work:
                 Intent intent2 = new Intent(getContext(), ChooseLocationView.class);
                 intent2.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.work));
-                if (App.getLocationStorage().getWorkLocation().latitude == 0) {
+                if (App.getLocationStorage().getWorkLocation() == null) {
                     startActivityForResult(intent2, WORK_RESQUEST_CODE);
                 } else showDialog(intent2, WORK_RESQUEST_CODE);
                 break;
             case R.id.lnl_other:
                 Intent intent3 = new Intent(getContext(), ChooseLocationView.class);
                 intent3.putExtra(KeyUtils.INTENT_KEY_TITLE, getString(R.string.other));
-                if (App.getLocationStorage().getOtherLocation().latitude == 0) {
+                if (App.getLocationStorage().getOtherLocation() == null) {
                     startActivityForResult(intent3, OTHER_RESQUEST_CODE);
                 } else showDialog(intent3, OTHER_RESQUEST_CODE);
                 break;

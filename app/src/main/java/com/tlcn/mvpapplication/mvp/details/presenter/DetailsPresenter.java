@@ -2,28 +2,24 @@ package com.tlcn.mvpapplication.mvp.details.presenter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
-import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
+import com.tlcn.mvpapplication.api.response.DetailLocationResponse;
+import com.tlcn.mvpapplication.api.response.DetailNewsResponse;
+import com.tlcn.mvpapplication.api.response.NewsResponse;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.Post;
-import com.tlcn.mvpapplication.model.Save;
 import com.tlcn.mvpapplication.mvp.details.view.IDetailsView;
-import com.tlcn.mvpapplication.utils.DateUtils;
-import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class DetailsPresenter extends BasePresenter implements IDetailsPresenter {
@@ -66,57 +62,31 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     @Override
     public void getSaveState() {
-        if (user != null) {
-            mReference.child(KeyUtils.SAVE).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
-                    for (DataSnapshot data : dataSnapshots) {
-                        Save item = data.getValue(Save.class);
-                        if (item.getLocation_id().equals(idLocation) && item.getUser_id().equals(user.getUid())) {
-                            getView().getSaveStateSuccess(true);
-                            return;
-                        }
-                    }
-                    getView().getSaveStateSuccess(false);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    getView().onFail(databaseError.getMessage());
-                }
-            });
+        if (locations != null) {
+            getView().getSaveStateSuccess(locations.isIs_save());
+        } else {
+            getView().getSaveStateSuccess(false);
         }
     }
 
     @Override
-    public void getListPostFromSV() {
+    public void getListPostFromSV(BaseListRequest request) {
         getView().showLoading();
-        mReference.child(KeyUtils.NEWS).child(idLocation).limitToLast(20).addValueEventListener(new ValueEventListener() {
+        String token = "";
+        if (App.getUserInfo().getInfo() != null && !App.getUserInfo().getInfo().getToken().isEmpty()) {
+            token = App.getUserInfo().getInfo().getToken();
+        }
+        getManager().getListNews(token, idLocation, new ApiCallback<NewsResponse>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
-                mListPost.clear();
-                for (DataSnapshot data : dataSnapshots) {
-                    Post item = data.getValue(Post.class);
-                    mListPost.add(item);
-                }
-                Collections.sort(mListPost, new Comparator<Post>() {
-                    @Override
-                    public int compare(Post o1, Post o2) {
-                        Date date1 = DateUtils.parseStringToDate(o1.getCreated_at());
-                        Date date2 = DateUtils.parseStringToDate(o2.getCreated_at());
-                        return date2.compareTo(date1);
-                    }
-                });
-                getView().getPostSuccess();
+            public void success(NewsResponse res) {
                 getView().hideLoading();
+                getView().getListNewsSuccess(res.getData(), res.getMetaData());
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void failure(RestError error) {
                 getView().hideLoading();
-                getView().onFail(databaseError.getMessage());
+                getView().onFail(error.message);
             }
         });
     }
@@ -124,13 +94,20 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
     @Override
     public void saveLocations() {
         getView().showLoading();
-        save = new SaveRequest(idLocation, user.getUid());
-        getManager().saveLocation(save, new ApiCallback<BaseResponse>() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().hideLoading();
+            getView().onFail(App.getContext().getString(R.string.please_login));
+            return;
+        }
+        save = new SaveRequest();
+        save.setToken(App.getUserInfo().getInfo().getToken());
+        save.setLocation_id(locations.getId());
+        getManager().saveLocation(save, new ApiCallback<DetailLocationResponse>() {
             @Override
-            public void success(BaseResponse res) {
+            public void success(DetailLocationResponse res) {
+                locations = res.getData();
                 getView().hideLoading();
                 getView().saveLocationSuccess();
-                save = new SaveRequest();
             }
 
             @Override
@@ -143,25 +120,72 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     @Override
     public void actionDislike(String idPost) {
-        getManager().action(new ActionRequest(user.getUid(), 2, idPost), new ApiCallback<BaseResponse>() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().onFail(App.getContext().getString(R.string.please_login));
+            return;
+        }
+        getView().showLoading();
+        ActionRequest actionRequest = new ActionRequest();
+        actionRequest.setToken(App.getUserInfo().getInfo().getToken());
+        actionRequest.setNews_id(idPost);
+        getManager().dislikeNews(actionRequest, new ApiCallback<DetailNewsResponse>() {
             @Override
-            public void success(BaseResponse res) {
-                getView().onActionSuccess();
+            public void success(DetailNewsResponse res) {
+                getView().onActionSuccess(res.getData());
+                getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
                 getView().onFail(error.message);
+                getView().hideLoading();
             }
         });
     }
 
     @Override
     public void actionLike(String idPost) {
-        getManager().action(new ActionRequest(user.getUid(), 1, idPost), new ApiCallback<BaseResponse>() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().onFail(App.getContext().getString(R.string.please_login));
+            return;
+        }
+        getView().showLoading();
+        ActionRequest actionRequest = new ActionRequest();
+        actionRequest.setToken(App.getUserInfo().getInfo().getToken());
+        actionRequest.setNews_id(idPost);
+        getManager().likeNews(actionRequest, new ApiCallback<DetailNewsResponse>() {
             @Override
-            public void success(BaseResponse res) {
-                getView().onActionSuccess();
+            public void success(DetailNewsResponse res) {
+                getView().onActionSuccess(res.getData());
+                getView().hideLoading();
+            }
+
+            @Override
+            public void failure(RestError error) {
+                getView().onFail(error.message);
+                getView().hideLoading();
+            }
+        });
+    }
+
+    @Override
+    public void getInfoLocation() {
+        getView().showLoading();
+        String token = "";
+        if (App.getUserInfo().getInfo() != null && !App.getUserInfo().getInfo().getToken().isEmpty()) {
+            token = App.getUserInfo().getInfo().getToken();
+        }
+        getManager().getDetailLocation(token, idLocation, new ApiCallback<DetailLocationResponse>() {
+            @Override
+            public void success(DetailLocationResponse res) {
+                getView().hideLoading();
+                locations = res.getData();
+                BaseListRequest request = new BaseListRequest();
+                request.setPage(1);
+                request.setLimit(15);
+                getListPostFromSV(request);
+                getView().getPostSuccess();
+                getView().getSaveStateSuccess(locations.isIs_save());
             }
 
             @Override
@@ -169,25 +193,21 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
                 getView().onFail(error.message);
             }
         });
-    }
-
-    @Override
-    public void getInfoLocation() {
-        mReference.child(KeyUtils.LOCATIONS).child(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null) {
-                    locations = dataSnapshot.getValue(Locations.class);
-                    getListPostFromSV();
-                } else {
-                    getView().onFail("Error!!!");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getView().onFail(databaseError.getMessage());
-            }
-        });
+//        mReference.child(KeyUtils.LOCATIONS).child(idLocation).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot != null) {
+//                    locations = dataSnapshot.getValue(Locations.class);
+//
+//                } else {
+//                    getView().onFail("Error!!!");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                getView().onFail(databaseError.getMessage());
+//            }
+//        });
     }
 }

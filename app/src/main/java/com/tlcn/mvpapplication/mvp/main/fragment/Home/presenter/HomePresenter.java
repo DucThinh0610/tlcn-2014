@@ -10,8 +10,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -21,9 +19,10 @@ import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.LocationByDistanceRequest;
 import com.tlcn.mvpapplication.api.request.user.LoginRequest;
-import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
+import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.LoginResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
@@ -34,9 +33,6 @@ import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
-import com.tlcn.mvpapplication.utils.MapUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,52 +177,54 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
     @Override
     public void getDetailLocation(final LatLng latLng) {
-        mListenerInfo = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-                for (DataSnapshot data : listData) {
-                    Locations item = data.getValue(Locations.class);
-                    LatLng start = new LatLng(item.getLat(), item.getLng());
-                    if (item.isStatus()) {
-                        if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
-                            getView().getDetailLocationSuccess(item);
-                            getView().hideLoading();
-                            return;
-                        }
-                    }
-                }
+        for (Locations item : listPlace) {
+            if (item.getLat() == latLng.latitude && item.getLng() == latLng.longitude) {
+                getView().getDetailLocationSuccess(item);
                 getView().hideLoading();
-                getView().onFail(App.getContext().getString(R.string.there_is_not_current_infomation));
+                return;
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getView().hideLoading();
-                getView().onFail(databaseError.getMessage());
-            }
-        };
-        mReference.addValueEventListener(mListenerInfo);
+        }
+        getView().hideLoading();
+        getView().onFail(App.getContext().getString(R.string.there_is_not_current_infomation));
+//        mListenerInfo = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
+//                for (DataSnapshot data : listData) {
+//                    Locations item = data.getValue(Locations.class);
+//                    LatLng start = new LatLng(item.getLat(), item.getLng());
+//                    if (item.isStatus()) {
+//                        if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
+//                            getView().getDetailLocationSuccess(item);
+//                            getView().hideLoading();
+//                            return;
+//                        }
+//                    }
+//                }
+//                getView().hideLoading();
+//                getView().onFail(App.getContext().getString(R.string.there_is_not_current_infomation));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                getView().hideLoading();
+//                getView().onFail(databaseError.getMessage());
+//            }
+//        };
+//        mReference.addValueEventListener(mListenerInfo);
     }
 
     @Override
     public void getInfoPlace(final LatLng latLng) {
-        mListenerDetail = new ValueEventListener() {
+        listPlace.clear();
+        LocationByDistanceRequest request = new LocationByDistanceRequest();
+        request.setLatitude(latLng.latitude);
+        request.setLongitude(latLng.longitude);
+        request.setDistance(boundRadiusLoad);
+        getManager().getLocationsByDistance(request, new ApiCallback<LocationsResponse>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
-                listPlace.clear();
-                allLocation.clear();
-                for (DataSnapshot data : dataSnapshots) {
-                    Locations item = data.getValue(Locations.class);
-                    LatLng start = new LatLng(item.getLat(), item.getLng());
-                    allLocation.add(item);
-                    if (item.isStatus()) {
-                        if (MapUtils.distanceBetweenTwoPoint(start, latLng) <= boundRadiusLoad) {
-                            listPlace.add(item);
-                        }
-                    }
-                }
+            public void success(LocationsResponse res) {
+                listPlace.addAll(res.getData());
                 if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
                     getView().showDialogConfirmNewRadius();
                 } else {
@@ -235,12 +233,40 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getView().hideLoading();
-                getView().onFail(databaseError.getMessage());
+            public void failure(RestError error) {
+                getView().onFail(error.message);
             }
-        };
-        mReference.addValueEventListener(mListenerDetail);
+        });
+//        mListenerDetail = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+//                listPlace.clear();
+//                allLocation.clear();
+//                for (DataSnapshot data : dataSnapshots) {
+//                    Locations item = data.getValue(Locations.class);
+//                    LatLng start = new LatLng(item.getLat(), item.getLng());
+//                    allLocation.add(item);
+//                    if (item.isStatus()) {
+//                        if (MapUtils.distanceBetweenTwoPoint(start, latLng) <= boundRadiusLoad) {
+//                            listPlace.add(item);
+//                        }
+//                    }
+//                }
+//                if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
+//                    getView().showDialogConfirmNewRadius();
+//                } else {
+//                    getView().showPlaces();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                getView().hideLoading();
+//                getView().onFail(databaseError.getMessage());
+//            }
+//        };
+//        mReference.addValueEventListener(mListenerDetail);
 
     }
 
@@ -255,30 +281,12 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     }
 
     @Override
-    public void pushNotificationToken(String UID, String token) {
-        getView().showLoading();
-        getManager().pushNotificationToken(UID, token, new ApiCallback<BaseResponse>() {
-            @Override
-            public void success(BaseResponse res) {
-                getView().hideLoading();
-                LogUtils.LOGE("MESSAGE", res.getMessage());
-            }
-
-            @Override
-            public void failure(RestError error) {
-                getView().hideLoading();
-                getView().onFail(error.message);
-            }
-        });
-    }
-
-    @Override
     public void login(LoginRequest request) {
         getView().showLoading();
         getManager().login(request, new ApiCallback<LoginResponse>() {
             @Override
             public void success(LoginResponse res) {
-
+                App.getUserInfo().saveInfo(res.getData());
                 getView().hideLoading();
             }
 
@@ -291,11 +299,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
     }
 
     @Override
-    public void logout(LogoutRequest request) {
+    public void logout() {
         getView().showLoading();
-        getManager().logout(request, new ApiCallback<BaseResponse>() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().onFail(App.getContext().getString(R.string.please_login));
+            return;
+        }
+        getManager().logout(App.getUserInfo().getInfo().getToken(), new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                App.getUserInfo().deleteInfo();
                 getView().hideLoading();
             }
 

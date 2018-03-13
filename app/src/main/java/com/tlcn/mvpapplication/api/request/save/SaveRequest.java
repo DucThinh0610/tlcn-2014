@@ -10,21 +10,23 @@ import java.io.Serializable;
  */
 
 public class SaveRequest implements Serializable {
+    @SerializedName("token")
+    @Expose
+    private String token;
     @SerializedName("location_id")
     @Expose
-    String location_id;
+    private String location_id;
 
-    @SerializedName("user_id")
-    @Expose
-    String user_id;
-
-    public SaveRequest(){
+    public SaveRequest() {
 
     }
 
-    public SaveRequest(String location_id, String user_id) {
-        this.location_id = location_id;
-        this.user_id = user_id;
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getLocation_id() {
@@ -33,13 +35,5 @@ public class SaveRequest implements Serializable {
 
     public void setLocation_id(String location_id) {
         this.location_id = location_id;
-    }
-
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
     }
 }

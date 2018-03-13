@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.mvp.main.fragment.News.view;
 
 import com.tlcn.mvpapplication.base.IView;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.MetaData;
 import com.tlcn.mvpapplication.model.ShareLink;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 
 public interface INewsView extends IView {
-    void getListNewsSuccess(List<Locations> result);
+    void getListNewsSuccess(List<Locations> result, MetaData metaData);
 
     void getShareLinkSuccess(ShareLink result);
 

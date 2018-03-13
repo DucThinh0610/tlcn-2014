@@ -66,6 +66,7 @@ public class DateUtils {
             return null;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             return sdf.parse(date);
         } catch (ParseException e) {
@@ -81,6 +82,7 @@ public class DateUtils {
             return null;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             Date date = sdf.parse(sDate);
             SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm:ss, dd-MM-yyyy", Locale.US);

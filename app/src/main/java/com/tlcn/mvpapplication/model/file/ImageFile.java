@@ -13,9 +13,9 @@ public class ImageFile implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("url")
+    @SerializedName("path")
     @Expose
-    private String url;
+    private String path;
 
     public String getName() {
         return name;
@@ -25,11 +25,11 @@ public class ImageFile implements Serializable {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPath() {
+        return path;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

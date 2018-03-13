@@ -22,6 +22,7 @@ public class ChartPresenter extends BasePresenter implements ChartContact.IPrese
     private Date dateStart;
     private Date dateEnd;
     private String idLocation;
+
     List<IChartDto> getChartDtoList() {
         return iChartDtoList;
     }

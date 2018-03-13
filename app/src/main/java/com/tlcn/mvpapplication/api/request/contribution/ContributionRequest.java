@@ -10,9 +10,12 @@ import java.io.Serializable;
  */
 
 public class ContributionRequest implements Serializable {
+    @SerializedName("token")
+    @Expose
+    private String token;
+
     @SerializedName("user_id")
     @Expose
-
     private String user_id;
 
     @SerializedName("device_id")
@@ -42,6 +45,14 @@ public class ContributionRequest implements Serializable {
     @SerializedName("file")
     @Expose
     private String file;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getUser_id() {
         return user_id;

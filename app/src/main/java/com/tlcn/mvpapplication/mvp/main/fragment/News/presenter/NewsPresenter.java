@@ -1,26 +1,22 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.News.presenter;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
-import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class NewsPresenter extends BasePresenter implements INewsPresenter {
@@ -50,35 +46,19 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
     }
 
     @Override
-    public void getListNews() {
+    public void getListNews(BaseListRequest request) {
         getView().showLoading();
-        mReference.addValueEventListener(new ValueEventListener() {
+        getManager().getAllLocations(request, new ApiCallback<LocationsResponse>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-                for (DataSnapshot data : listData) {
-                    Locations item = data.getValue(Locations.class);
-                    if (item.isStatus()) {
-                        list.add(item);
-                    }
-                }
-                Collections.sort(list, new Comparator<Locations>() {
-                    @Override
-                    public int compare(Locations news, Locations t1) {
-                        Date date1 = DateUtils.parseStringToDate(news.getLast_modify());
-                        Date date2 = DateUtils.parseStringToDate(t1.getLast_modify());
-                        return date2.compareTo(date1);
-                    }
-                });
+            public void success(LocationsResponse res) {
                 getView().hideLoading();
-                getView().getListNewsSuccess(list);
+                getView().getListNewsSuccess(res.getData(),res.getMetaData());
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void failure(RestError error) {
                 getView().hideLoading();
-                getView().onFail(databaseError.getMessage());
+                getView().onFail(error.message);
             }
         });
     }
@@ -104,15 +84,22 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
     @Override
     public void onChangeStopped(String id) {
         getView().showLoading();
-        ActionRequest request = new ActionRequest(id, DateUtils.getCurrentDate());
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().hideLoading();
+            getView().onFail(App.getContext().getString(R.string.please_login));
+            return;
         }
+        ActionRequest request = new ActionRequest();
+        request.setToken(App.getUserInfo().getInfo().getToken());
+        request.setIdLocation(id);
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        }
+
         getManager().actionStop(request, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 getView().hideLoading();
-                getView().notifyChangeStopped();
             }
 
             @Override

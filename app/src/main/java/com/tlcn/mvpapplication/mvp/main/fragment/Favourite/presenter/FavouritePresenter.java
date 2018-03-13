@@ -1,41 +1,26 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.Favourite.presenter;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
-import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
-import com.tlcn.mvpapplication.api.request.action.ActionRequest;
+import com.tlcn.mvpapplication.api.request.FavouriteLocationsRequest;
+import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.Favourite.view.IFavouriteView;
-import com.tlcn.mvpapplication.utils.DateUtils;
-import com.tlcn.mvpapplication.utils.KeyUtils;
-import com.tlcn.mvpapplication.utils.LogUtils;
-import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by tskil on 9/12/2017.
  */
 
 public class FavouritePresenter extends BasePresenter implements IFavouritePresenter {
-    private List<Locations> list;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mReference;
+    //    private FirebaseDatabase mDatabase;
+//    private DatabaseReference mReference;
     private LocationStorage mLocationStorage;
 
     public void attachView(IFavouriteView view) {
@@ -50,50 +35,61 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
     public void onCreate() {
         super.onCreate();
         mLocationStorage = App.getLocationStorage();
-        mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
-        list = new ArrayList<>();
-    }
-
-    public List<Locations> getListNewsResult() {
-        return list;
+//        mDatabase = FirebaseDatabase.getInstance();
+//        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
     }
 
     @Override
     public void getListNews() {
         getView().showLoading();
-        final int distanceToLoad = mLocationStorage.getDistanceFavourite() * 20;
-        mReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-                for (DataSnapshot data : listData) {
-                    Locations item = data.getValue(Locations.class);
-                    LatLng start = new LatLng(item.getLat(), item.getLng());
-                    if (Utilities.calculationByDistance(start, mLocationStorage.getHouseLocation()) <= distanceToLoad
-                            || Utilities.calculationByDistance(start, mLocationStorage.getWorkLocation()) <= distanceToLoad
-                            || Utilities.calculationByDistance(start, mLocationStorage.getOtherLocation()) <= distanceToLoad)
-                        list.add(item);
+        double distanceToLoad = mLocationStorage.getDistanceFavourite() * 20;
+        if (distanceToLoad <= 0) {
+            distanceToLoad = 1;
+        }
+        FavouriteLocationsRequest request = new FavouriteLocationsRequest();
+        request.setDistance(distanceToLoad);
+        if (mLocationStorage.getHouseLocation() != null && mLocationStorage.getOtherLocation() != null && mLocationStorage.getWorkLocation() != null) {
+            request.setLatLng1(mLocationStorage.getHouseLocation());
+            request.setLatLng2(mLocationStorage.getWorkLocation());
+            request.setLatLng3(mLocationStorage.getOtherLocation());
+        } else {
+            if (mLocationStorage.getHouseLocation() != null && mLocationStorage.getWorkLocation() != null) {
+                request.setLatLng1(mLocationStorage.getHouseLocation());
+                request.setLatLng2(mLocationStorage.getWorkLocation());
+            } else if (mLocationStorage.getHouseLocation() != null && mLocationStorage.getOtherLocation() != null) {
+                request.setLatLng1(mLocationStorage.getHouseLocation());
+                request.setLatLng2(mLocationStorage.getOtherLocation());
+            } else if (mLocationStorage.getWorkLocation() != null && mLocationStorage.getOtherLocation() != null) {
+                request.setLatLng1(mLocationStorage.getWorkLocation());
+                request.setLatLng2(mLocationStorage.getOtherLocation());
+            } else if (mLocationStorage.getHouseLocation() != null) {
+                request.setLatLng1(mLocationStorage.getHouseLocation());
+            } else if (mLocationStorage.getWorkLocation() != null) {
+                request.setLatLng1(mLocationStorage.getWorkLocation());
+            } else if (mLocationStorage.getOtherLocation() != null) {
+                request.setLatLng1(mLocationStorage.getOtherLocation());
+            } else {
+                request = null;
+            }
+        }
+        if (request != null) {
+            getManager().getFavouriteLocations(request, new ApiCallback<LocationsResponse>() {
+                @Override
+                public void success(LocationsResponse res) {
+                    getView().getListLocationSuccess(res.getData());
+                    getView().hideLoading();
                 }
-                Collections.sort(list, new Comparator<Locations>() {
-                    @Override
-                    public int compare(Locations locations, Locations t1) {
-                        Date date1 = DateUtils.parseStringToDate(locations.getLast_modify());
-                        Date date2 = DateUtils.parseStringToDate(t1.getLast_modify());
-                        return date2.compareTo(date1);
-                    }
-                });
-                getView().hideLoading();
-                getView().getListLocationSuccess(list);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getView().hideLoading();
-                getView().onFail(databaseError.getMessage());
-            }
-        });
+                @Override
+                public void failure(RestError error) {
+                    getView().onFail(error.message);
+                    getView().hideLoading();
+                }
+            });
+        } else {
+            getView().getListLocationSuccess(new ArrayList<Locations>());
+            getView().hideLoading();
+        }
     }
 
     @Override

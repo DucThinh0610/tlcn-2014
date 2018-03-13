@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.model.Locations;
 
 /**
@@ -7,7 +8,7 @@ import com.tlcn.mvpapplication.model.Locations;
  */
 
 public interface ISavedListNewsPresenter {
-    void getSavedListLocation();
+    void getSavedListLocation(BaseListRequest request);
 
     void unSavedLocation(Locations locationID);
 

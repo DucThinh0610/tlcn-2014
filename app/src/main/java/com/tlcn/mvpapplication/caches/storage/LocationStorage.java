@@ -56,6 +56,9 @@ public class LocationStorage implements ILocationStorage {
     public LatLng getHouseLocation() {
         double lat = Double.parseDouble(pref.getString(LAT_HOUSE, "0"));
         double log = Double.parseDouble(pref.getString(LOG_HOUSE, "0"));
+        if (lat == 0 || log == 0) {
+            return null;
+        }
         return new LatLng(lat, log);
     }
 
@@ -77,6 +80,9 @@ public class LocationStorage implements ILocationStorage {
     public LatLng getWorkLocation() {
         double lat = Double.parseDouble(pref.getString(LAT_WORK, "0"));
         double log = Double.parseDouble(pref.getString(LOG_WORK, "0"));
+        if (lat == 0 || log == 0) {
+            return null;
+        }
         return new LatLng(lat, log);
     }
 
@@ -98,6 +104,9 @@ public class LocationStorage implements ILocationStorage {
     public LatLng getOtherLocation() {
         double lat = Double.parseDouble(pref.getString(LAT_OTHER, "0"));
         double log = Double.parseDouble(pref.getString(LOG_OTHER, "0"));
+        if (lat == 0 || log == 0) {
+            return null;
+        }
         return new LatLng(lat, log);
     }
 

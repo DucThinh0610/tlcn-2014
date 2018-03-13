@@ -22,8 +22,10 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.MetaData;
 import com.tlcn.mvpapplication.model.ShareLink;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
@@ -32,6 +34,7 @@ import com.tlcn.mvpapplication.mvp.savedlistnews.view.SavedListNewsView;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -60,6 +63,15 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     CallbackManager callbackManager;
     ShareDialog shareDialog;
 
+    BaseListRequest request;
+
+    List<Locations> mList;
+    MetaData mMetaData;
+    int visibleItemCount;
+    int totalItemCount;
+    int pastVisiblesItems;
+    boolean isLoading = false;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -73,11 +85,10 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
 
         View v = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, v);
-        initData(v);
-        initListener(v);
         mPresenter.attachView(this);
         mPresenter.onCreate();
-        mPresenter.getListNews();
+        initData(v);
+        initListener(v);
         return v;
     }
 
@@ -85,21 +96,67 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
         //các sự kiện click view được khai báo ở đây
         swpLayout.setOnRefreshListener(this);
         tvSavedListNews.setOnClickListener(this);
+
+        rcvNews.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                try {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) rcvNews.getLayoutManager();
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if (!isLoading && mMetaData.isHas_more_page()) {
+                            isLoading = true;
+                            //bottom of recyclerview
+                            request.setPage(mMetaData.getCurrent_page() + 1);
+                            mPresenter.getListNews(request);
+                        }
+                    }
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
     }
 
     private void initData(View v) {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
+        request = new BaseListRequest();
+        mList = new ArrayList<>();
+        isLoading = true;
+        mPresenter.getListNews(request);
     }
 
     @Override
-    public void getListNewsSuccess(List<Locations> result) {
+    public void getListNewsSuccess(List<Locations> result, MetaData metaData) {
         if (result != null) {
-            newsAdapter = new LocationAdapter(result, getContext(), this);
-            rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
-            rcvNews.setAdapter(newsAdapter);
+            isLoading = false;
+            swpLayout.setRefreshing(false);
+            if (mList.size() == 0) {
+                mList.addAll(result);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                newsAdapter = new LocationAdapter(mList,getContext(), this);
+                rcvNews.setLayoutManager(layoutManager);
+                rcvNews.setAdapter(newsAdapter);
+            } else {
+                if (!mList.containsAll(result)) {
+                    mList.addAll(result);
+                    newsAdapter.notifyDataSetChanged();
+                }
+            }
         }
-        swpLayout.setRefreshing(false);
+        if (metaData != null) {
+            mMetaData = metaData;
+        }
     }
 
     @Override
@@ -163,7 +220,10 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        mPresenter.getListNews();
+        request.setPage(1);
+        isLoading = false;
+        mList = new ArrayList<>();
+        mPresenter.getListNews(request);
     }
 
     @Override

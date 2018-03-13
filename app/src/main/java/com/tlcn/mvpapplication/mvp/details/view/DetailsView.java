@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.mvp.details.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,21 +19,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
+import com.tlcn.mvpapplication.model.MetaData;
+import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.mvp.details.adapter.PostAdapter;
 import com.tlcn.mvpapplication.mvp.details.presenter.DetailsPresenter;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DetailsView extends AppCompatActivity implements IDetailsView,
         View.OnClickListener,
-        OnMapReadyCallback, PostAdapter.OnItemClick {
+        OnMapReadyCallback, PostAdapter.OnItemClick, SwipeRefreshLayout.OnRefreshListener {
     //Todo: Binding
     @Bind(R.id.tv_title_header)
     TextView tvTitleHeader;
@@ -48,6 +54,8 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     ImageView imvBack;
     @Bind(R.id.imv_save)
     ImageView imvSave;
+    @Bind(R.id.swp_layout)
+    SwipeRefreshLayout swpLayout;
 
     //Todo: Declaring
     DialogProgress mProgressDialog;
@@ -56,6 +64,14 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     GoogleMap mGoogleMap;
     PostAdapter mPostAdapter;
     CallbackManager mCallbackManager;
+
+    BaseListRequest request;
+    List<Post> mList;
+    MetaData mMetaData;
+    int visibleItemCount;
+    int totalItemCount;
+    int pastVisiblesItems;
+    boolean isLoading = false;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -81,19 +97,55 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
         //các sự kiện click view được khai báo ở đây
         imvBack.setOnClickListener(this);
         imvSave.setOnClickListener(this);
+        swpLayout.setOnRefreshListener(this);
+
+        rcvImages.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                try {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) rcvImages.getLayoutManager();
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if (!isLoading && mMetaData.isHas_more_page()) {
+                            isLoading = true;
+                            //bottom of recyclerview
+                            request.setPage(mMetaData.getCurrent_page() + 1);
+                            mPresenter.getListPostFromSV(request);
+                        }
+                    }
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+
     }
 
     private void initData() {
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         if (getIntent().getExtras() != null) {
             mPresenter.setIdLocation(getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION));
+
+            swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
+            isLoading = true;
+            mList = new ArrayList<>();
+            request = new BaseListRequest();
+            request.setLimit(15);
+
             mPresenter.getInfoLocation();
             mPresenter.getSaveState();
+        } else {
+            finish();
         }
-        mPostAdapter = new PostAdapter(mPresenter.getListPost(), DetailsView.this, this);
-        rcvImages.setLayoutManager(new LinearLayoutManager(this));
-        rcvImages.setNestedScrollingEnabled(false);
-        rcvImages.setAdapter(mPostAdapter);
     }
 
     @Override
@@ -125,12 +177,8 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                 finish();
                 break;
             case R.id.imv_save:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    mPresenter.saveLocations();
-                    mPresenter.getSaveState();
-                } else {
-                    Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-                }
+                mPresenter.saveLocations();
+                mPresenter.getSaveState();
                 break;
         }
     }
@@ -156,7 +204,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void getPostSuccess() {
-        mPostAdapter.notifyDataSetChanged();
+//        mPostAdapter.notifyDataSetChanged();
         tvTitle.setText(mPresenter.getLocations().getTitle());
         tvCreatedAt.setText(DateUtils.formatDateToString(mPresenter.getLocations().getLast_modify()));
         if (mGoogleMap != null) {
@@ -170,8 +218,34 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     }
 
     @Override
-    public void onActionSuccess() {
-        mPostAdapter.notifyDataSetChanged();
+    public void getListNewsSuccess(List<Post> result, MetaData metaData) {
+        if (result != null) {
+            isLoading = false;
+            swpLayout.setRefreshing(false);
+            if (mList.size() == 0) {
+                mList.addAll(result);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+                mPostAdapter = new PostAdapter(mList,this, this);
+                rcvImages.setLayoutManager(layoutManager);
+                rcvImages.setAdapter(mPostAdapter);
+            } else {
+                if (!mList.containsAll(result)) {
+                    mList.addAll(result);
+                    mPostAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+        if (metaData != null) {
+            mMetaData = metaData;
+        }
+    }
+
+    @Override
+    public void onActionSuccess(Post result) {
+        if (mList.contains(result)){
+            mList.set(mList.indexOf(result),result);
+            mPostAdapter.notifyItemChanged(mList.indexOf(result));
+        }
     }
 
     @Override
@@ -182,19 +256,19 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void onClickDislike(String id) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPresenter.actionDislike(id);
-        } else {
-            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-        }
+        mPresenter.actionDislike(id);
     }
 
     @Override
     public void onClickLike(String id) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPresenter.actionLike(id);
-        } else {
-            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-        }
+        mPresenter.actionLike(id);
+    }
+
+    @Override
+    public void onRefresh() {
+        request.setPage(1);
+        isLoading = false;
+        mList = new ArrayList<>();
+        mPresenter.getListPostFromSV(request);
     }
 }

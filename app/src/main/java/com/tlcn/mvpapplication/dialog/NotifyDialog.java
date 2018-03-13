@@ -17,11 +17,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
-import com.tlcn.mvpapplication.caches.image.ImageLoaderListener;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -102,7 +100,7 @@ public class NotifyDialog extends Dialog {
         tvHeader.setText(mLocation.getTitle());
         tvDistance.setText(DateUtils.getHourFromStringDate(mLocation.getLast_modify()));
         ratingBar.setRating((float) mLocation.getCurrent_level());
-        ImageLoader.loadImageFirebaseStorage(imvNew, prBar, mLocation.getLatest_image_url());
+        ImageLoader.loadImageFirebaseStorage(imvNew, prBar, mLocation.getLatest_image());
         btnRight.setText(R.string.detail);
         btnRight.setTextColor(getContext().getResources().getColor(R.color.blue));
         btnLeft.setText(getContext().getString(R.string.close_time, 10));

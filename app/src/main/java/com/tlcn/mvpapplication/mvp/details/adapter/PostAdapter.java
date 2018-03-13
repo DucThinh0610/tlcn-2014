@@ -1,8 +1,6 @@
 package com.tlcn.mvpapplication.mvp.details.adapter;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,14 +12,11 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
-import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
-import com.tlcn.mvpapplication.caches.image.ImageLoaderListener;
 import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.utils.DateUtils;
 
@@ -56,10 +51,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tvCountDislike.setText(String.valueOf(item.getCount_dislike()));
         holder.tvCountLike.setText(String.valueOf(item.getCount_like()));
         holder.rtbLevel.setRating((float) item.getLevel());
-        if (TextUtils.isEmpty(item.getUser_id())) {
+        if (item.getUser_id() == null) {
             holder.tvUserName.setText(R.string.anonymous);
         } else {
-            holder.tvUserName.setText(item.getUser_name());
+            holder.tvUserName.setText(item.getUser_id().getFull_name());
         }
         if (!TextUtils.isEmpty(item.getDescription())) {
             holder.tvDes.setText(item.getDescription());
@@ -67,11 +62,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else
             holder.tvDes.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.getUrl_image())) {
-            ImageLoader.loadImageFirebaseStorage(holder.imvImage, holder.prBar, item.getUrl_image());
-
+            ImageLoader.loadWithProgressBar(mContext, BuildConfig.SERVER_IMAGE + item.getUrl_image(), holder.imvImage, holder.prBar);
         } else {
             holder.imvImage.setVisibility(View.GONE);
             holder.prBar.setVisibility(View.GONE);
+        }
+        if (item.isIs_like()) {
+            holder.rlLike.setBackgroundResource(R.drawable.custom_background_view_like);
+            holder.tvCountLike.setTextColor(mContext.getResources().getColor(R.color.color_main));
+            holder.imvLike.setImageResource(R.drawable.ic_like_main);
+        }else {
+            holder.rlLike.setBackgroundResource(R.drawable.custom_background_view_like_unselected);
+            holder.tvCountLike.setTextColor(mContext.getResources().getColor(R.color.grey_divider));
+            holder.imvLike.setImageResource(R.drawable.ic_like_normal);
+        }
+        if (item.isIs_dislike()) {
+            holder.rlDislike.setBackgroundResource(R.drawable.custom_background_view_like);
+            holder.tvCountDislike.setTextColor(mContext.getResources().getColor(R.color.color_main));
+            holder.imvDislike.setImageResource(R.drawable.ic_like_main);
+        }else {
+            holder.rlDislike.setBackgroundResource(R.drawable.custom_background_view_like_unselected);
+            holder.tvCountDislike.setTextColor(mContext.getResources().getColor(R.color.grey_divider));
+            holder.imvDislike.setImageResource(R.drawable.ic_like_normal);
         }
         holder.rlDislike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +123,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         RelativeLayout rlLike;
         @Bind(R.id.tv_num_like)
         TextView tvCountLike;
+        @Bind(R.id.imv_like)
+        ImageView imvLike;
+        @Bind(R.id.imv_dislike)
+        ImageView imvDislike;
         @Bind(R.id.pr_bar)
         ProgressBar prBar;
 

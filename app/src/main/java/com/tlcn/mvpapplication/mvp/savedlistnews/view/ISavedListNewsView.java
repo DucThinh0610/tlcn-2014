@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.mvp.savedlistnews.view;
 
 import com.tlcn.mvpapplication.base.IView;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.MetaData;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface ISavedListNewsView extends IView {
 
-    void onGetSavedListLocationSuccess(List<Locations> result);
+    void onGetSavedListLocationSuccess(List<Locations> result, MetaData metaData);
 
     void notifyDataSetChanged();
 

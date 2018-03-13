@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import com.facebook.FacebookSdk;
 import com.tlcn.mvpapplication.caches.storage.LocationStorage;
 import com.tlcn.mvpapplication.caches.storage.NotificationStorage;
+import com.tlcn.mvpapplication.caches.storage.UserInfomationStorage;
 import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
 import com.tlcn.mvpapplication.interactor.socketIO.SocketManager;
 import com.zxy.tiny.Tiny;
@@ -17,6 +18,7 @@ public class App extends Application {
     private static App mInstance;
     private LocationStorage mLocationStorage;
     private NotificationStorage mNotificationStorage;
+    private UserInfomationStorage mUserInfomationStorage;
     private static Context mContext;
     private static SharedPreferences mSharedPreferences;
     private static EventManager eventManager;
@@ -45,8 +47,18 @@ public class App extends Application {
         return this.googleApiHelper;
     }
 
+    private UserInfomationStorage getUserInfoInstance(){
+        if (mUserInfomationStorage == null){
+            mUserInfomationStorage = new UserInfomationStorage(this);
+        }
+        return mUserInfomationStorage;
+    }
 
-    public LocationStorage getLocationStorageInstance() {
+    public static UserInfomationStorage getUserInfo(){
+        return getInstance().getUserInfoInstance();
+    }
+
+    private LocationStorage getLocationStorageInstance() {
         if (mLocationStorage == null) {
             mLocationStorage = new LocationStorage(this);
         }

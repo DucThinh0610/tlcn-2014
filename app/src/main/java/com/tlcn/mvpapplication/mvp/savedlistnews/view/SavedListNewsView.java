@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.model.Locations;
+import com.tlcn.mvpapplication.model.MetaData;
 import com.tlcn.mvpapplication.mvp.savedlistnews.adapter.SavedAdapter;
 import com.tlcn.mvpapplication.mvp.savedlistnews.presenter.SavedListNewsPresenter;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -38,6 +41,14 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
     SavedListNewsPresenter mPresenter = new SavedListNewsPresenter();
     SavedAdapter adapter;
 
+    BaseListRequest request;
+    List<Locations> mList;
+    MetaData mMetaData;
+    int visibleItemCount;
+    int totalItemCount;
+    int pastVisiblesItems;
+    boolean isLoading = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +62,44 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
 
     private void initData() {
         swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
-        mPresenter.getSavedListLocation();
+        request = new BaseListRequest();
+        mList = new ArrayList<>();
+        isLoading = true;
+        mPresenter.getSavedListLocation(request);
     }
 
     private void initListener() {
         imvBack.setOnClickListener(this);
         swpLayout.setOnRefreshListener(this);
+        rcvSavedListNews.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                try {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) rcvSavedListNews.getLayoutManager();
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if (!isLoading && mMetaData.isHas_more_page()) {
+                            isLoading = true;
+                            //bottom of recyclerview
+                            request.setPage(mMetaData.getCurrent_page() + 1);
+                            mPresenter.getSavedListLocation(request);
+                        }
+                    }
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -82,25 +125,38 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
     }
 
     @Override
-    public void onGetSavedListLocationSuccess(List<Locations> result) {
-        if (result != null) {
+    public void onGetSavedListLocationSuccess(List<Locations> result, MetaData metaData) {
+        isLoading = false;
+        swpLayout.setRefreshing(false);
+        if (mList.size() == 0) {
+            mList.addAll(result);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            adapter = new SavedAdapter(mList, this, this);
             rcvSavedListNews.setLayoutManager(layoutManager);
-            adapter = new SavedAdapter(result, this, this);
             rcvSavedListNews.setAdapter(adapter);
+        } else {
+            if (!mList.containsAll(result)) {
+                mList.addAll(result);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        if (metaData != null) {
+            mMetaData = metaData;
         }
     }
 
     @Override
     public void notifyDataSetChanged() {
         mPresenter.setChange(true);
-        mPresenter.getSavedListLocation();
+        mList = new ArrayList<>();
+        mPresenter.getSavedListLocation(new BaseListRequest());
     }
 
     @Override
     public void onContributingSuccess() {
         Toast.makeText(this, getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
-        mPresenter.getSavedListLocation();
+        mList = new ArrayList<>();
+        mPresenter.getSavedListLocation(new BaseListRequest());
     }
 
 
@@ -120,8 +176,8 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
 
     @Override
     public void onRefresh() {
-        mPresenter.getSavedListLocation();
-        swpLayout.setRefreshing(false);
+        isLoading = true;
+        mPresenter.getSavedListLocation(new BaseListRequest());
     }
 
     //TODO: on Item View Click

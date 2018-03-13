@@ -5,20 +5,32 @@ import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
+import com.tlcn.mvpapplication.api.request.FavouriteLocationsRequest;
+import com.tlcn.mvpapplication.api.request.LocationByDistanceRequest;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.chart.ChartRequest;
 import com.tlcn.mvpapplication.api.request.contribution.ContributionRequest;
-import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
-import com.tlcn.mvpapplication.api.request.user.LogoutRequest;
+import com.tlcn.mvpapplication.api.request.user.LoginRequest;
+import com.tlcn.mvpapplication.api.response.DetailLocationResponse;
+import com.tlcn.mvpapplication.api.response.DetailNewsResponse;
+import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.LoginResponse;
+import com.tlcn.mvpapplication.api.response.NewsResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
+import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.app.AppManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MultipartBody;
 
 public class ApiManager {
     public void addContribution(ContributionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).contribute(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_api_v1_server().from(ApiServices.class).contribute(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -31,38 +43,11 @@ public class ApiManager {
         });
     }
 
-//    public void getInfoPlace(GetInfoRequest request, final ApiCallback<GetInfoResponse> callback) {
-//        AppManager.http_local().from(ApiServices.class).getInfoPlace(request).enqueue(new RestCallback<GetInfoResponse>() {
-//            @Override
-//            public void success(GetInfoResponse res) {
-//                callback.success(res);
-//            }
-//
-//            @Override
-//            public void failure(RestError error) {
-//                callback.failure(error);
-//            }
-//        });
-//    }
 
-//    public void uploadFile(final MultipartBody.Part file, final ApiCallback<UploadFileResponse> callback) {
-//        AppManager.http_local().from(ApiServices.class).uploadFile(file).enqueue(new RestCallback<UploadFileResponse>() {
-//            @Override
-//            public void success(UploadFileResponse res) {
-//                callback.success(res);
-//            }
-//
-//            @Override
-//            public void failure(RestError error) {
-//                callback.failure(error);
-//            }
-//        });
-//    }
-
-    public void action(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).action(request).enqueue(new RestCallback<BaseResponse>() {
+    public void uploadFile(String token, final MultipartBody.Part file, final ApiCallback<UploadFileResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).uploadFile(token, file).enqueue(new RestCallback<UploadFileResponse>() {
             @Override
-            public void success(BaseResponse res) {
+            public void success(UploadFileResponse res) {
                 callback.success(res);
             }
 
@@ -74,7 +59,7 @@ public class ApiManager {
     }
 
     public void actionStop(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).actionStop(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_api_v1_server().from(ApiServices.class).actionStop(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -88,7 +73,7 @@ public class ApiManager {
     }
 
     public void actionOn(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).actionOn(request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_api_v1_server().from(ApiServices.class).actionOn(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -101,25 +86,11 @@ public class ApiManager {
         });
     }
 
-    public void saveLocation(SaveRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).saveLocation(request).enqueue(new RestCallback<BaseResponse>() {
+    public void saveLocation(SaveRequest request, final ApiCallback<DetailLocationResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).saveLocation(request.getToken(), request).enqueue(new RestCallback<DetailLocationResponse>() {
 
             @Override
-            public void success(BaseResponse res) {
-                callback.success(res);
-            }
-
-            @Override
-            public void failure(RestError error) {
-                callback.failure(error);
-            }
-        });
-    }
-
-    public void pushNotificationToken(String user_id, String token, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).push_notification(user_id, token).enqueue(new RestCallback<BaseResponse>() {
-            @Override
-            public void success(BaseResponse res) {
+            public void success(DetailLocationResponse res) {
                 callback.success(res);
             }
 
@@ -143,8 +114,8 @@ public class ApiManager {
         });
     }
 
-    public void logout(LogoutRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).logout(request).enqueue(new RestCallback<BaseResponse>() {
+    public void logout(String token, final ApiCallback<BaseResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).logout(token).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -158,7 +129,7 @@ public class ApiManager {
     }
 
     public void getShareLink(String location_id, final ApiCallback<ShareResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
+        AppManager.http_api_v1_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
                 callback.success(res);
@@ -172,9 +143,152 @@ public class ApiManager {
     }
 
     public void getInfoChart(String id_location, ChartRequest chartRequest, final ApiCallback<ChartResponse> callback) {
-        AppManager.http_local().from(ApiServices.class).getChartInfo(id_location, chartRequest).enqueue(new RestCallback<ChartResponse>() {
+        Map<String, String> params = new HashMap<>();
+        params.put("start_date", chartRequest.getStartDate());
+        params.put("end_date", chartRequest.getEndDate());
+        AppManager.http_api_v1_server().from(ApiServices.class).getChartInfo(id_location, params).enqueue(new RestCallback<ChartResponse>() {
             @Override
             public void success(ChartResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getAllLocations(BaseListRequest request, final ApiCallback<LocationsResponse> callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("limit", String.valueOf(request.getLimit()));
+        params.put("page", String.valueOf(request.getPage()));
+        AppManager.http_api_v1_server().from(ApiServices.class).getAllLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getLocationsByDistance(LocationByDistanceRequest request, final ApiCallback<LocationsResponse> callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("latitude", String.valueOf(request.getLatitude()));
+        params.put("longitude", String.valueOf(request.getLongitude()));
+        params.put("distance", String.valueOf(request.getDistance()));
+        AppManager.http_api_v1_server().from(ApiServices.class).getLocationsByDistance(params).enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getFavouriteLocations(FavouriteLocationsRequest request, final ApiCallback<LocationsResponse> callback) {
+        Map<String, Double> params = new HashMap<>();
+        params.put("lat1", request.getLatLng1().latitude);
+        params.put("long1", request.getLatLng1().longitude);
+        params.put("distance", request.getDistance());
+        if (request.getLatLng2() != null) {
+            params.put("lat2", request.getLatLng2().latitude);
+            params.put("long2", request.getLatLng2().longitude);
+            if (request.getLatLng3() != null) {
+                params.put("lat3", request.getLatLng3().latitude);
+                params.put("long3", request.getLatLng3().longitude);
+            }
+        }
+
+        AppManager.http_api_v1_server().from(ApiServices.class).getFavouriteLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getDetailLocation(String token, String location_id, final ApiCallback<DetailLocationResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).getDetailLocation(location_id, token).enqueue(new RestCallback<DetailLocationResponse>() {
+            @Override
+            public void success(DetailLocationResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getSavedLocations(String token, BaseListRequest request, final ApiCallback<LocationsResponse> callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", token);
+        if (request.getPage() != 0) {
+            params.put("page", String.valueOf(request.getPage()));
+        }
+        if (request.getLimit() != 0) {
+            params.put("limit", String.valueOf(request.getLimit()));
+        }
+        AppManager.http_api_v1_server().from(ApiServices.class).getSavedLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getListNews(String token, String location_id, final ApiCallback<NewsResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).getNewsByLocation(location_id, token).enqueue(new RestCallback<NewsResponse>() {
+            @Override
+            public void success(NewsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void likeNews(ActionRequest request, final ApiCallback<DetailNewsResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).likeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
+            @Override
+            public void success(DetailNewsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void dislikeNews(ActionRequest request, final ApiCallback<DetailNewsResponse> callback) {
+        AppManager.http_api_v1_server().from(ApiServices.class).dislikeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
+            @Override
+            public void success(DetailNewsResponse res) {
                 callback.success(res);
             }
 

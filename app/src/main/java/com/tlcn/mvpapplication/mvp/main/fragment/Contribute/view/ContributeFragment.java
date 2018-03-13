@@ -35,7 +35,6 @@ import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.ContributePresenter;
 import com.tlcn.mvpapplication.service.GPSTracker;
-import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.FileUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -87,9 +86,10 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     @Override
     public void onStart() {
         super.onStart();
-        if (mPresenter != null) {
-            mPresenter.setFileUpload(null);
-        }
+
+//        if (mPresenter.getImageUpload() != null) {
+//            mPresenter.setFileUpload(null);
+//        }
     }
 
     @Nullable
@@ -195,7 +195,6 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                     mPresenter.contribution.setLongitude(postLocation.longitude);
                     mPresenter.contribution.setLevel(sbLevel.getProgress());
                     mPresenter.contribution.setDescription(edtDescription.getText().toString());
-                    mPresenter.contribution.setCreated(DateUtils.getCurrentDate());
                     mPresenter.uploadImage();
                 }
                 break;

@@ -1,22 +1,20 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
 import com.tlcn.mvpapplication.api.network.RestError;
+import com.tlcn.mvpapplication.api.request.BaseListRequest;
 import com.tlcn.mvpapplication.api.request.action.ActionRequest;
 import com.tlcn.mvpapplication.api.request.save.SaveRequest;
+import com.tlcn.mvpapplication.api.response.DetailLocationResponse;
+import com.tlcn.mvpapplication.api.response.LocationsResponse;
+import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.ISavedListNewsView;
-import com.tlcn.mvpapplication.utils.DateUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import java.util.ArrayList;
@@ -57,79 +55,24 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     }
 
     @Override
-    public void getSavedListLocation() {
+    public void getSavedListLocation(BaseListRequest request) {
         getView().showLoading();
-        Query saveQuery = mSaveReference.orderByChild("user_id").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        saveQuery.addChildEventListener(new ChildEventListener() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().onFailed(App.getContext().getString(R.string.please_login));
+            return;
+        }
+
+        getManager().getSavedLocations(App.getUserInfo().getInfo().getToken(), request, new ApiCallback<LocationsResponse>() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId().equals(dataSnapshot.child("location_id").getValue())) {
-                        list.remove(i);
-                    }
-                }
-                getView().onGetSavedListLocationSuccess(list);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        saveQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    Query query = mLocationReference.orderByChild("id").equalTo(data.child("location_id").getValue().toString());
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            getView().hideLoading();
-                            boolean isChild = false;
-                            for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                Locations item = child.getValue(Locations.class);
-                                for (int i = 0; i < list.size(); i++) {
-                                    if (list.get(i).getId().equals(item.getId())) {
-                                        list.set(i, item);
-                                        isChild = true;
-                                    }
-                                }
-                                if (!isChild) {
-                                    list.add(item);
-                                }
-                            }
-                            getView().onGetSavedListLocationSuccess(list);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            getView().hideLoading();
-                            getView().onFailed(databaseError.getMessage());
-                        }
-                    });
-                }
+            public void success(LocationsResponse res) {
+                getView().onGetSavedListLocationSuccess(res.getData(), res.getMetaData());
                 getView().hideLoading();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void failure(RestError error) {
+                getView().onFailed(error.message);
                 getView().hideLoading();
-                getView().onFailed(databaseError.getMessage());
             }
         });
     }
@@ -137,10 +80,16 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     @Override
     public void unSavedLocation(Locations location) {
         getView().showLoading();
-        SaveRequest request = new SaveRequest(location.getId(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-        getManager().saveLocation(request, new ApiCallback<BaseResponse>() {
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            getView().onFailed(App.getContext().getString(R.string.please_login));
+            return;
+        }
+        SaveRequest request = new SaveRequest();
+        request.setToken(App.getUserInfo().getInfo().getToken());
+        request.setLocation_id(location.getId());
+        getManager().saveLocation(request, new ApiCallback<DetailLocationResponse>() {
             @Override
-            public void success(BaseResponse res) {
+            public void success(DetailLocationResponse res) {
                 getView().hideLoading();
                 getView().notifyDataSetChanged();
             }
@@ -156,7 +105,12 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
     @Override
     public void contributing(Locations location) {
         getView().showLoading();
-        ActionRequest request = new ActionRequest(location.getId(), DateUtils.getCurrentDate());
+        if (App.getUserInfo().getInfo() == null || App.getUserInfo().getInfo().getToken().isEmpty()) {
+            return;
+        }
+        ActionRequest request = new ActionRequest();
+        request.setToken(App.getUserInfo().getInfo().getToken());
+        request.setIdLocation(location.getId());
         if (location.isStatus()) {
             getManager().actionStop(request, new ApiCallback<BaseResponse>() {
                 @Override
@@ -172,9 +126,9 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                 }
             });
         } else {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            }
+//            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//                request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//            }
             getManager().actionOn(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {
