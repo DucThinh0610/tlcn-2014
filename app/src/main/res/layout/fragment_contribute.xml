@@ -100,6 +100,19 @@
                 </RadioGroup>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:textSize="13sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -264,11 +277,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imv_video"
@@ -317,20 +330,21 @@
                 android:id="@+id/imv_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="20dp"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                android:maxHeight="200dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
-                android:visibility="gone"/>
+                android:layout_marginTop="20dp"
+                android:contentDescription="@null"
+                android:maxHeight="200dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp">
 
         <Button
             android:id="@+id/btn_send"

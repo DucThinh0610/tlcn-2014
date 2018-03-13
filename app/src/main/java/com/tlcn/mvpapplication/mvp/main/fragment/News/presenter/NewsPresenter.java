@@ -92,13 +92,10 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
         ActionRequest request = new ActionRequest();
         request.setToken(App.getUserInfo().getInfo().getToken());
         request.setIdLocation(id);
-//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//            request.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//        }
-
         getManager().actionStop(request, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                getView().notifyChangeStopped();
                 getView().hideLoading();
             }
 

@@ -144,7 +144,7 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
             if (mList.size() == 0) {
                 mList.addAll(result);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                newsAdapter = new LocationAdapter(mList,getContext(), this);
+                newsAdapter = new LocationAdapter(mList, getContext(), this);
                 rcvNews.setLayoutManager(layoutManager);
                 rcvNews.setAdapter(newsAdapter);
             } else {
@@ -191,7 +191,8 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
 
     @Override
     public void notifyChangeStopped() {
-        newsAdapter.notifyDataSetChanged();
+        Toast.makeText(getContext(), getString(R.string.thanks_for_your_contribution), Toast.LENGTH_SHORT).show();
+//        newsAdapter.notifyDataSetChanged();
     }
 
     @Override

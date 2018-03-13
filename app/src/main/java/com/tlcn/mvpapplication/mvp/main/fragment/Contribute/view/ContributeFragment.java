@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +39,7 @@ import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.FileUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.Utilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +78,9 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     Button btnSend;
     @Bind(R.id.imv_image)
     ImageView imvImage;
+    @Bind(R.id.tv_address)
+    TextView tvAddress;
+
     //Todo: Declaring
     ContributePresenter mPresenter = new ContributePresenter();
     private DialogProgress mProgressDialog;
@@ -86,7 +91,6 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     @Override
     public void onStart() {
         super.onStart();
-
 //        if (mPresenter.getImageUpload() != null) {
 //            mPresenter.setFileUpload(null);
 //        }
@@ -115,6 +119,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
         if (rdgLocation.getCheckedRadioButtonId() == R.id.rdb_current) {
             if (gpsTracker.canGetLocation()) {
                 postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+                tvAddress.setText(Utilities.getCompleteAddressString(getContext(), postLocation.latitude, postLocation.longitude));
             } else {
                 Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
                 DialogUtils.showSettingLocationDialog(this, 102);
@@ -127,6 +132,7 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
                     case R.id.rdb_current:
                         if (gpsTracker.canGetLocation()) {
                             postLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+                            tvAddress.setText(Utilities.getCompleteAddressString(getContext(), postLocation.latitude, postLocation.longitude));
                         } else
                             Toast.makeText(getContext(), getString(R.string.please_check_your_location), Toast.LENGTH_SHORT).show();
                         break;
@@ -289,6 +295,9 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
             imvImage.setVisibility(View.VISIBLE);
             ImageLoader.loadImageFromPath(getContext(), mPresenter.getImageUpload().getPath(), imvImage, 10);
         }
+        if (postLocation != null) {
+            tvAddress.setText(Utilities.getCompleteAddressString(getContext(), postLocation.latitude, postLocation.longitude));
+        }
     }
 
     private File startCameraScreen() {
@@ -316,5 +325,10 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d("REady map", "ASdsad");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

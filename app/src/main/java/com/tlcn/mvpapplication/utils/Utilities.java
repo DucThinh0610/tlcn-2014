@@ -1,6 +1,8 @@
 package com.tlcn.mvpapplication.utils;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Html;
@@ -12,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -21,6 +24,22 @@ import java.util.TimeZone;
 
 public class Utilities {
 
+    public static String getCompleteAddressString(Context context, double latitude, double longitude) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                return returnedAddress.getAddressLine(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static boolean isConnectingToInternet(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

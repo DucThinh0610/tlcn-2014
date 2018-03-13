@@ -3,6 +3,7 @@ package com.tlcn.mvpapplication.interactor.socketIO;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
 import com.tlcn.mvpapplication.interactor.event_bus.type.MessageEvent;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -39,7 +40,7 @@ public class SocketManager {
             options.reconnection = true;
             options.forceNew = true;
             try {
-                mSocket = IO.socket("http://192.168.1.5:3000/", options);
+                mSocket = IO.socket(BuildConfig.SOCKET_URL, options);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

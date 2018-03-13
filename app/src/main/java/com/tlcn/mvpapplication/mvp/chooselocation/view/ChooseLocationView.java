@@ -41,6 +41,7 @@ import com.tlcn.mvpapplication.mvp.main.adapter.PlaceSearchAdapter;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.Utilities;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -86,6 +87,8 @@ public class ChooseLocationView extends AppCompatActivity implements
     TextView tvTitle;
     @Bind(R.id.tv_title_com)
     TextView tvTitleCOM;
+    @Bind(R.id.tv_address)
+    TextView tvAddress;
 
     //Todo: Declaring
     private SupportMapFragment supportMapFragment;
@@ -150,6 +153,9 @@ public class ChooseLocationView extends AppCompatActivity implements
         mAdapter = new PlaceSearchAdapter(getBaseContext(), mPresenter.getGoogleApiClient(), HCM, new AutocompleteFilter.Builder().setCountry("VN").build(), this);
         rcvSearch.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         rcvSearch.setAdapter(mAdapter);
+        if (gpsTracker.canGetLocation()) {
+            tvAddress.setText(Utilities.getCompleteAddressString(this, gpsTracker.getLatitude(), gpsTracker.getLongitude()));
+        }
         if (getIntent().getExtras() != null) {
             String title = getString(R.string.set_locaton_for) + " " + getIntent().getStringExtra("title").toLowerCase();
             tvTitle.setText(title);
