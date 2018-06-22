@@ -2,6 +2,7 @@ package com.tlcn.mvpapplication.mvp.main.fragment.Home.presenter;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -10,9 +11,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.ApiServices;
@@ -28,26 +27,30 @@ import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
 import com.tlcn.mvpapplication.caches.storage.MapStorage;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.PolylineInfo;
 import com.tlcn.mvpapplication.model.direction.Route;
 import com.tlcn.mvpapplication.mvp.main.fragment.Home.view.IHomeView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+import com.tlcn.mvpapplication.utils.MapUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
+
 public class HomePresenter extends BasePresenter implements IHomePresenter {
     private int boundRadiusLoad = 300;
-    private LatLng lngStart, lngEnd;
+    private LatLng lngStart, lngEnd, currentLocation;
     private List<Route> routes;
     private List<Locations> listPlace = new ArrayList<>();
     private List<Locations> allLocation = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    public DatabaseReference mReference;
     private CameraPosition mCameraPosition;
     private boolean continuousShowDialog = true;
-    public ValueEventListener mListenerDetail, mListenerInfo;
     private boolean stateUI;
 
     public void setContinuousShowDialog(boolean continuousShowDialog) {
@@ -116,11 +119,11 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         if (App.getGoogleApiHelper().isConnected()) {
             mGoogleApiClient = App.getGoogleApiHelper().getGoogleApiClient();
         }
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         mCameraPosition = MapStorage.getInstance().getCameraPosition();
         stateUI = MapStorage.getInstance().getStateUI();
         routes = MapStorage.getInstance().getDirection();
+        if (!getEventManager().isRegister(this))
+            getEventManager().register(this);
     }
 
     public void attachView(IHomeView view) {
@@ -186,44 +189,19 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         }
         getView().hideLoading();
         getView().onFail(App.getContext().getString(R.string.there_is_not_current_infomation));
-//        mListenerInfo = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Iterable<DataSnapshot> listData = dataSnapshot.getChildren();
-//                for (DataSnapshot data : listData) {
-//                    Locations item = data.getValue(Locations.class);
-//                    LatLng start = new LatLng(item.getLat(), item.getLng());
-//                    if (item.isStatus()) {
-//                        if (Utilities.calculationByDistance(start, latLng) <= KeyUtils.DEFAULT_DISTANCE_TO_LOAD) {
-//                            getView().getDetailLocationSuccess(item);
-//                            getView().hideLoading();
-//                            return;
-//                        }
-//                    }
-//                }
-//                getView().hideLoading();
-//                getView().onFail(App.getContext().getString(R.string.there_is_not_current_infomation));
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                getView().hideLoading();
-//                getView().onFail(databaseError.getMessage());
-//            }
-//        };
-//        mReference.addValueEventListener(mListenerInfo);
     }
 
     @Override
     public void getInfoPlace(final LatLng latLng) {
-        listPlace.clear();
         LocationByDistanceRequest request = new LocationByDistanceRequest();
         request.setLatitude(latLng.latitude);
         request.setLongitude(latLng.longitude);
         request.setDistance(boundRadiusLoad);
+        currentLocation = latLng;
         getManager().getLocationsByDistance(request, new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                listPlace.clear();
                 listPlace.addAll(res.getData());
                 if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
                     getView().showDialogConfirmNewRadius();
@@ -237,37 +215,6 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 getView().onFail(error.message);
             }
         });
-//        mListenerDetail = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
-//                listPlace.clear();
-//                allLocation.clear();
-//                for (DataSnapshot data : dataSnapshots) {
-//                    Locations item = data.getValue(Locations.class);
-//                    LatLng start = new LatLng(item.getLat(), item.getLng());
-//                    allLocation.add(item);
-//                    if (item.isStatus()) {
-//                        if (MapUtils.distanceBetweenTwoPoint(start, latLng) <= boundRadiusLoad) {
-//                            listPlace.add(item);
-//                        }
-//                    }
-//                }
-//                if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
-//                    getView().showDialogConfirmNewRadius();
-//                } else {
-//                    getView().showPlaces();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                getView().hideLoading();
-//                getView().onFail(databaseError.getMessage());
-//            }
-//        };
-//        mReference.addValueEventListener(mListenerDetail);
-
     }
 
     @Override
@@ -343,6 +290,34 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         protected void onPostExecute(Void aVoid) {
             getView().getDirectionSuccess();
             getView().hideLoading();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void onEvent(ObjectEvent objectEvent) {
+        if (objectEvent == null || !isViewAttached())
+            return;
+        if (objectEvent.getKeyId().equals(KeyUtils.KEY_EVENT_LOCATIONS) && objectEvent.getSocketLocation() != null) {
+            Locations pointChange = objectEvent.getSocketLocation();
+            Log.d("subscribe home fragment", new Gson().toJson(pointChange));
+            if (listPlace.contains(pointChange)) {
+                Locations locExisted = listPlace.get(listPlace.indexOf(pointChange));
+                if (checkLevel(locExisted.getCurrent_level()) != checkLevel(pointChange.getCurrent_level())) {
+                    listPlace.set(listPlace.indexOf(locExisted), pointChange);
+                    getView().showPlaces();
+                }
+            } else {
+                LatLng newPoint = new LatLng(pointChange.getLat(), pointChange.getLng());
+                if (MapUtils.distanceBetweenTwoPoint(currentLocation, newPoint) < boundRadiusLoad){
+                    listPlace.add(pointChange);
+                    getView().showPlaces();
+                }
+            }
         }
     }
 }

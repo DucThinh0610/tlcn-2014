@@ -30,7 +30,7 @@ import okhttp3.MultipartBody;
 
 public class ApiManager {
     public void addContribution(ContributionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).contribute(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_local().from(ApiServices.class).contribute(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -45,7 +45,7 @@ public class ApiManager {
 
 
     public void uploadFile(String token, final MultipartBody.Part file, final ApiCallback<UploadFileResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).uploadFile(token, file).enqueue(new RestCallback<UploadFileResponse>() {
+        AppManager.http_local().from(ApiServices.class).uploadFile(token, file).enqueue(new RestCallback<UploadFileResponse>() {
             @Override
             public void success(UploadFileResponse res) {
                 callback.success(res);
@@ -59,7 +59,7 @@ public class ApiManager {
     }
 
     public void actionStop(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).actionStop(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_local().from(ApiServices.class).actionStop(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -73,7 +73,7 @@ public class ApiManager {
     }
 
     public void actionOn(ActionRequest request, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).actionOn(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_local().from(ApiServices.class).actionOn(request.getToken(), request).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -87,7 +87,7 @@ public class ApiManager {
     }
 
     public void saveLocation(SaveRequest request, final ApiCallback<DetailLocationResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).saveLocation(request.getToken(), request).enqueue(new RestCallback<DetailLocationResponse>() {
+        AppManager.http_local().from(ApiServices.class).saveLocation(request.getToken(), request).enqueue(new RestCallback<DetailLocationResponse>() {
 
             @Override
             public void success(DetailLocationResponse res) {
@@ -102,7 +102,7 @@ public class ApiManager {
     }
 
     public void login(LoginRequest request, final ApiCallback<LoginResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).login(request).enqueue(new RestCallback<LoginResponse>() {
+        AppManager.http_local().from(ApiServices.class).login(request).enqueue(new RestCallback<LoginResponse>() {
             public void success(LoginResponse res) {
                 callback.success(res);
             }
@@ -115,7 +115,7 @@ public class ApiManager {
     }
 
     public void logout(String token, final ApiCallback<BaseResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).logout(token).enqueue(new RestCallback<BaseResponse>() {
+        AppManager.http_local().from(ApiServices.class).logout(token).enqueue(new RestCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
                 callback.success(res);
@@ -129,7 +129,7 @@ public class ApiManager {
     }
 
     public void getShareLink(String location_id, final ApiCallback<ShareResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
+        AppManager.http_local().from(ApiServices.class).shareLink(location_id).enqueue(new RestCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
                 callback.success(res);
@@ -146,7 +146,7 @@ public class ApiManager {
         Map<String, String> params = new HashMap<>();
         params.put("start_date", chartRequest.getStartDate());
         params.put("end_date", chartRequest.getEndDate());
-        AppManager.http_api_v1_server().from(ApiServices.class).getChartInfo(id_location, params).enqueue(new RestCallback<ChartResponse>() {
+        AppManager.http_local().from(ApiServices.class).getChartInfo(id_location, params).enqueue(new RestCallback<ChartResponse>() {
             @Override
             public void success(ChartResponse res) {
                 callback.success(res);
@@ -163,7 +163,7 @@ public class ApiManager {
         Map<String, String> params = new HashMap<>();
         params.put("limit", String.valueOf(request.getLimit()));
         params.put("page", String.valueOf(request.getPage()));
-        AppManager.http_api_v1_server().from(ApiServices.class).getAllLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+        AppManager.http_local().from(ApiServices.class).getAllLocations(params).enqueue(new RestCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
                 callback.success(res);
@@ -181,7 +181,7 @@ public class ApiManager {
         params.put("latitude", String.valueOf(request.getLatitude()));
         params.put("longitude", String.valueOf(request.getLongitude()));
         params.put("distance", String.valueOf(request.getDistance()));
-        AppManager.http_api_v1_server().from(ApiServices.class).getLocationsByDistance(params).enqueue(new RestCallback<LocationsResponse>() {
+        AppManager.http_local().from(ApiServices.class).getLocationsByDistance(params).enqueue(new RestCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
                 callback.success(res);
@@ -208,7 +208,7 @@ public class ApiManager {
             }
         }
 
-        AppManager.http_api_v1_server().from(ApiServices.class).getFavouriteLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+        AppManager.http_local().from(ApiServices.class).getFavouriteLocations(params).enqueue(new RestCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
                 callback.success(res);
@@ -222,7 +222,7 @@ public class ApiManager {
     }
 
     public void getDetailLocation(String token, String location_id, final ApiCallback<DetailLocationResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).getDetailLocation(location_id, token).enqueue(new RestCallback<DetailLocationResponse>() {
+        AppManager.http_local().from(ApiServices.class).getDetailLocation(location_id, token).enqueue(new RestCallback<DetailLocationResponse>() {
             @Override
             public void success(DetailLocationResponse res) {
                 callback.success(res);
@@ -244,7 +244,7 @@ public class ApiManager {
         if (request.getLimit() != 0) {
             params.put("limit", String.valueOf(request.getLimit()));
         }
-        AppManager.http_api_v1_server().from(ApiServices.class).getSavedLocations(params).enqueue(new RestCallback<LocationsResponse>() {
+        AppManager.http_local().from(ApiServices.class).getSavedLocations(params).enqueue(new RestCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
                 callback.success(res);
@@ -258,7 +258,7 @@ public class ApiManager {
     }
 
     public void getListNews(String token, String location_id, final ApiCallback<NewsResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).getNewsByLocation(location_id, token).enqueue(new RestCallback<NewsResponse>() {
+        AppManager.http_local().from(ApiServices.class).getNewsByLocation(location_id, token).enqueue(new RestCallback<NewsResponse>() {
             @Override
             public void success(NewsResponse res) {
                 callback.success(res);
@@ -272,7 +272,7 @@ public class ApiManager {
     }
 
     public void likeNews(ActionRequest request, final ApiCallback<DetailNewsResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).likeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
+        AppManager.http_local().from(ApiServices.class).likeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
             @Override
             public void success(DetailNewsResponse res) {
                 callback.success(res);
@@ -286,7 +286,7 @@ public class ApiManager {
     }
 
     public void dislikeNews(ActionRequest request, final ApiCallback<DetailNewsResponse> callback) {
-        AppManager.http_api_v1_server().from(ApiServices.class).dislikeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
+        AppManager.http_local().from(ApiServices.class).dislikeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
             @Override
             public void success(DetailNewsResponse res) {
                 callback.success(res);

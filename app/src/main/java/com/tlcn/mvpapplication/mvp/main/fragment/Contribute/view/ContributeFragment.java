@@ -35,6 +35,7 @@ import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.dialog.DialogProgress;
 import com.tlcn.mvpapplication.mvp.chooselocation.view.ChooseLocationView;
 import com.tlcn.mvpapplication.mvp.main.fragment.Contribute.presenter.ContributePresenter;
+import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 import com.tlcn.mvpapplication.service.GPSTracker;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.FileUtils;
@@ -51,7 +52,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.tlcn.mvpapplication.utils.FileUtils.getUriFromFile;
 
 public class ContributeFragment extends Fragment implements IContributeView, View.OnClickListener
-        , OnMapReadyCallback {
+        , OnMapReadyCallback, MainActivity.OnBackPressedListener {
 
     public static ContributeFragment newInstance() {
         return new ContributeFragment();
@@ -330,5 +331,26 @@ public class ContributeFragment extends Fragment implements IContributeView, Vie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setOnBackPressedListener(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).setOnBackPressedListener(null);
+
+    }
+
+    //callback onpressBack from activity
+    @Override
+    public void doBack() {
+        edtDescription.clearFocus();
     }
 }

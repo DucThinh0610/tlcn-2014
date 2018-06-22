@@ -30,6 +30,7 @@ import com.tlcn.mvpapplication.model.ShareLink;
 import com.tlcn.mvpapplication.mvp.details.view.DetailsView;
 import com.tlcn.mvpapplication.mvp.main.adapter.LocationAdapter;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.presenter.NewsPresenter;
+import com.tlcn.mvpapplication.mvp.main.view.MainActivity;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.SavedListNewsView;
 import com.tlcn.mvpapplication.utils.DialogUtils;
 import com.tlcn.mvpapplication.utils.KeyUtils;
@@ -44,7 +45,7 @@ import butterknife.ButterKnife;
  * Created by tskil on 8/23/2017.
  */
 
-public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener, LocationAdapter.OnItemClick, View.OnClickListener {
+public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLayout.OnRefreshListener, LocationAdapter.OnItemClick, View.OnClickListener, MainActivity.OnBackPressedListener {
     public static NewsFragment newInstance() {
         return new NewsFragment();
     }
@@ -196,6 +197,19 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
     }
 
     @Override
+    public void notifyNewLocation(Locations locations) {
+        if (mList == null || newsAdapter == null)
+            return;
+        if (!mList.contains(locations)) {
+            mMetaData.increasePage(1);
+        } else {
+            mList.remove(locations);
+        }
+        mList.add(0, locations);
+        newsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void showLoading() {
         swpLayout.setRefreshing(false);
         showDialogLoading();
@@ -255,5 +269,36 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
                     Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng chức năng !", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setOnBackPressedListener(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).setOnBackPressedListener(null);
+
+    }
+
+    //listener call back from activity
+    @Override
+    public void doBack() {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDestroy();
+        super.onDestroyView();
     }
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by apple on 3/6/18.
  */
 
-public class MetaData implements Serializable{
+public class MetaData implements Serializable {
     @SerializedName("total")
     @Expose
     private int total;
@@ -26,11 +26,19 @@ public class MetaData implements Serializable{
         return total;
     }
 
+    public void increaseTotal(int count) {
+        total += count;
+    }
+
     public int getCurrent_page() {
         return current_page;
     }
 
     public boolean isHas_more_page() {
         return has_more_page;
+    }
+
+    public void increasePage(int count) {
+        current_page += count;
     }
 }

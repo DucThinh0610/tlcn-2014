@@ -46,5 +46,7 @@ public class AppManager {
         return httpServerV1;
     }
 
-    public final static String URL_LOCAL = "http://192.168.1.5:3000/";
+    public final static String URL_LOCAL = "http://192.168.0.103:3000/api/";
+    public final static String URL_IMAGE = "http://192.168.0.103:3000/";
+    public final static String URL_SOCKET= "http://192.168.0.103:3000/";
 }

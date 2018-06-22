@@ -23,4 +23,6 @@ public interface IDetailsView extends IView {
     void getListNewsSuccess(List<Post> result, MetaData metaData);
 
     void onActionSuccess(Post result);
+
+    void notifyNew(Post socketPost);
 }

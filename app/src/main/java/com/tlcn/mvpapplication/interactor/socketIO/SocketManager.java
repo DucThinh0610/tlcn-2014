@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.tlcn.mvpapplication.BuildConfig;
+import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
 import com.tlcn.mvpapplication.interactor.event_bus.type.MessageEvent;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.utils.KeyUtils;
 
 import org.json.JSONObject;
@@ -40,7 +42,7 @@ public class SocketManager {
             options.reconnection = true;
             options.forceNew = true;
             try {
-                mSocket = IO.socket(BuildConfig.SOCKET_URL, options);
+                mSocket = IO.socket(AppManager.URL_SOCKET, options);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -65,8 +67,12 @@ public class SocketManager {
             }).on(KeyUtils.KEY_SOCKET_LOCATIONS, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    JSONObject jsonObject = (JSONObject) args[0];
-                    Log.d("Result", new Gson().toJson(jsonObject));
+                    mEvent.sendEvent(new ObjectEvent(KeyUtils.KEY_EVENT_LOCATIONS, args));
+                }
+            }).on(KeyUtils.KEY_SOCKET_NEWS, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    mEvent.sendEvent(new ObjectEvent(KeyUtils.KEY_EVENT_NEWS, args));
                 }
             });
             mSocket.connect();

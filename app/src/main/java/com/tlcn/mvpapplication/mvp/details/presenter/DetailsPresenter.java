@@ -1,9 +1,11 @@
 package com.tlcn.mvpapplication.mvp.details.presenter;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.RestError;
@@ -15,17 +17,21 @@ import com.tlcn.mvpapplication.api.response.DetailNewsResponse;
 import com.tlcn.mvpapplication.api.response.NewsResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
+import com.tlcn.mvpapplication.interactor.event_bus.type.Empty;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.mvp.details.view.IDetailsView;
+import com.tlcn.mvpapplication.utils.KeyUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsPresenter extends BasePresenter implements IDetailsPresenter {
-    private DatabaseReference mReference;
     private List<Post> mListPost;
-    private FirebaseUser user;
     private SaveRequest save;
     private String idLocation;
     private Locations locations;
@@ -38,18 +44,12 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         this.idLocation = idLocation;
     }
 
-    public List<Post> getListPost() {
-        return mListPost;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mListPost = new ArrayList<>();
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference();
-        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
-        user = mFirebaseAuth.getCurrentUser();
+        if (!getEventManager().isRegister(this))
+            getEventManager().register(this);
     }
 
     public void attachView(IDetailsView view) {
@@ -209,5 +209,22 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 //                getView().onFail(databaseError.getMessage());
 //            }
 //        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ObjectEvent objectEvent) {
+        if (objectEvent == null || !isViewAttached())
+            return;
+        if (objectEvent.getKeyId().equals(KeyUtils.KEY_EVENT_NEWS) && objectEvent.getSocketPost() != null) {
+            if (idLocation != null && idLocation.equals(objectEvent.getSocketPost().getIdLocation())) {
+                Log.d("subscribe new success", new Gson().toJson(objectEvent.getSocketPost()));
+                getView().notifyNew(objectEvent.getSocketPost());
+            }
+        }
     }
 }

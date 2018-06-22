@@ -66,7 +66,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     CallbackManager mCallbackManager;
 
     BaseListRequest request;
-    List<Post> mList;
+    List<Post> mList=new ArrayList<>();
     MetaData mMetaData;
     int visibleItemCount;
     int totalItemCount;
@@ -127,17 +127,21 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
                 }
             }
         });
+        rcvImages.setNestedScrollingEnabled(false);
 
     }
 
     private void initData() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mPostAdapter = new PostAdapter(mList, this, this);
+        rcvImages.setLayoutManager(layoutManager);
+        rcvImages.setAdapter(mPostAdapter);
         // hiển thị các view được làm ở đây. như các nút hoặc các dữ liệu cứng, intent, adapter
         if (getIntent().getExtras() != null) {
             mPresenter.setIdLocation(getIntent().getStringExtra(KeyUtils.KEY_INTENT_LOCATION));
 
             swpLayout.setColorSchemeColors(getResources().getColor(R.color.color_main));
             isLoading = true;
-            mList = new ArrayList<>();
             request = new BaseListRequest();
             request.setLimit(15);
 
@@ -224,10 +228,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
             swpLayout.setRefreshing(false);
             if (mList.size() == 0) {
                 mList.addAll(result);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-                mPostAdapter = new PostAdapter(mList,this, this);
-                rcvImages.setLayoutManager(layoutManager);
-                rcvImages.setAdapter(mPostAdapter);
+                mPostAdapter.notifyDataSetChanged();
             } else {
                 if (!mList.containsAll(result)) {
                     mList.addAll(result);
@@ -242,10 +243,24 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
 
     @Override
     public void onActionSuccess(Post result) {
-        if (mList.contains(result)){
-            mList.set(mList.indexOf(result),result);
+        if (mList.contains(result)) {
+            mList.set(mList.indexOf(result), result);
             mPostAdapter.notifyItemChanged(mList.indexOf(result));
         }
+    }
+
+    @Override
+    public void notifyNew(Post socketPost) {
+        if (mList == null || mPostAdapter == null)
+            return;
+        if (!mList.contains(socketPost)) {
+            mMetaData.increasePage(1);
+            mList.add(0, socketPost);
+        } else {
+            mList.set(mList.indexOf(socketPost), socketPost);
+        }
+        mPostAdapter.notifyDataSetChanged();
+        swpLayout.setRefreshing(false);
     }
 
     @Override
@@ -268,7 +283,13 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     public void onRefresh() {
         request.setPage(1);
         isLoading = false;
-        mList = new ArrayList<>();
+        mList.clear();
         mPresenter.getListPostFromSV(request);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDestroy();
+        super.onDestroy();
     }
 }

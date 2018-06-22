@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.model.Post;
 import com.tlcn.mvpapplication.utils.DateUtils;
@@ -62,7 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else
             holder.tvDes.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.getUrl_image())) {
-            ImageLoader.loadWithProgressBar(mContext, BuildConfig.SERVER_IMAGE + item.getUrl_image(), holder.imvImage, holder.prBar);
+            ImageLoader.loadWithProgressBar(mContext, AppManager.URL_IMAGE + item.getUrl_image(), holder.imvImage, holder.prBar);
         } else {
             holder.imvImage.setVisibility(View.GONE);
             holder.prBar.setVisibility(View.GONE);
@@ -71,7 +72,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.rlLike.setBackgroundResource(R.drawable.custom_background_view_like);
             holder.tvCountLike.setTextColor(mContext.getResources().getColor(R.color.color_main));
             holder.imvLike.setImageResource(R.drawable.ic_like_main);
-        }else {
+        } else {
             holder.rlLike.setBackgroundResource(R.drawable.custom_background_view_like_unselected);
             holder.tvCountLike.setTextColor(mContext.getResources().getColor(R.color.grey_divider));
             holder.imvLike.setImageResource(R.drawable.ic_like_normal);
@@ -79,11 +80,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if (item.isIs_dislike()) {
             holder.rlDislike.setBackgroundResource(R.drawable.custom_background_view_like);
             holder.tvCountDislike.setTextColor(mContext.getResources().getColor(R.color.color_main));
-            holder.imvDislike.setImageResource(R.drawable.ic_like_main);
-        }else {
+            holder.imvDislike.setImageResource(R.drawable.ic_dislike_main);
+        } else {
             holder.rlDislike.setBackgroundResource(R.drawable.custom_background_view_like_unselected);
             holder.tvCountDislike.setTextColor(mContext.getResources().getColor(R.color.grey_divider));
-            holder.imvDislike.setImageResource(R.drawable.ic_like_normal);
+            holder.imvDislike.setImageResource(R.drawable.ic_dislike_normal);
         }
         holder.rlDislike.setOnClickListener(new View.OnClickListener() {
             @Override

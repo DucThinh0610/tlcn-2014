@@ -19,4 +19,6 @@ public interface INewsView extends IView {
     void onFail(String message);
 
     void notifyChangeStopped();
+
+    void notifyNewLocation(Locations locations);
 }

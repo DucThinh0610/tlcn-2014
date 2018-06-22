@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.app.App;
+import com.tlcn.mvpapplication.app.AppManager;
 
 import java.io.File;
 

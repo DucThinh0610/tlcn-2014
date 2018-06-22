@@ -34,6 +34,10 @@ public class KeyUtils {
 
     //todo: key socket
     public static final String KEY_SOCKET_LOCATIONS = "location";
+    public static final String KEY_SOCKET_NEWS = "new";
+    //todo: key eventBus Socket
+    public static final String KEY_EVENT_LOCATIONS = "KEY_EVENT_LOCATIONS";
+    public static final String KEY_EVENT_NEWS = "KEY_EVENT_NEWS";
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
 

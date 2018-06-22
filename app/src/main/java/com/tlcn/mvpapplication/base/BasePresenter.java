@@ -5,6 +5,7 @@ import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.caches.storage.LocalStorage;
 import com.tlcn.mvpapplication.interactor.event_bus.EventManager;
 import com.tlcn.mvpapplication.interactor.event_bus.type.Empty;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.interactor.socketIO.SocketManager;
 
 import org.greenrobot.eventbus.Subscribe;

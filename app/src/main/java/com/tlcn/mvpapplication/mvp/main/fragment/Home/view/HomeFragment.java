@@ -753,12 +753,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-        if (mPresenter.mListenerDetail != null) {
-            mPresenter.mReference.removeEventListener(mPresenter.mListenerDetail);
-        }
-        if (mPresenter.mListenerInfo != null) {
-            mPresenter.mReference.removeEventListener(mPresenter.mListenerInfo);
-        }
         mPresenter.saveCurrentStateMap();
         ((MainActivity) getActivity()).setOnBackPressedListener(null);
     }
@@ -829,5 +823,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback,
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setOnBackPressedListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDestroy();
+        super.onDestroyView();
     }
 }

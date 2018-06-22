@@ -1,7 +1,10 @@
 package com.tlcn.mvpapplication.mvp.main.fragment.News.presenter;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
@@ -12,9 +15,14 @@ import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
+import com.tlcn.mvpapplication.interactor.event_bus.type.Empty;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.main.fragment.News.view.INewsView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +30,6 @@ import java.util.List;
 public class NewsPresenter extends BasePresenter implements INewsPresenter {
 
     private List<Locations> list;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mReference;
 
     public List<Locations> getListNewsResult() {
         return list;
@@ -40,9 +46,14 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
     @Override
     public void onCreate() {
         super.onCreate();
-        mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
+        if (!getEventManager().isRegister(this))
+            getEventManager().register(this);
         list = new ArrayList<>();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -52,7 +63,7 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
             @Override
             public void success(LocationsResponse res) {
                 getView().hideLoading();
-                getView().getListNewsSuccess(res.getData(),res.getMetaData());
+                getView().getListNewsSuccess(res.getData(), res.getMetaData());
             }
 
             @Override
@@ -105,5 +116,15 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
                 getView().onFail(error.message);
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ObjectEvent objectEvent) {
+        if (objectEvent == null || !isViewAttached())
+            return;
+        if (objectEvent.getKeyId().equals(KeyUtils.KEY_EVENT_LOCATIONS)) {
+            Log.d("subscribe success", new Gson().toJson(objectEvent.getSocketLocation()));
+            getView().notifyNewLocation(objectEvent.getSocketLocation());
+        }
     }
 }

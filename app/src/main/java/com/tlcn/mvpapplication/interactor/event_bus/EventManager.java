@@ -19,6 +19,10 @@ public class EventManager {
         EventBus.getDefault().register(obj);
     }
 
+    public boolean isRegister(Object obj){
+        return EventBus.getDefault().isRegistered(obj);
+    }
+
     public void sendEvent(Empty empty) {
         EventBus.getDefault().post(empty);
     }

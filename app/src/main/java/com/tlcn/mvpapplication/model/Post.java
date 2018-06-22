@@ -34,6 +34,13 @@ public class Post {
     @SerializedName("is_dislike")
     @Expose
     private boolean is_dislike;
+    @SerializedName("location_id")
+    @Expose
+    private String idLocation;
+
+    public String getIdLocation() {
+        return idLocation;
+    }
 
     public int getCount_dislike() {
         return count_dislike;
