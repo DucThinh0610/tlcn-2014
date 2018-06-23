@@ -27,7 +27,7 @@ public class Locations implements Serializable {
     @SerializedName("rate")
     @Expose
     private double rate;
-    @SerializedName("latest_image")
+    @SerializedName("lastest_image")
     @Expose
     private String latest_image;
 
