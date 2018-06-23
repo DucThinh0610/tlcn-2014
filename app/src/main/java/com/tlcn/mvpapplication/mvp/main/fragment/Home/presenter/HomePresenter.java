@@ -45,6 +45,7 @@ import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
 public class HomePresenter extends BasePresenter implements IHomePresenter {
     private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd, currentLocation;
+    private GetDirectionResponse directionResponse;
     private List<Route> routes;
     private List<Locations> listPlace = new ArrayList<>();
     private List<Locations> allLocation = new ArrayList<>();
@@ -167,13 +168,33 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 if (routes != null) {
                     routes.clear();
                 }
-                new getDirectionTask().execute(res);
+                directionResponse = res;
+                getTrafficJamLocation();
             }
 
             @Override
             public void failure(RestError error) {
                 getView().onFail(error.message);
                 getView().hideLoading();
+            }
+        });
+    }
+
+    private void getTrafficJamLocation() {
+        getManager().getTrafficJamLocation(new ApiCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                if (res.getData() != null) {
+                    allLocation.clear();
+                    allLocation.addAll(res.getData());
+                }
+                new getDirectionTask().execute(directionResponse);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                Log.d("error", " find location");
+                new getDirectionTask().execute(directionResponse);
             }
         });
     }
@@ -313,7 +334,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 }
             } else {
                 LatLng newPoint = new LatLng(pointChange.getLat(), pointChange.getLng());
-                if (MapUtils.distanceBetweenTwoPoint(currentLocation, newPoint) < boundRadiusLoad){
+                if (MapUtils.distanceBetweenTwoPoint(currentLocation, newPoint) < boundRadiusLoad) {
                     listPlace.add(pointChange);
                     getView().showPlaces();
                 }

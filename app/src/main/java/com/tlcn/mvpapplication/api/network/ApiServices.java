@@ -96,4 +96,7 @@ public interface ApiServices {
 
     @GET("chart/{location_id}")
     Call<ChartResponse> getChartInfo(@Path("location_id") String id_location, @QueryMap Map<String,String> parameters);
+
+    @GET("locations/getTrafficLocation")
+    Call<LocationsResponse> getTrafficJamLocation();
 }

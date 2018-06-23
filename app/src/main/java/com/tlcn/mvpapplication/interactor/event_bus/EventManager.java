@@ -16,7 +16,7 @@ public class EventManager {
     }
 
     public void unRegister(Object obj) {
-        EventBus.getDefault().register(obj);
+        EventBus.getDefault().unregister(obj);
     }
 
     public boolean isRegister(Object obj){

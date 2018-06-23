@@ -1,5 +1,6 @@
 package com.tlcn.mvpapplication.api;
 
+import com.google.android.gms.awareness.snapshot.LocationResponse;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
@@ -289,6 +290,20 @@ public class ApiManager {
         AppManager.http_local().from(ApiServices.class).dislikeNews(request.getToken(), request).enqueue(new RestCallback<DetailNewsResponse>() {
             @Override
             public void success(DetailNewsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void getTrafficJamLocation(final ApiCallback<LocationsResponse> callback){
+        AppManager.http_local().from(ApiServices.class).getTrafficJamLocation().enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
                 callback.success(res);
             }
 
