@@ -37,6 +37,7 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.MapUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -328,7 +329,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         super.onDestroy();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ObjectEvent objectEvent) {
         if (objectEvent == null || !isViewAttached())
             return;
