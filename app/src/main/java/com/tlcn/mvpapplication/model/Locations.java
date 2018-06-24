@@ -83,6 +83,10 @@ public class Locations implements Serializable {
         return title;
     }
 
+    public String getShortTitle() {
+        return title.replace("Kẹt xe tại", "");
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

@@ -213,6 +213,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 

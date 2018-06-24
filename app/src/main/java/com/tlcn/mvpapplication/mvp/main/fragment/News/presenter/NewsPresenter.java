@@ -53,6 +53,8 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 

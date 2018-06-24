@@ -23,6 +23,7 @@ import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.LoginResponse;
+import com.tlcn.mvpapplication.api.response.TextSpeechResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
@@ -37,8 +38,14 @@ import com.tlcn.mvpapplication.utils.MapUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
 
@@ -316,6 +323,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 

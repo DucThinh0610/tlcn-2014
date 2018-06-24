@@ -40,6 +40,9 @@ public class KeyUtils {
     public static final String KEY_EVENT_NEWS = "KEY_EVENT_NEWS";
     //TODO: KEY FOR OTHER
     public static final String KEY_DIRECTION_API = "AIzaSyCL8C2wURzDuzgF8VRSZ8GOLG0YEBT07Ig";
+    public static final String KEY_FPT_API = "aea469998cc24b3a838ed49801e77afc";
+
+    //TODO: sth text to speech
 
     public static final int REQUEST_PERMISSION_CAPTURE_IMAGE = 1;
     public static final int REQUEST_PERMISSION_READ_LIBRARY = 2;

@@ -1,6 +1,5 @@
 package com.tlcn.mvpapplication.api;
 
-import com.google.android.gms.awareness.snapshot.LocationResponse;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.ApiServices;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
