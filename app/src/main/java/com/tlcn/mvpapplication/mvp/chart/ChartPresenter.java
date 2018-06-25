@@ -62,6 +62,8 @@ public class ChartPresenter extends BasePresenter implements ChartContact.IPrese
                 new ApiCallback<ChartResponse>() {
                     @Override
                     public void success(ChartResponse res) {
+                        if (!isViewAttached())
+                            return;
                         iChartDtoList.clear();
                         LogUtils.d("CHART", new Gson().toJson(res));
                         LocationInfo locationInfo = new LocationInfo(res.getChartInfo().getLocations(), res.getChartInfo().getChartData());
@@ -76,6 +78,8 @@ public class ChartPresenter extends BasePresenter implements ChartContact.IPrese
 
                     @Override
                     public void failure(RestError error) {
+                        if (!isViewAttached())
+                            return;
                         getView().hideLoading();
                         getView().onFail(error.message);
                     }

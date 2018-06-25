@@ -23,7 +23,6 @@ import com.tlcn.mvpapplication.api.request.user.LoginRequest;
 import com.tlcn.mvpapplication.api.response.GetDirectionResponse;
 import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.LoginResponse;
-import com.tlcn.mvpapplication.api.response.TextSpeechResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.base.BasePresenter;
@@ -39,14 +38,8 @@ import com.tlcn.mvpapplication.utils.MapUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
 
@@ -150,6 +143,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
             public void onResult(@NonNull PlaceBuffer places) {
+                if (!isViewAttached())
+                    return;
                 if (places.getCount() == 1) {
                     getView().getDetailPlaceSuccess(places);
                     places.release();
@@ -172,6 +167,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 KeyUtils.KEY_DIRECTION_API, true, "vi").enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
             public void success(GetDirectionResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().onStartFindDirection();
                 if (routes != null) {
                     routes.clear();
@@ -182,6 +179,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
                 getView().hideLoading();
             }
@@ -192,6 +191,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().getTrafficJamLocation(new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
                 if (res.getData() != null) {
                     allLocation.clear();
                     allLocation.addAll(res.getData());
@@ -201,6 +202,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 Log.d("error", " find location");
                 new getDirectionTask().execute(directionResponse);
             }
@@ -230,6 +233,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().getLocationsByDistance(request, new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
                 listPlace.clear();
                 listPlace.addAll(res.getData());
                 if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
@@ -241,6 +246,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
             }
         });
@@ -262,12 +269,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().login(request, new ApiCallback<LoginResponse>() {
             @Override
             public void success(LoginResponse res) {
+                if (!isViewAttached())
+                    return;
                 App.getUserInfo().saveInfo(res.getData());
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -284,12 +295,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().logout(App.getUserInfo().getInfo().getToken(), new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                if (!isViewAttached())
+                    return;
                 App.getUserInfo().deleteInfo();
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }

@@ -44,6 +44,8 @@ public class UserPresenter extends BasePresenter implements IUserPresenter {
         AppManager.http_api().from(ApiServices.class).getUserInfo(idUser).enqueue(new Callback<UserInfoGit>() {
             @Override
             public void onResponse(Call<UserInfoGit> call, Response<UserInfoGit> response) {
+                if (!isViewAttached())
+                    return;
                 //xử lý data ở đây, sau đó bắn những thứ cần sang view để hiển thị
                 //success thi tat loading
                 userInfoGit=response.body();
@@ -53,6 +55,8 @@ public class UserPresenter extends BasePresenter implements IUserPresenter {
 
             @Override
             public void onFailure(Call<UserInfoGit> call, Throwable t) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(t.getMessage());
             }

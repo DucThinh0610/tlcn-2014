@@ -76,12 +76,16 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
             getManager().getFavouriteLocations(request, new ApiCallback<LocationsResponse>() {
                 @Override
                 public void success(LocationsResponse res) {
+                    if (!isViewAttached())
+                        return;
                     getView().getListLocationSuccess(res.getData());
                     getView().hideLoading();
                 }
 
                 @Override
                 public void failure(RestError error) {
+                    if (!isViewAttached())
+                        return;
                     getView().onFail(error.message);
                     getView().hideLoading();
                 }
@@ -98,12 +102,16 @@ public class FavouritePresenter extends BasePresenter implements IFavouritePrese
         getManager().getShareLink(location_id, new ApiCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().getShareLinkSuccess(res.getShareLink());
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
