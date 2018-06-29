@@ -53,6 +53,8 @@ public class ContributePresenter extends BasePresenter implements IContributePre
         getManager().addContribution(contribution, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 contribution = new ContributionRequest();
                 getView().onSuccess();
@@ -60,6 +62,8 @@ public class ContributePresenter extends BasePresenter implements IContributePre
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
                 getView().hideLoading();
             }
@@ -91,6 +95,8 @@ public class ContributePresenter extends BasePresenter implements IContributePre
                         getManager().uploadFile(App.getUserInfo().getInfo().getToken(), part, new ApiCallback<UploadFileResponse>() {
                             @Override
                             public void success(UploadFileResponse res) {
+                                if (!isViewAttached())
+                                    return;
                                 fileUpload = null;
                                 contribution.setFile(res.getImageFile().getPath());
                                 sendContribution();

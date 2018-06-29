@@ -91,6 +91,8 @@ public class ContributionRequest implements Serializable {
     }
 
     public void setLevel(int level) {
+        if (level == 0)
+            level = 1;
         this.level = level;
     }
 

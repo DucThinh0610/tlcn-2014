@@ -64,6 +64,11 @@ public class SocketManager {
                     mEvent.sendEvent(new MessageEvent("ConnectError"));
                     Log.d("Result", "ConnectError");
                 }
+            }).on(Socket.EVENT_RECONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d("Result", "RECONNECT");
+                }
             }).on(KeyUtils.KEY_SOCKET_LOCATIONS, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {

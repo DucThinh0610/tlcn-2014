@@ -53,6 +53,8 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 
@@ -62,12 +64,16 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
         getManager().getAllLocations(request, new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().getListNewsSuccess(res.getData(), res.getMetaData());
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -80,12 +86,16 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
         getManager().getShareLink(location_id, new ApiCallback<ShareResponse>() {
             @Override
             public void success(ShareResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().getShareLinkSuccess(res.getShareLink());
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -106,12 +116,16 @@ public class NewsPresenter extends BasePresenter implements INewsPresenter {
         getManager().actionStop(request, new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().notifyChangeStopped();
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }

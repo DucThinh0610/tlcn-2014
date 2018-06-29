@@ -36,6 +36,7 @@ import com.tlcn.mvpapplication.utils.KeyUtils;
 import com.tlcn.mvpapplication.utils.MapUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ import static com.tlcn.mvpapplication.utils.KeyUtils.checkLevel;
 public class HomePresenter extends BasePresenter implements IHomePresenter {
     private int boundRadiusLoad = 300;
     private LatLng lngStart, lngEnd, currentLocation;
+    private GetDirectionResponse directionResponse;
     private List<Route> routes;
     private List<Locations> listPlace = new ArrayList<>();
     private List<Locations> allLocation = new ArrayList<>();
@@ -141,6 +143,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
             public void onResult(@NonNull PlaceBuffer places) {
+                if (!isViewAttached())
+                    return;
                 if (places.getCount() == 1) {
                     getView().getDetailPlaceSuccess(places);
                     places.release();
@@ -163,17 +167,45 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 KeyUtils.KEY_DIRECTION_API, true, "vi").enqueue(new RestCallback<GetDirectionResponse>() {
             @Override
             public void success(GetDirectionResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().onStartFindDirection();
                 if (routes != null) {
                     routes.clear();
                 }
-                new getDirectionTask().execute(res);
+                directionResponse = res;
+                getTrafficJamLocation();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
                 getView().hideLoading();
+            }
+        });
+    }
+
+    private void getTrafficJamLocation() {
+        getManager().getTrafficJamLocation(new ApiCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
+                if (res.getData() != null) {
+                    allLocation.clear();
+                    allLocation.addAll(res.getData());
+                }
+                new getDirectionTask().execute(directionResponse);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
+                Log.d("error", " find location");
+                new getDirectionTask().execute(directionResponse);
             }
         });
     }
@@ -201,6 +233,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().getLocationsByDistance(request, new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
                 listPlace.clear();
                 listPlace.addAll(res.getData());
                 if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
@@ -212,6 +246,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
             }
         });
@@ -233,12 +269,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().login(request, new ApiCallback<LoginResponse>() {
             @Override
             public void success(LoginResponse res) {
+                if (!isViewAttached())
+                    return;
                 App.getUserInfo().saveInfo(res.getData());
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -255,12 +295,16 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
         getManager().logout(App.getUserInfo().getInfo().getToken(), new ApiCallback<BaseResponse>() {
             @Override
             public void success(BaseResponse res) {
+                if (!isViewAttached())
+                    return;
                 App.getUserInfo().deleteInfo();
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -295,10 +339,12 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ObjectEvent objectEvent) {
         if (objectEvent == null || !isViewAttached())
             return;
@@ -313,7 +359,7 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 }
             } else {
                 LatLng newPoint = new LatLng(pointChange.getLat(), pointChange.getLng());
-                if (MapUtils.distanceBetweenTwoPoint(currentLocation, newPoint) < boundRadiusLoad){
+                if (MapUtils.distanceBetweenTwoPoint(currentLocation, newPoint) < boundRadiusLoad) {
                     listPlace.add(pointChange);
                     getView().showPlaces();
                 }

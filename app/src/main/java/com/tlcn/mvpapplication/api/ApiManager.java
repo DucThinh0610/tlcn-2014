@@ -298,4 +298,18 @@ public class ApiManager {
             }
         });
     }
+
+    public void getTrafficJamLocation(final ApiCallback<LocationsResponse> callback){
+        AppManager.http_local().from(ApiServices.class).getTrafficJamLocation().enqueue(new RestCallback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse res) {
+                callback.success(res);
+            }
+
+            @Override
+            public void failure(RestError error) {
+                callback.failure(error);
+            }
+        });
+    }
 }

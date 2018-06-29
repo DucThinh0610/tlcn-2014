@@ -79,12 +79,16 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         getManager().getListNews(token, idLocation, new ApiCallback<NewsResponse>() {
             @Override
             public void success(NewsResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().getListNewsSuccess(res.getData(), res.getMetaData());
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -105,6 +109,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         getManager().saveLocation(save, new ApiCallback<DetailLocationResponse>() {
             @Override
             public void success(DetailLocationResponse res) {
+                if (!isViewAttached())
+                    return;
                 locations = res.getData();
                 getView().hideLoading();
                 getView().saveLocationSuccess();
@@ -112,6 +118,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFail(error.message);
             }
@@ -131,12 +139,16 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         getManager().dislikeNews(actionRequest, new ApiCallback<DetailNewsResponse>() {
             @Override
             public void success(DetailNewsResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().onActionSuccess(res.getData());
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
                 getView().hideLoading();
             }
@@ -156,12 +168,16 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         getManager().likeNews(actionRequest, new ApiCallback<DetailNewsResponse>() {
             @Override
             public void success(DetailNewsResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().onActionSuccess(res.getData());
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
                 getView().hideLoading();
             }
@@ -178,6 +194,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
         getManager().getDetailLocation(token, idLocation, new ApiCallback<DetailLocationResponse>() {
             @Override
             public void success(DetailLocationResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 locations = res.getData();
                 BaseListRequest request = new BaseListRequest();
@@ -190,6 +208,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFail(error.message);
             }
         });
@@ -213,6 +233,8 @@ public class DetailsPresenter extends BasePresenter implements IDetailsPresenter
 
     @Override
     public void onDestroy() {
+        if (getEventManager().isRegister(this))
+            getEventManager().unRegister(this);
         super.onDestroy();
     }
 

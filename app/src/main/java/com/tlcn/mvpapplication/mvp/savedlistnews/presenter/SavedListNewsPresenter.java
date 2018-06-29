@@ -65,12 +65,16 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
         getManager().getSavedLocations(App.getUserInfo().getInfo().getToken(), request, new ApiCallback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().onGetSavedListLocationSuccess(res.getData(), res.getMetaData());
                 getView().hideLoading();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().onFailed(error.message);
                 getView().hideLoading();
             }
@@ -90,12 +94,16 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
         getManager().saveLocation(request, new ApiCallback<DetailLocationResponse>() {
             @Override
             public void success(DetailLocationResponse res) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().notifyDataSetChanged();
             }
 
             @Override
             public void failure(RestError error) {
+                if (!isViewAttached())
+                    return;
                 getView().hideLoading();
                 getView().onFailed(error.message);
             }
@@ -115,12 +123,16 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
             getManager().actionStop(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {
+                    if (!isViewAttached())
+                        return;
                     getView().hideLoading();
                     getView().onContributingSuccess();
                 }
 
                 @Override
                 public void failure(RestError error) {
+                    if (!isViewAttached())
+                        return;
                     getView().hideLoading();
                     getView().onFailed(error.message);
                 }
@@ -132,12 +144,16 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
             getManager().actionOn(request, new ApiCallback<BaseResponse>() {
                 @Override
                 public void success(BaseResponse res) {
+                    if (!isViewAttached())
+                        return;
                     getView().hideLoading();
                     getView().onContributingSuccess();
                 }
 
                 @Override
                 public void failure(RestError error) {
+                    if (!isViewAttached())
+                        return;
                     getView().hideLoading();
                     getView().onFailed(error.message);
                 }

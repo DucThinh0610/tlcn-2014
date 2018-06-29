@@ -11,6 +11,7 @@ import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.api.response.LoginResponse;
 import com.tlcn.mvpapplication.api.response.NewsResponse;
 import com.tlcn.mvpapplication.api.response.ShareResponse;
+import com.tlcn.mvpapplication.api.response.TextSpeechResponse;
 import com.tlcn.mvpapplication.api.response.chart.ChartResponse;
 import com.tlcn.mvpapplication.api.response.file.UploadFileResponse;
 import com.tlcn.mvpapplication.model.Result;
@@ -19,9 +20,11 @@ import com.tlcn.mvpapplication.model.UserInfoGit;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -96,4 +99,10 @@ public interface ApiServices {
 
     @GET("chart/{location_id}")
     Call<ChartResponse> getChartInfo(@Path("location_id") String id_location, @QueryMap Map<String,String> parameters);
+
+    @GET("locations/getTrafficLocation")
+    Call<LocationsResponse> getTrafficJamLocation();
+
+    @POST("text2speech/v4")
+    Call<TextSpeechResponse> getTextToSpeech(@Header("api_key") String apiKey, @Header("voice") String voice,@Body String body);
 }

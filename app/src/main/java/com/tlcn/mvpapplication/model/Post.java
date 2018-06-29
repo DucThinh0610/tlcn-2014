@@ -2,6 +2,10 @@ package com.tlcn.mvpapplication.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tlcn.mvpapplication.app.App;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Post {
     @SerializedName("count_dislike")
@@ -37,6 +41,23 @@ public class Post {
     @SerializedName("location_id")
     @Expose
     private String idLocation;
+    @SerializedName("dislikes")
+    private List<String> listUserDislike;
+
+    @SerializedName("likes")
+    private List<String> listUserLike;
+
+    public List<String> getListUserDislike() {
+        if (listUserDislike==null)
+            listUserDislike=new ArrayList<>();
+        return listUserDislike;
+    }
+
+    public List<String> getListUserLike() {
+        if (listUserLike==null)
+            listUserLike=new ArrayList<>();
+        return listUserLike;
+    }
 
     public String getIdLocation() {
         return idLocation;
@@ -107,7 +128,7 @@ public class Post {
     }
 
     public boolean isIs_like() {
-        return is_like;
+        return App.getUserInfo().getInfo() != null && getListUserLike().contains(App.getUserInfo().getInfo().getId());
     }
 
     public void setIs_like(boolean is_like) {
@@ -115,7 +136,7 @@ public class Post {
     }
 
     public boolean isIs_dislike() {
-        return is_dislike;
+        return App.getUserInfo().getInfo() != null && getListUserDislike().contains(App.getUserInfo().getInfo().getId());
     }
 
     public void setIs_dislike(boolean is_dislike) {

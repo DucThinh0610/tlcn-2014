@@ -193,6 +193,8 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mGoogleMap.getUiSettings().setCompassEnabled(false);
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -321,7 +323,7 @@ public class DirectionActivity extends AppCompatActivity implements LocationList
             CameraUpdate factory = CameraUpdateFactory.newCameraPosition(
                     new CameraPosition.Builder()
                             .target(latLng)
-                            .zoom(KeyUtils.DEFAULT_MAP_ZOOM_BEARING)
+                            .zoom(mGoogleMap.getCameraPosition().zoom < KeyUtils.DEFAULT_MAP_ZOOM_BEARING ? KeyUtils.DEFAULT_MAP_ZOOM_BEARING : mGoogleMap.getCameraPosition().zoom)
                             .bearing(bearing).tilt(65.5f)
                             .build());
             mGoogleMap.animateCamera(factory);

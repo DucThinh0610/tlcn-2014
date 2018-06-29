@@ -274,7 +274,10 @@ public class DateUtils {
 
     public static String getHourFromStringDate(String dateStr) {
         Date date = parseStringToDate(dateStr);
+        date.setHours(date.getHours()+7);
         String dateFormat = "HH:mm";
-        return formatDate(date, dateFormat);
+        SimpleDateFormat dateResultFormat = new SimpleDateFormat(dateFormat, Locale.US);
+        dateResultFormat.setTimeZone(TimeZone.getDefault());
+        return dateResultFormat.format(date);
     }
 }

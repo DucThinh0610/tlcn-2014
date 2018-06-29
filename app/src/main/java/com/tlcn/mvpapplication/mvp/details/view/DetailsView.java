@@ -66,7 +66,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
     CallbackManager mCallbackManager;
 
     BaseListRequest request;
-    List<Post> mList=new ArrayList<>();
+    List<Post> mList = new ArrayList<>();
     MetaData mMetaData;
     int visibleItemCount;
     int totalItemCount;
@@ -256,10 +256,12 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
         if (!mList.contains(socketPost)) {
             mMetaData.increasePage(1);
             mList.add(0, socketPost);
+            mPostAdapter.notifyItemInserted(0);
         } else {
-            mList.set(mList.indexOf(socketPost), socketPost);
+            int pos = mList.indexOf(socketPost);
+            mList.set(pos, socketPost);
+            mPostAdapter.notifyItemChanged(pos);
         }
-        mPostAdapter.notifyDataSetChanged();
         swpLayout.setRefreshing(false);
     }
 

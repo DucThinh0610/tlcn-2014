@@ -27,7 +27,7 @@ public class Locations implements Serializable {
     @SerializedName("rate")
     @Expose
     private double rate;
-    @SerializedName("latest_image")
+    @SerializedName("lastest_image")
     @Expose
     private String latest_image;
 
@@ -81,6 +81,10 @@ public class Locations implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getShortTitle() {
+        return title.replace("Kẹt xe tại", "");
     }
 
     public void setTitle(String title) {

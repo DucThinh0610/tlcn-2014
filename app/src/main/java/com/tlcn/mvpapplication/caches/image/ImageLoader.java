@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,6 +60,7 @@ public class ImageLoader {
             imageView.setImageResource(R.drawable.ic_error);
             return;
         }
+        Log.d("urlImage", url);
 
         Glide.with(context)
                 .load(url)
@@ -96,23 +98,5 @@ public class ImageLoader {
                         imageView.setImageDrawable(drawable);
                     }
                 });
-    }
-
-    public static void loadImageFirebaseStorage(final ImageView imageView, final ProgressBar prBar, String imageUrl) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("images/" + imageUrl);
-        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                ImageLoader.loadWithProgressBar(App.getContext(), uri.toString(), imageView, prBar);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                prBar.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.ic_error);
-            }
-        });
     }
 }
