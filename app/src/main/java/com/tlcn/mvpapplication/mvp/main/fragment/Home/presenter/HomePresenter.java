@@ -239,9 +239,8 @@ public class HomePresenter extends BasePresenter implements IHomePresenter {
                 listPlace.addAll(res.getData());
                 if (listPlace.size() == 0 && boundRadiusLoad < 500 && continuousShowDialog) {
                     getView().showDialogConfirmNewRadius();
-                } else {
-                    getView().showPlaces();
                 }
+                getView().showPlaces();
             }
 
             @Override
