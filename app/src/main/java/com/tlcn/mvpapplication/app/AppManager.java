@@ -54,7 +54,7 @@ public class AppManager {
     }
 
     public final static String URL_LOCAL = "http://150.95.110.242:3000/api/";
-    public final static String URL_IMAGE = "http://150.95.110.242:3000/";
+    public final static String URL_IMAGE = "http://150.95.110.242:3000";
     public final static String URL_SOCKET = "http://150.95.110.242:3000/";
     public final static String URL_API_FPT = "http://api.openfpt.vn/";
 }
