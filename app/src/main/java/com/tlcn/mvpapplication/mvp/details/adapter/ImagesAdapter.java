@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tlcn.mvpapplication.BuildConfig;
 import com.tlcn.mvpapplication.R;
+import com.tlcn.mvpapplication.app.AppManager;
 import com.tlcn.mvpapplication.caches.image.ImageLoader;
 import com.tlcn.mvpapplication.model.Image;
 import com.tlcn.mvpapplication.utils.DateUtils;
@@ -37,7 +37,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
 
     @Override
     public void onBindViewHolder(ImageHolder holder, int position) {
-        ImageLoader.load(mContext, BuildConfig.SERVER_URL_API+list.get(position).getUrl(),holder.imvContent);
+        ImageLoader.load(mContext, AppManager.URL_IMAGE + list.get(position).getUrl(), holder.imvContent);
         holder.tvCreatedAt.setText(DateUtils.formatDateToString(list.get(position).getCreated_at()));
         holder.tvCreatedBy.setText(list.get(position).getUser_name());
     }
@@ -51,6 +51,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
         ImageView imvContent;
         TextView tvCreatedBy;
         TextView tvCreatedAt;
+
         public ImageHolder(View v) {
             super(v);
             imvContent = (ImageView) v.findViewById(R.id.imv_content);
