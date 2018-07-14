@@ -9,42 +9,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:padding="2dp">
+
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/tv_name"
-                android:gravity="center_vertical"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
-                android:textSize="18sp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/black"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="20dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingEnd="10dp"
-                android:textSize="18sp"
+                android:paddingStart="20dp"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:id="@+id/tv_detail"/>
+                android:paddingEnd="10dp"
+                android:paddingStart="20dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/imv_add"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_add_to_edit_text"
-            android:id="@+id/imv_add"
-            android:layout_marginEnd="10dp"/>
+            android:src="@drawable/ic_add_to_edit_text" />
     </LinearLayout>
-    <View style="@style/view_margin"/>
+
+    <View style="@style/view_margin" />
 </LinearLayout>
