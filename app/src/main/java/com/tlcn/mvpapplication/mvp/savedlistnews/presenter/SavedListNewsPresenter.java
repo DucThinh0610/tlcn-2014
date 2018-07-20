@@ -1,7 +1,10 @@
 package com.tlcn.mvpapplication.mvp.savedlistnews.presenter;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.tlcn.mvpapplication.R;
 import com.tlcn.mvpapplication.api.network.ApiCallback;
 import com.tlcn.mvpapplication.api.network.BaseResponse;
@@ -13,9 +16,13 @@ import com.tlcn.mvpapplication.api.response.DetailLocationResponse;
 import com.tlcn.mvpapplication.api.response.LocationsResponse;
 import com.tlcn.mvpapplication.app.App;
 import com.tlcn.mvpapplication.base.BasePresenter;
+import com.tlcn.mvpapplication.interactor.event_bus.type.ObjectEvent;
 import com.tlcn.mvpapplication.model.Locations;
 import com.tlcn.mvpapplication.mvp.savedlistnews.view.ISavedListNewsView;
 import com.tlcn.mvpapplication.utils.KeyUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +55,9 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
         mDatabase = FirebaseDatabase.getInstance();
         mLocationReference = mDatabase.getReference().child(KeyUtils.LOCATIONS);
         mSaveReference = mDatabase.getReference().child(KeyUtils.SAVE);
+        if (!getEventManager().isRegister(this)) {
+            getEventManager().register(this);
+        }
     }
 
     public void setChange(boolean change) {
@@ -158,6 +168,17 @@ public class SavedListNewsPresenter extends BasePresenter implements ISavedListN
                     getView().onFailed(error.message);
                 }
             });
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ObjectEvent objectEvent) {
+        if (objectEvent == null || !isViewAttached())
+            return;
+        if (objectEvent.getKeyId().equals(KeyUtils.KEY_EVENT_LOCATIONS) && objectEvent.getSocketLocation() != null) {
+            Locations pointChange = objectEvent.getSocketLocation();
+            Log.d("subscribe saved list", new Gson().toJson(pointChange));
+            getView().onLocationChanged(pointChange);
         }
     }
 }

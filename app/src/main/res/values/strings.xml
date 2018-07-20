@@ -94,7 +94,7 @@
     <string name="distance_of_search">Khoảng cách tìm kiếm:</string>
     <string name="get_notification_from_app">nhận thông báo từ</string>
     <string name="saved_list_news">Tin đã lưu</string>
-    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_id" translatable="false">DefaultChannel</string>
     <string name="guide">Hướng dẫn</string>
     <string name="start">Start</string>
     <string name="anonymous">Ẩn danh</string>

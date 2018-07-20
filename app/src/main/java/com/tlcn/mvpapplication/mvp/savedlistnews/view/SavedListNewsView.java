@@ -166,6 +166,14 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
     }
 
     @Override
+    public void onLocationChanged(Locations response) {
+        if (mList.contains(response)) {
+            mList.set(mList.indexOf(response), response);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imv_back:
@@ -176,6 +184,7 @@ public class SavedListNewsView extends AppCompatActivity implements ISavedListNe
 
     @Override
     public void onRefresh() {
+        mList.clear();
         isLoading = true;
         mPresenter.getSavedListLocation(new BaseListRequest());
     }

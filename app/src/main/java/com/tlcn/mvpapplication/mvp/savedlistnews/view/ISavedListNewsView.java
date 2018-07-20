@@ -19,4 +19,6 @@ public interface ISavedListNewsView extends IView {
     void onContributingSuccess();
 
     void onFailed(String message);
+
+    void onLocationChanged(Locations response);
 }

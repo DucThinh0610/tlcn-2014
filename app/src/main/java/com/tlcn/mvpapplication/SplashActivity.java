@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         if (getIntent().getData() != null && getIntent().getData().getPathSegments() != null) {
             if (getIntent().getData().getPathSegments().size() > 0) {
                 Intent intent = new Intent(this, DetailsView.class);
-                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getData().getPathSegments().get(0));
+                intent.putExtra(KeyUtils.KEY_INTENT_LOCATION, getIntent().getData().getPathSegments().get(2));
                 startActivity(intent);
                 finish();
                 return;
@@ -301,5 +301,5 @@ public class SplashActivity extends AppCompatActivity {
             //Log.e( "printHashKey()", e);
         }
     }
-/* todo : end ======================================== end */
+    /* todo : end ======================================== end */
 }
