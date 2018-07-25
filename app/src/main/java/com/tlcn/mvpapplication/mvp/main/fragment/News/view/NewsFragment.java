@@ -202,10 +202,15 @@ public class NewsFragment extends Fragment implements INewsView, SwipeRefreshLay
             return;
         if (!mList.contains(locations)) {
             mMetaData.increasePage(1);
-            mList.add(0, locations);
         } else {
+            if (!locations.isStatus()){
+                mList.remove(locations);
+                newsAdapter.notifyDataSetChanged();
+                return;
+            }
             mList.remove(locations);
         }
+        mList.add(0, locations);
         newsAdapter.notifyDataSetChanged();
     }
 
