@@ -1,13 +1,21 @@
 apply plugin: 'com.android.application'
 android {
+    signingConfigs {
+        ketxe24h {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('/Volumes/Data/ketxe24h')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 26
     flavorDimensions "default"
     defaultConfig {
         applicationId "com.tlcn.mvpapplication"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.0"
+        versionCode 7
+        versionName "1.1"
         multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -22,26 +30,28 @@ android {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
-            buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
-            buildConfigField("String","SERVER_API_V1",'"https://ketxe24h.info/api/"')
-            buildConfigField("String","SERVER_IMAGE",'"https://ketxe24h.info/"')
-            buildConfigField("String","SOCKET_URL",'"https://ketxe24h.info/"')
-
+            buildConfigField("String", "SERVER_FIREBASE_API", '"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
+            buildConfigField("String", "SERVER_API_V1", '"https://ketxe24h.info/api/"')
+            buildConfigField("String", "SERVER_IMAGE", '"https://ketxe24h.info/"')
+            buildConfigField("String", "SOCKET_URL", '"https://ketxe24h.info/"')
+            signingConfig signingConfigs.ketxe24h
         }
         real {
             buildConfigField("String", "API_URL", '"https://api.github.com/"')
             buildConfigField("String", "DIRECTION_URL_API", '"https://maps.googleapis.com/"')
             buildConfigField("String", "SERVER_URL_API", '"https://tlcn-2014.herokuapp.com/"')
-            buildConfigField("String","SERVER_FIREBASE_API",'"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
-            buildConfigField("String","SERVER_API_V1",'"https://ketxe24h.info/api/"')
-            buildConfigField("String","SERVER_IMAGE",'"https://ketxe24h.info/"')
-            buildConfigField("String","SOCKET_URL",'"https://ketxe24h.info/"')
+            buildConfigField("String", "SERVER_FIREBASE_API", '"https://us-central1-tlcn-bedcc.cloudfunctions.net/app/"')
+            buildConfigField("String", "SERVER_API_V1", '"https://ketxe24h.info/api/"')
+            buildConfigField("String", "SERVER_IMAGE", '"https://ketxe24h.info/"')
+            buildConfigField("String", "SOCKET_URL", '"https://ketxe24h.info/"')
+            signingConfig signingConfigs.ketxe24h
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.ketxe24h
         }
     }
 }
@@ -70,7 +80,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:${retrofit_library_verson}"
     implementation "com.squareup.retrofit2:adapter-rxjava:${retrofit_library_verson}"
     implementation "com.google.firebase:firebase-core:${fire_base_library_version}"
-    implementation "org.zakariya.stickyheaders:stickyheaders:0.7.6"
+    implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'

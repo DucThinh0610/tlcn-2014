@@ -257,6 +257,7 @@ public class DetailsView extends AppCompatActivity implements IDetailsView,
             mMetaData.increasePage(1);
             mList.add(0, socketPost);
             mPostAdapter.notifyItemInserted(0);
+            tvCreatedAt.setText(DateUtils.formatDateToString(socketPost.getCreated_at()));
         } else {
             int pos = mList.indexOf(socketPost);
             mList.set(pos, socketPost);
